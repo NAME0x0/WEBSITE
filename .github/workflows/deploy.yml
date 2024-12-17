@@ -1,4 +1,4 @@
-name: Deploy WEBSITE to GitHub Pages
+name: Deploy Personal Website to GitHub Pages
 
 # Controls when the workflow will run
 on:
@@ -15,9 +15,10 @@ permissions:
   pages: write
   id-token: write
 
-# Allow one concurrent deployment
-concurrencyGroup: "pages"
-cancelInProgressCurrent: true
+# Add concurrency to ensure only one deployment runs at a time
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
 
 jobs:
   # Build job
