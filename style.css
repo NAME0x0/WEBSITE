@@ -84,7 +84,7 @@ body, html {
 
 #save-note {
     padding: 10px 20px;
-    background-color: #4CAF50;
+    background-color: #f2f0ef;
     color: white;
     border: none;
     border-radius: 5px;
@@ -93,7 +93,7 @@ body, html {
 }
 
 #save-note:hover {
-    background-color: #45a049;
+    background-color: #f2f0ef;
 }
 
 #saved-notes {
