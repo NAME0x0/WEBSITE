@@ -8,7 +8,7 @@ body, html {
     height: 100%;
     overflow: hidden;
     font-family: 'Helvetica Neue', Arial, sans-serif;
-    background-color: #f4f4f4;
+    background-color: #f2f0ef;
     color: #333;
 }
 
@@ -50,19 +50,19 @@ body, html {
 
 /* Section-specific styles */
 .portfolio {
-    background-color: #e6f2ff;
+    background-color: #f2f0ef;
 }
 
 .notes {
-    background-color: #f0f0f0;
+    background-color: #f2f0ef;
 }
 
 .tools {
-    background-color: #e6ffe6;
+    background-color: #f2f0ef;
 }
 
 .personal-details {
-    background-color: #fff0e6;
+    background-color: #f2f0ef;
 }
 
 /* Notes section specific styles */
