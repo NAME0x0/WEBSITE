@@ -1,142 +1,188 @@
 /* General Styles */
+:root {
+    --primary-bg: #f8f8f8;
+    --primary-color: #333;
+    --button-bg: #333;
+    --button-hover-bg: #555;
+    --border-radius: 5px;
+    --max-width: 800px;
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --transition-duration: 0.3s;
+}
+
 body {
     margin: 0;
     font-family: 'Helvetica Neue', sans-serif;
-    background-color: #f8f8f8;
-    color: #333;
+    background-color: var(--primary-bg);
+    color: var(--primary-color);
     line-height: 1.6;
-  }
-  
-  nav ul {
-    list-style: none;
-    padding: 0;
-    background: #333;
-    margin: 0;
+}
+
+/* Normal Navigation Bar */
+nav {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--primary-color);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 15px 0; /* Normal padding */
+    transition: padding 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Faster and smoother transition */
+}
+
+/* Smaller Navigation Bar on Scroll */
+nav.shrink {
+    padding: 5px 0; /* Reduced padding when scrolled */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Smaller shadow */
+}
+
+/* Navigation Links */
+nav ul {
     display: flex;
     justify-content: space-around;
-  }
-  
-  nav ul li {
-    display: inline;
-  }
-  
-  nav ul li a {
+    list-style: none;
+    margin: 0;
+    padding: 10px 0;
+}
+
+nav ul li a {
     color: white;
     text-decoration: none;
     padding: 10px 15px;
     display: inline-block;
-  }
-  
-  section {
-    padding: 20px;
-    border-bottom: 1px solid #ccc;
-  }
-  
-  .search-container, .notes-container, .tools-container, .portfolio-container, .contact-container {
-    max-width: 800px;
+}
+
+nav ul li a:hover {
+    background: var(--button-hover-bg);
+    border-radius: var(--border-radius);
+}
+
+/* Horizontal Scroll Container */
+.horizontal-scroll {
+    display: flex;
+    height: 100vh; /* Full height of viewport */
+    width: 100vw; /* Full width of viewport */
+    overflow-x: auto; /* Enable horizontal scrolling */
+    scroll-snap-type: x mandatory; /* Snap behavior for sections */
+}
+
+/* Section Styles */
+.section {
+    min-width: 100vw; /* Full viewport width for each section */
+    height: 100vh; /* Full viewport height */
+    display: flex; /* Flexbox centering */
+    justify-content: center; /* Horizontal centering */
+    align-items: center; /* Vertical centering */
+    text-align: center; /* Align text inside */
+    scroll-snap-align: start; /* Snap to start of section */
+    padding: 10px;
+    box-sizing: border-box; /* Include padding in size calculations */
+}
+
+/* Section-Specific Background Colors */
+#search {
+    background-color: #f0f8ff;
+}
+
+#tools {
+    background-color: #f0f8ff;
+}
+
+#contact {
+    background-color: #f0f8ff;
+}
+
+/* Shared Content Styling */
+.section-container {
+    max-width: var(--max-width);
     margin: 0 auto;
     text-align: center;
-  }
-  
-  input, textarea {
+    background: rgba(255, 255, 255, 0.9); /* Light background for readability */
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: var(--box-shadow);
+}
+
+/* Inputs and Textareas */
+input, textarea {
     width: 100%;
     padding: 10px;
     margin: 10px 0;
     border: 1px solid #ccc;
     border-radius: 4px;
-  }
-  
-  button {
-    background: #333;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-  }
-
-/* Horizontal scroll container */
-.horizontal-scroll {
-    display: flex;
-    height: 100vh; /* Ensure it takes full viewport height */
-    width: 100vw; /* Full width of the viewport */
-    overflow-x: auto; /* Enable horizontal scrolling */
-    scroll-snap-type: x mandatory; /* Enable snap behavior horizontally */
-}
-
-/* Section styles */
-.section {
-    min-width: 100vw; /* Each section spans full viewport width */
-    height: 100vh; /* Full height of the viewport */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 20px;
-    box-sizing: border-box; /* Include padding in size calculations */
-    scroll-snap-align: start; /* Snap sections to the start */
-}
-
-/* Specific section colors */
-.portfolio {
-    background-color: #f2f0ef;
-}
-.notes {
-    background-color: #d8e2dc;
-}
-.tools {
-    background-color: #ffe5d9;
-}
-.personal-details {
-    background-color: #ffd7ba;
-}
-
-/* Content styling */
-.content {
-    max-width: 800px;
-    background: rgba(255, 255, 255, 0.9);
-    padding: 40px;
-    border-radius: 15px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-/* Notes container styling */
-#notes-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-}
-
-#note-input {
-    width: 100%;
-    min-height: 150px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
     resize: vertical;
 }
 
-#save-note {
-    padding: 10px 20px;
-    background-color: #333;
+/* Buttons */
+button {
+    background: var(--button-bg);
     color: white;
     border: none;
-    border-radius: 5px;
+    padding: 10px 20px;
+    border-radius: var(--border-radius);
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color var(--transition-duration) ease;
 }
 
-#save-note:hover {
-    background-color: #555;
+button:hover {
+    background-color: var(--button-hover-bg);
+}
+
+button:focus, a:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 4px;
+}
+
+/* Notes Section Specific Styling */
+.notes-box {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
 }
 
 #saved-notes {
-    width: 100%;
     max-height: 200px;
     overflow-y: auto;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 10px;
     margin-top: 15px;
+}
+
+#stickyNotesContainer {
+  position: absolute;
+  top: 50px;
+  left: 50px;
+  z-index: 999;
+}
+
+.sticky-note {
+  width: 200px;
+  height: 200px;
+  background-color: #FFEB3B;
+  border-radius: 8px;
+  margin: 10px;
+  position: absolute;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sticky-note-content {
+  width: 100%;
+  height: 100%;
+  background: none;
+  border: none;
+  font-size: 16px;
+  padding: 10px;
+}
+
+.sticky-note:active {
+  cursor: move;
+}
+
+/* making ze responsive Adjustments */
+@media (max-width: 768px) {
+    .section-container {
+        width: 90%;
+        padding: 20px;
+    }
 }
