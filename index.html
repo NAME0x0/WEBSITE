@@ -1,46 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mr. Afsah - Personal Website</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WEBSITE</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <section class="section portfolio">
-            <div class="content">
-                <h1>Portfolio</h1>
-                <p>Showcasing professional work and achievements</p>
-            </div>
-        </section>
+  <!-- Navigation -->
+  <nav>
+    <ul>
+      <li><a href="#search">Home</a></li>
+      <li><a href="#notes">Notes</a></li>
+      <li><a href="#tools">Tools</a></li>
+      <li><a href="#portfolio">Portfolio</a></li>
+      <li><a href="#contact">About/Contact</a></li>
+    </ul>
+  </nav>
 
-        <section class="section notes">
-            <div class="content">
-                <h2>Notes</h2>
-                <div id="notes-container">
-                    <textarea id="note-input" placeholder="Write your note here..."></textarea>
-                    <button id="save-note">Save Note</button>
-                    <div id="saved-notes"></div>
-                </div>
-            </div>
-        </section>
-
-        <section class="section tools">
-            <div class="content">
-                <h2>Tools</h2>
-                <p>Useful utilities and resources</p>
-            </div>
-        </section>
-
-        <section class="section personal-details">
-            <div class="content">
-                <h2>Contact</h2>
-                <p>Get in touch or find more about me</p>
-            </div>
-        </section>
+  <!-- Sections -->
+  <section id="search">
+    <div class="search-container">
+      <h1>Welcome to WEBSITE</h1>
+      <input type="text" id="searchBar" placeholder="Search...">
     </div>
+  </section>
 
-    <script src="app.js"></script>
+  <section id="notes">
+    <div class="notes-container">
+      <h2>Notes</h2>
+      <textarea id="notesArea" placeholder="Write your notes here..."></textarea>
+      <button id="saveNotes">Save Notes</button>
+    </div>
+  </section>
+
+  <section id="tools">
+    <div class="tools-container">
+      <h2>Tools</h2>
+      <button id="tool1">Calculator</button>
+      <button id="tool2">Stopwatch</button>
+    </div>
+  </section>
+
+  <section id="portfolio">
+    <div class="portfolio-container">
+      <h2>Portfolio</h2>
+      <p>Your projects, skills, and achievements will go here.</p>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="contact-container">
+      <h2>About/Contact</h2>
+      <form id="contactForm">
+        <input type="text" id="name" placeholder="Your Name" required>
+        <input type="email" id="email" placeholder="Your Email" required>
+        <textarea id="message" placeholder="Your Message" required></textarea>
+        <button type="submit">Send</button>
+      </form>
+    </div>
+  </section>
+
+  <script src="app.js" defer></script>
 </body>
 </html>
