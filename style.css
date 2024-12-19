@@ -1,55 +1,142 @@
 /* General Styles */
 body {
-  margin: 0;
-  font-family: 'Helvetica Neue', sans-serif;
-  background-color: #f8f8f8;
-  color: #333;
-  line-height: 1.6;
+    margin: 0;
+    font-family: 'Helvetica Neue', sans-serif;
+    background-color: #f8f8f8;
+    color: #333;
+    line-height: 1.6;
+  }
+  
+  nav ul {
+    list-style: none;
+    padding: 0;
+    background: #333;
+    margin: 0;
+    display: flex;
+    justify-content: space-around;
+  }
+  
+  nav ul li {
+    display: inline;
+  }
+  
+  nav ul li a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+    display: inline-block;
+  }
+  
+  section {
+    padding: 20px;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .search-container, .notes-container, .tools-container, .portfolio-container, .contact-container {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  
+  input, textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  button {
+    background: #333;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+
+/* Horizontal scroll container */
+.horizontal-scroll {
+    display: flex;
+    height: 100vh; /* Ensure it takes full viewport height */
+    width: 100vw; /* Full width of the viewport */
+    overflow-x: auto; /* Enable horizontal scrolling */
+    scroll-snap-type: x mandatory; /* Enable snap behavior horizontally */
 }
 
-nav ul {
-  list-style: none;
-  padding: 0;
-  background: #333;
-  margin: 0;
-  display: flex;
-  justify-content: space-around;
+/* Section styles */
+.section {
+    min-width: 100vw; /* Each section spans full viewport width */
+    height: 100vh; /* Full height of the viewport */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box; /* Include padding in size calculations */
+    scroll-snap-align: start; /* Snap sections to the start */
 }
 
-nav ul li {
-  display: inline;
+/* Specific section colors */
+.portfolio {
+    background-color: #f2f0ef;
+}
+.notes {
+    background-color: #d8e2dc;
+}
+.tools {
+    background-color: #ffe5d9;
+}
+.personal-details {
+    background-color: #ffd7ba;
 }
 
-nav ul li a {
-  color: white;
-  text-decoration: none;
-  padding: 10px 15px;
-  display: inline-block;
+/* Content styling */
+.content {
+    max-width: 800px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-section {
-  padding: 20px;
-  border-bottom: 1px solid #ccc;
+/* Notes container styling */
+#notes-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
 }
 
-.search-container, .notes-container, .tools-container, .portfolio-container, .contact-container {
-  max-width: 800px;
-  margin: 0 auto;
-  text-align: center;
+#note-input {
+    width: 100%;
+    min-height: 150px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    resize: vertical;
 }
 
-input, textarea {
-  width: 100%;
-  padding: 10px;
-  margin: 10px 0;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+#save-note {
+    padding: 10px 20px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-button {
-  background: #333;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
+#save-note:hover {
+    background-color: #555;
+}
+
+#saved-notes {
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    margin-top: 15px;
 }
