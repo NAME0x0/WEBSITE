@@ -60,6 +60,21 @@
     --transition-duration: 0.6s;
     --transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
     --page-transition: 0.8s;
+
+    /* Modern and refined color palette */
+    --dark-bg: #0a0a0a;
+    --dark-surface: #161616;
+    --dark-primary: #6366f1;
+    --dark-secondary: #3b82f6;
+    --dark-accent: #10b981;
+    --dark-text: #ffffff;
+    --dark-text-secondary: rgba(255, 255, 255, 0.7);
+    
+    /* Layout constants */
+    --header-height: 64px;
+    --content-max-width: 1440px;
+    --section-spacing: clamp(2rem, 5vw, 5rem);
+    --grid-gap: clamp(1rem, 2vw, 2rem);
 }
 
 /* Light theme variables */
@@ -104,6 +119,10 @@ body {
     perspective: var(--gpu-perspective);
     transition: background-color var(--transition-duration) var(--transition-timing);
     animation: pageLoad 1s ease-out;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    min-height: 100vh;
+    overflow-x: hidden;
 }
 
 /* Normal Navigation Bar */
@@ -122,6 +141,14 @@ nav {
     background: var(--surface-bg);
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
+    height: var(--header-height);
+    background: rgba(var(--surface-bg), 0.8);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 0 var(--section-spacing);
+    position: fixed;
+    width: 100%;
+    z-index: 100;
 }
 
 /* Smaller Navigation Bar on Scroll */
@@ -137,6 +164,10 @@ nav ul {
     list-style: none;
     margin: 0;
     padding: 10px 0;
+    height: 100%;
+    max-width: var(--content-max-width);
+    margin: 0 auto;
+    gap: 2rem;
 }
 
 nav ul li a {
@@ -216,6 +247,11 @@ nav ul li a:hover::after {
     transform-style: preserve-3d;
     animation: sectionFloat 1s var(--transition-timing);
     transition: all var(--transition-duration) var(--transition-timing);
+    min-height: 100vh;
+    padding: calc(var(--header-height) + var(--section-spacing)) var(--section-spacing);
+    display: grid;
+    place-items: center;
+    position: relative;
 }
 
 /* Section-Specific Background Colors with smooth transitions */
@@ -359,6 +395,9 @@ button:focus, a:focus {
     width: 100%;
     max-width: 600px;
     margin: 0 auto;
+    width: 100%;
+    max-width: 800px;
+    position: relative;
 }
 
 .search-bar {
@@ -372,6 +411,13 @@ button:focus, a:focus {
     -webkit-backdrop-filter: var(--blur-effect);
     backdrop-filter: var(--blur-effect);
     transition: all 0.3s ease;
+    width: 100%;
+    height: 60px;
+    border-radius: 30px;
+    padding: 0 2rem 0 4rem;
+    font-size: 1.2rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Quick access tools panel */
@@ -380,6 +426,10 @@ button:focus, a:focus {
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 15px;
     margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--grid-gap);
+    margin-top: 3rem;
 }
 
 .tool-card {
@@ -387,6 +437,15 @@ button:focus, a:focus {
     border-radius: 15px;
     transition: transform 0.3s ease;
     animation: float 6s ease-in-out infinite;
+    aspect-ratio: 4/3;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, var(--dark-primary), var(--dark-secondary));
+    border-radius: 24px;
+    transition: transform 0.3s var(--transition-timing);
 }
 
 .tool-card:hover {
@@ -439,6 +498,18 @@ button:focus, a:focus {
             will-change: auto !important;
         }
     }
+
+    .section {
+        padding: var(--section-spacing) 1rem;
+    }
+    
+    .quick-tools {
+        grid-template-columns: 1fr;
+    }
+    
+    .calculator {
+        max-width: 100%;
+    }
 }
 
 /* Material Design Components */
@@ -453,6 +524,14 @@ button:focus, a:focus {
     transition: all var(--transition-duration) var(--transition-timing);
     position: relative;
     overflow: hidden;
+    border-radius: 24px;
+    padding: 2rem;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.05),
+        rgba(255, 255, 255, 0.01)
+    );
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .material-card:hover {
@@ -603,4 +682,65 @@ button:focus, a:focus {
     0% { transform: scale(1); }
     50% { transform: scale(1.05); }
     100% { transform: scale(1); }
+}
+
+/* Modern Calculator Design */
+.calculator {
+    background: var(--surface-bg);
+    border-radius: 24px;
+    padding: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    max-width: 360px;
+    width: 100%;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.calculator-display {
+    grid-column: 1 / -1;
+    background: transparent;
+    color: var(--text-color);
+    font-size: 2.5rem;
+    text-align: right;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: none;
+    border-bottom: 2px solid var(--dark-primary);
+}
+
+.calculator .btn {
+    aspect-ratio: 1;
+    border-radius: 50%;
+    font-size: 1.25rem;
+    border: none;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-color);
+    transition: all 0.3s var(--transition-timing);
+}
+
+.calculator .btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+.calculator .operator {
+    background: var(--dark-primary);
+    color: white;
+}
+
+/* Refined Animations */
+@keyframes fadeScale {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.section > * {
+    animation: fadeScale 0.6s var(--transition-timing);
 }
