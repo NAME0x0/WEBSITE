@@ -137,28 +137,15 @@ body {
 
 /* Normal Navigation Bar */
 nav {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    background: var(--primary-color);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 15px 0; /* Normal padding */
-    transition: padding 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Faster and smoother transition */
-    transform: var(--gpu-transform);
-    will-change: transform, opacity;
-    -webkit-transform-style: preserve-3d;
-    transform-style: preserve-3d;
     background: var(--surface-bg);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
     height: var(--header-height);
-    background: rgba(var(--surface-bg), 0.8);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     padding: 0 var(--section-spacing);
     position: fixed;
     width: 100%;
     z-index: 100;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--glass-border);
 }
 
 /* Smaller Navigation Bar on Scroll */
@@ -170,14 +157,14 @@ nav.shrink {
 /* Navigation Links */
 nav ul {
     display: flex;
-    justify-content: space-around;
-    list-style: none;
-    margin: 0;
-    padding: 10px 0;
+    justify-content: center;
+    align-items: center;
     height: 100%;
+    gap: 2rem;
     max-width: var(--content-max-width);
     margin: 0 auto;
-    gap: 2rem;
+    padding: 0;
+    list-style: none;
 }
 
 nav ul li a {
@@ -236,32 +223,23 @@ nav ul li a:hover::after {
 
 /* Section Styles - Enhanced with smooth transitions */
 .section {
-    min-width: 100vw; /* Full viewport width for each section */
-    height: 100vh; /* Full viewport height */
-    display: flex; /* Flexbox centering */
-    justify-content: center; /* Horizontal centering */
-    align-items: center; /* Vertical centering */
-    text-align: center; /* Align text inside */
-    scroll-snap-align: start; /* Snap to start of section */
-    padding: 10px;
-    box-sizing: border-box; /* Include padding in size calculations */
-    /* Smooth color transition */
-    transition: background-color var(--transition-duration) ease;
-    /* Hardware acceleration for animations */
-    transform: translateZ(0);
-    /* Prevent flickering on some devices */
-    backface-visibility: hidden;
-    transform: var(--gpu-transform);
-    will-change: transform, background-color;
-    -webkit-transform-style: preserve-3d;
-    transform-style: preserve-3d;
-    animation: sectionFloat 1s var(--transition-timing);
-    transition: all var(--transition-duration) var(--transition-timing);
     min-height: 100vh;
-    padding: calc(var(--header-height) + var(--section-spacing)) var(--section-spacing);
-    display: grid;
-    place-items: center;
-    position: relative;
+    padding: calc(var(--header-height) + 2rem) var(--section-spacing) 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.section-container {
+    max-width: var(--content-max-width);
+    width: 100%;
+    margin: 0 auto;
+    padding: 2rem;
+    background: var(--glass-bg);
+    border-radius: 24px;
+    border: 1px solid var(--glass-border);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
 }
 
 /* Section-Specific Background Colors with smooth transitions */
@@ -484,15 +462,19 @@ button:focus, a:focus {
 /* Theme toggle button */
 .theme-toggle {
     position: fixed;
-    right: 20px;
-    top: 20px;
+    top: 1rem;
+    right: 1rem;
     z-index: 1000;
-    padding: 10px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    background: var(--card-bg);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    transition: all 0.3s var(--transition-timing);
-    animation: pulseOnLoad 2s infinite;
 }
 
 /* making ze responsive Adjustments */
@@ -736,27 +718,23 @@ button:focus, a:focus {
 
 /* Modern Calculator Design */
 .calculator {
+    max-width: 320px;
+    margin: 0 auto;
     background: var(--surface-bg);
-    border-radius: 24px;
-    padding: 1.5rem;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-    max-width: 360px;
-    width: 100%;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    border-radius: 16px;
+    padding: 1rem;
 }
 
 .calculator-display {
-    grid-column: 1 / -1;
-    background: transparent;
-    color: var(--text-color);
-    font-size: 2.5rem;
-    text-align: right;
+    width: 100%;
     padding: 1rem;
     margin-bottom: 1rem;
+    background: transparent;
     border: none;
-    border-bottom: 2px solid var(--dark-primary);
+    border-bottom: 2px solid var(--primary-color);
+    color: var(--text-color);
+    font-size: 1.5rem;
+    text-align: right;
 }
 
 .calculator .btn {

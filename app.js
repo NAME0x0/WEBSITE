@@ -342,4 +342,62 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// ...existing code...
+// Theme toggle functionality
+const themeToggle = document.getElementById('themeToggle');
+const root = document.documentElement;
+
+themeToggle.addEventListener('click', () => {
+    const currentTheme = root.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+});
+
+// Initialize calculator
+function initCalculator() {
+    const calculator = document.querySelector('.calculator');
+    const display = calculator.querySelector('.calculator-display');
+    const buttonsContainer = calculator.querySelector('.calculator-buttons');
+    
+    const buttons = [
+        '7', '8', '9', '/',
+        '4', '5', '6', '*',
+        '1', '2', '3', '-',
+        '0', '.', '=', '+'
+    ];
+    
+    buttons.forEach(btn => {
+        const button = document.createElement('button');
+        button.textContent = btn;
+        button.className = 'calculator-btn';
+        if(['+', '-', '*', '/', '='].includes(btn)) {
+            button.classList.add('operator');
+        }
+        buttonsContainer.appendChild(button);
+        
+        button.addEventListener('click', () => {
+            if(btn === '=') {
+                try {
+                    display.value = eval(display.value);
+                } catch(e) {
+                    display.value = 'Error';
+                }
+            } else {
+                display.value += btn;
+            }
+        });
+    });
+}
+
+// Initialize everything when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize theme
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    root.setAttribute('data-theme', savedTheme);
+    
+    // Initialize calculator
+    initCalculator();
+    
+    // Initialize other components
+    // ...existing code...
+});

@@ -9,77 +9,58 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <nav class="navigation">
-        <div class="nav-container">
-            <div class="logo">Workspace</div>
-            <div class="nav-links">
-                <a href="#hero">Home</a>
-                <a href="#search">Search</a>
-                <a href="#tools">Tools</a>
-                <a href="#notes">Notes</a>
-            </div>
-            <button class="theme-toggle" id="themeToggle">
-                <span class="material-icons">dark_mode</span>
-            </button>
-        </div>
+    <nav>
+        <ul>
+            <li><a href="#hero">Home</a></li>
+            <li><a href="#search">Search</a></li>
+            <li><a href="#tools">Tools</a></li>
+            <li><a href="#notes">Notes</a></li>
+        </ul>
+        <button class="theme-toggle" id="themeToggle">
+            <span class="material-icons">dark_mode</span>
+        </button>
     </nav>
 
     <main>
-        <section id="hero" class="hero-section">
-            <div class="hero-content">
+        <section id="hero" class="section">
+            <div class="section-container">
                 <h1>Your Digital Workspace</h1>
                 <p>Everything you need, in one place</p>
                 <div class="search-container">
-                    <input type="text" class="search-input" placeholder="Search anything..." id="searchBar">
-                    <span class="material-icons search-icon">search</span>
+                    <input type="text" class="search-bar" placeholder="Search anything..." id="searchBar">
+                    <span class="material-icons">search</span>
                 </div>
             </div>
         </section>
 
-        <section id="tools" class="tools-section section">
-            <div class="section-header">
+        <section id="tools" class="section">
+            <div class="section-container">
                 <h2>Tools</h2>
-                <p>Powerful utilities at your fingertips</p>
-            </div>
-            <div class="tools-grid">
-                <div class="tool-card calculator-card">
-                    <div class="tool-header">
-                        <span class="material-icons">calculate</span>
+                <div class="quick-tools">
+                    <div class="tool-card material-card">
                         <h3>Calculator</h3>
+                        <div class="calculator">
+                            <input type="text" class="calculator-display" id="display" disabled title="Calculator Display" placeholder="0">
+                            <div class="calculator-buttons">
+                                <!-- Calculator buttons will be added by JavaScript -->
+                            </div>
+                        </div>
                     </div>
-                    <div class="calculator" id="calculator">
-                        <!-- Calculator content -->
-                    </div>
-                </div>
-                <div class="tool-card notes-card">
-                    <div class="tool-header">
-                        <span class="material-icons">note_alt</span>
+                    <div class="tool-card material-card">
                         <h3>Quick Notes</h3>
-                    </div>
-                    <div class="notes-content">
-                        <textarea id="notesArea" placeholder="Write your thoughts..."></textarea>
-                        <button id="saveNotes" class="action-button">Save</button>
-                    </div>
-                </div>
-                <div class="tool-card stopwatch-card">
-                    <div class="tool-header">
-                        <span class="material-icons">timer</span>
-                        <h3>Stopwatch</h3>
-                    </div>
-                    <div class="stopwatch" id="stopwatch">
-                        <!-- Stopwatch content -->
+                        <textarea class="notes-box" placeholder="Write your notes here..."></textarea>
+                        <button class="material-button">Save Note</button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="notes" class="notes-section section">
-            <div class="section-header">
-                <h2>Notes Archive</h2>
-                <p>Your thoughts, organized</p>
-            </div>
-            <div class="notes-grid" id="notesGrid">
-                <!-- Notes will be dynamically added here -->
+        <section id="notes" class="section">
+            <div class="section-container">
+                <h2>Notes</h2>
+                <div id="saved-notes" class="glass-effect">
+                    <!-- Notes will be dynamically added here -->
+                </div>
             </div>
         </section>
     </main>
