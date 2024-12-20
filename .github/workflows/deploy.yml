@@ -16,19 +16,19 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04  # Explicitly specify Ubuntu version
+    runs-on: ubuntu-22.04
     
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node.js (Optional)
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
 
-      - name: Install dependencies
+      - name: Install dependencies (Optional)
         run: |
           if [ -f package.json ]; then
             npm ci
@@ -36,7 +36,7 @@ jobs:
             echo "No package.json found, skipping npm install"
           fi
 
-      - name: Validate HTML
+      - name: Validate HTML (Optional)
         uses: Cyb3r-Jak3/html5validator-action@v7.2.0
         with:
           root: .
@@ -48,26 +48,23 @@ jobs:
 
       - name: Build project
         run: |
-          # Create a build directory
+          # Ensure build directory contains required files
           mkdir -p build
-          # Copy necessary files to build directory
-          cp -r index.html style.css app.js images/* build/ 2>/dev/null || :
+          cp -r index.html style.css app.js images build/ 2>/dev/null || :
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: build  # Upload the build directory instead of entire project
+          path: build
 
   deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-22.04  # Match build job's Ubuntu version
+    runs-on: ubuntu-22.04
     needs: build
     
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-        with:
-          timeout: 600000  # 10 minutes
