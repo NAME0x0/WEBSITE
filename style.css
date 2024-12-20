@@ -102,6 +102,8 @@
     --text-color: var(--light-text);
     --text-secondary: var(--light-text-secondary);
     --hover-bg: var(--light-hover);
+    --glass-bg: rgba(255, 255, 255, 0.8);
+    --glass-border: rgba(0, 0, 0, 0.1);
     color-scheme: light;
 }
 
@@ -114,6 +116,8 @@
     --text-color: var(--dark-text);
     --text-secondary: var(--dark-text-secondary);
     --hover-bg: var(--dark-hover);
+    --glass-bg: rgba(30, 30, 30, 0.8);
+    --glass-border: rgba(255, 255, 255, 0.1);
     color-scheme: dark;
 }
 
@@ -142,7 +146,7 @@ nav {
     padding: 0 var(--section-spacing);
     position: fixed;
     width: 100%;
-    z-index: 100;
+    z-index: 1000;
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--glass-border);
@@ -228,6 +232,8 @@ nav ul li a:hover::after {
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+    z-index: 1;
 }
 
 .section-container {
@@ -240,6 +246,9 @@ nav ul li a:hover::after {
     border: 1px solid var(--glass-border);
     -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);
+    color: var(--text-color);
+    position: relative;
+    z-index: 1;
 }
 
 /* Section-Specific Background Colors with smooth transitions */
@@ -253,33 +262,6 @@ nav ul li a:hover::after {
 
 #contact {
     background-color: var(--section-bg-3);
-}
-
-/* Shared Content Styling */
-.section-container {
-    max-width: var(--max-width);
-    margin: 0 auto;
-    text-align: center;
-    background: rgba(255, 255, 255, 0.9); /* Light background for readability */
-    padding: 40px;
-    border-radius: 15px;
-    box-shadow: var(--box-shadow);
-    /* Add smooth transition for transforms */
-    transition: transform var(--transition-duration) ease,
-                opacity var(--transition-duration) ease;
-    /* Hardware acceleration */
-    transform: translateZ(0);
-    /* Prevent flickering */
-    backface-visibility: hidden;
-    /* Improve text rendering */
-    -webkit-font-smoothing: antialiased;
-    transform: var(--gpu-transform);
-    will-change: transform, opacity;
-    -webkit-transform-style: preserve-3d;
-    transform-style: preserve-3d;
-    opacity: 0;
-    transform: translateY(20px);
-    animation: fadeInUp 0.8s var(--transition-timing) forwards;
 }
 
 /* Inputs and Textareas */
@@ -703,6 +685,10 @@ button:focus, a:focus {
 
 /* Smooth section transitions */
 @keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
     to {
         opacity: 1;
         transform: translateY(0);
@@ -769,10 +755,6 @@ button:focus, a:focus {
     }
 }
 
-.section > * {
-    animation: fadeScale 0.6s var(--transition-timing);
-}
-
 /* Utility Classes */
 .glass-effect {
     background: var(--glass-bg);
@@ -804,4 +786,9 @@ button:focus, a:focus {
     backface-visibility: hidden;
     perspective: 1000px;
     will-change: transform;
+}
+
+/* Update the section animations */
+.section > * {
+    animation: none; /* Remove the fadeScale animation */
 }

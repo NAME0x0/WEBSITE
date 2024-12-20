@@ -157,10 +157,9 @@ const StorageManager = {
 // Enhanced Theme Management
 const ThemeManager = {
     init() {
-        const savedTheme = StorageManager.get('theme') || 'dark';
+        const savedTheme = localStorage.getItem('theme') || 'dark';
         document.documentElement.setAttribute('data-theme', savedTheme);
         this.setupThemeToggle();
-        this.setupTransitionEffects();
     },
     
     setupThemeToggle() {
@@ -170,47 +169,13 @@ const ThemeManager = {
         });
     },
 
-    setupTransitionEffects() {
-        document.documentElement.style.setProperty('--page-transition', '0.8s');
-        
-        const sections = document.querySelectorAll('.section');
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                });
-            },
-            { threshold: 0.1 }
-        );
-
-        sections.forEach(section => {
-            section.style.opacity = '0';
-            section.style.transform = 'translateY(20px)';
-            observer.observe(section);
-        });
-    },
-
     toggleTheme() {
         const root = document.documentElement;
         const currentTheme = root.getAttribute('data-theme');
         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
         
-        // Add transition class
-        root.classList.add('theme-transitioning');
-        
-        // Animate theme change
-        requestAnimationFrame(() => {
-            root.setAttribute('data-theme', newTheme);
-            StorageManager.set('theme', newTheme);
-            
-            // Remove transition class after animation
-            setTimeout(() => {
-                root.classList.remove('theme-transitioning');
-            }, 800);
-        });
+        root.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
     }
 };
 
@@ -334,23 +299,13 @@ document.addEventListener('DOMContentLoaded', () => {
     ThemeManager.init();
     SearchManager.init();
     MaterialTransitions.init();
+    initCalculator();
     // ...existing code...
     
     // Add smooth page transitions
     window.addEventListener('beforeunload', () => {
         document.body.classList.add('page-transition');
     });
-});
-
-// Theme toggle functionality
-const themeToggle = document.getElementById('themeToggle');
-const root = document.documentElement;
-
-themeToggle.addEventListener('click', () => {
-    const currentTheme = root.getAttribute('data-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    root.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
 });
 
 // Initialize calculator
