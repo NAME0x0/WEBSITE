@@ -1,14 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WEBSITE</title>
+  <title>Modern Search & Tools</title>
+  <!-- Material Icons and Fonts -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Navigation -->
-  <nav>
+  <!-- Material Design FAB for theme toggle -->
+  <button class="theme-toggle material-fab" id="themeToggle">
+    <span class="material-icons">dark_mode</span>
+  </button>
+
+  <!-- Material Design Navigation -->
+  <nav class="material-nav">
     <ul>
       <li><a href="#search">Home</a></li>
       <li><a href="#notes">Notes</a></li>
@@ -20,69 +28,87 @@
 
   <!-- Sections -->
   <section id="search" class="section">
-    <div class="section-container">
-      <h1>Welcome to WEBSITE</h1>
-      <input type="text" id="searchBar" placeholder="Search...">
+    <div class="section-container material-card">
+      <div class="search-container">
+        <div class="material-search-wrapper">
+          <span class="material-icons">search</span>
+          <input type="text" class="search-bar material-input" id="searchBar" placeholder="Search anything..." autocomplete="off">
+        </div>
+        <div class="quick-tools">
+          <div class="tool-card material-card">
+            <span class="material-icons">note_add</span>
+            <h3>Quick Notes</h3>
+          </div>
+          <div class="tool-card material-card">
+            <span class="material-icons">calculate</span>
+            <h3>Calculator</h3>
+          </div>
+          <div class="tool-card material-card">
+            <span class="material-icons">bookmarks</span>
+            <h3>Bookmarks</h3>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
   
   <section id="notes" class="section">
-    <div class="section-container">
+    <div class="section-container material-card">
       <h2>Notes</h2>
-      <textarea id="notesArea" placeholder="Write your notes here..."></textarea>
-      <button id="saveNotes">Save Notes</button>
+      <textarea id="notesArea" class="material-input" placeholder="Write your notes here..."></textarea>
+      <button id="saveNotes" class="material-button">Save Notes</button>
     </div>
   </section>
   
   <section id="tools" class="section">
-  <div class="section-container">
+  <div class="section-container material-card">
     <h2>Tools</h2>
-    <button id="tool1">Calculator</button>
-    <button id="tool2">Stopwatch</button>
+    <button id="tool1" class="material-button">Calculator</button>
+    <button id="tool2" class="material-button">Stopwatch</button>
 
     <!-- Calculator UI -->
-    <div id="calculator" style="display: none;">
-      <input type="text" id="display" disabled />
+    <div id="calculator" class="hidden">
+      <input type="text" id="display" class="material-input" title="Calculator Display" placeholder="0" disabled />
       <div class="buttons">
-        <button class="btn" onclick="appendNumber(7)">7</button>
-        <button class="btn" onclick="appendNumber(8)">8</button>
-        <button class="btn" onclick="appendNumber(9)">9</button>
-        <button class="btn" onclick="appendOperator('+')">+</button>
+        <button class="btn material-button" onclick="appendNumber(7)">7</button>
+        <button class="btn material-button" onclick="appendNumber(8)">8</button>
+        <button class="btn material-button" onclick="appendNumber(9)">9</button>
+        <button class="btn material-button" onclick="appendOperator('+')">+</button>
         
-        <button class="btn" onclick="appendNumber(4)">4</button>
-        <button class="btn" onclick="appendNumber(5)">5</button>
-        <button class="btn" onclick="appendNumber(6)">6</button>
-        <button class="btn" onclick="appendOperator('-')">-</button>
+        <button class="btn material-button" onclick="appendNumber(4)">4</button>
+        <button class="btn material-button" onclick="appendNumber(5)">5</button>
+        <button class="btn material-button" onclick="appendNumber(6)">6</button>
+        <button class="btn material-button" onclick="appendOperator('-')">-</button>
         
-        <button class="btn" onclick="appendNumber(1)">1</button>
-        <button class="btn" onclick="appendNumber(2)">2</button>
-        <button class="btn" onclick="appendNumber(3)">3</button>
-        <button class="btn" onclick="appendOperator('*')">*</button>
+        <button class="btn material-button" onclick="appendNumber(1)">1</button>
+        <button class="btn material-button" onclick="appendNumber(2)">2</button>
+        <button class="btn material-button" onclick="appendNumber(3)">3</button>
+        <button class="btn material-button" onclick="appendOperator('*')">*</button>
         
-        <button class="btn" onclick="appendNumber(0)">0</button>
-        <button class="btn" onclick="clearDisplay()">C</button>
-        <button class="btn" onclick="calculateResult()">=</button>
-        <button class="btn" onclick="appendOperator('/')">/</button>
+        <button class="btn material-button" onclick="appendNumber(0)">0</button>
+        <button class="btn material-button" onclick="clearDisplay()">C</button>
+        <button class="btn material-button" onclick="calculateResult()">=</button>
+        <button class="btn material-button" onclick="appendOperator('/')">/</button>
       </div>
     </div>
   </div>
 </section>
   
   <section id="portfolio" class="section">
-    <div class="section-container">
+    <div class="section-container material-card">
       <h2>Portfolio</h2>
       <p>Your projects, skills, and achievements will go here.</p>
     </div>
   </section>
   
   <section id="contact" class="section">
-    <div class="section-container">
+    <div class="section-container material-card">
       <h2>About/Contact</h2>
       <form id="contactForm">
-        <input type="text" id="name" placeholder="Your Name" required>
-        <input type="email" id="email" placeholder="Your Email" required>
-        <textarea id="message" placeholder="Your Message" required></textarea>
-        <button type="submit">Send</button>
+        <input type="text" id="name" class="material-input" placeholder="Your Name" required>
+        <input type="email" id="email" class="material-input" placeholder="Your Email" required>
+        <textarea id="message" class="material-input" placeholder="Your Message" required></textarea>
+        <button type="submit" class="material-button">Send</button>
       </form>
     </div>
   </section>  

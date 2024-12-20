@@ -37,14 +37,14 @@ let operator = "";
 // Append number to the display
 function appendNumber(number) {
   currentInput += number;
-  document.getElementById("display").value = currentInput;
+  updateCalculatorDisplay(currentInput);
 }
 
 // Append operator to the display
 function appendOperator(op) {
   if (currentInput !== "") {
     currentInput += " " + op + " ";
-    document.getElementById("display").value = currentInput;
+    updateCalculatorDisplay(currentInput);
   }
 }
 
@@ -81,19 +81,217 @@ const nav = document.querySelector('nav');
 // Variable to store the last scroll position
 let lastScrollTop = 0;
 
-// Function to handle the scroll event
-window.addEventListener('scroll', function() {
-    let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
-
-    // Check if the page has been scrolled down
-    if (currentScroll > lastScrollTop) {
-        // Add the 'shrink' class to shrink the navbar
-        nav.classList.add('shrink');
-    } else {
-        // Remove the 'shrink' class to restore the navbar to normal size
-        nav.classList.remove('shrink');
-    }
-
-    // Update the last scroll position
-    lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+// Smooth scrolling implementation with performance optimization
+document.querySelectorAll('nav a').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href');
+        const targetSection = document.querySelector(targetId);
+        
+        // Use requestAnimationFrame for smooth performance
+        requestAnimationFrame(() => {
+            targetSection.scrollIntoView({
+                behavior: 'smooth',
+                inline: 'start'
+            });
+        });
+    });
 });
+
+// Optimize scroll performance with throttling
+function throttle(func, limit) {
+    let inThrottle;
+    return function() {
+        const args = arguments;
+        const context = this;
+        if (!inThrottle) {
+            func.apply(context, args);
+            inThrottle = true;
+            setTimeout(() => inThrottle = false, limit);
+        }
+    }
+}
+
+// Optimized navbar shrink behavior
+const handleScroll = throttle(() => {
+    const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+    
+    // Use requestAnimationFrame for smooth class toggling
+    requestAnimationFrame(() => {
+        if (currentScroll > lastScrollTop) {
+            nav.classList.add('shrink');
+        } else {
+            nav.classList.remove('shrink');
+        }
+        lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+    });
+}, 100); // Throttle to 10 times per second
+
+window.addEventListener('scroll', handleScroll);
+
+// Optimize calculator display updates
+function updateCalculatorDisplay(value) {
+    requestAnimationFrame(() => {
+        document.getElementById("display").value = value;
+    });
+}
+
+// Local Storage Manager
+const StorageManager = {
+    set: (key, value) => {
+        try {
+            localStorage.setItem(key, JSON.stringify(value));
+        } catch (e) {
+            console.warn('Storage quota exceeded');
+        }
+    },
+    get: (key) => {
+        try {
+            return JSON.parse(localStorage.getItem(key));
+        } catch {
+            return null;
+        }
+    }
+};
+
+// Theme Management
+const ThemeManager = {
+    init() {
+        const savedTheme = StorageManager.get('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        this.setupThemeToggle();
+    },
+    
+    setupThemeToggle() {
+        const themeToggle = document.getElementById('themeToggle');
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            StorageManager.set('theme', newTheme);
+        });
+    }
+};
+
+// Enhanced Search Functionality
+const SearchManager = {
+    init() {
+        const searchBar = document.getElementById('searchBar');
+        this.setupSearchHistory();
+        this.setupAutocomplete(searchBar);
+    },
+
+    setupSearchHistory() {
+        const history = StorageManager.get('searchHistory') || [];
+        // Implementation for search history
+    },
+
+    setupAutocomplete(searchBar) {
+        searchBar.addEventListener('input', this.debounce(async (e) => {
+            const query = e.target.value;
+            if (query.length < 2) return;
+            
+            try {
+                // Implement local first search before making network requests
+                const localResults = this.searchLocal(query);
+                this.showResults(localResults);
+                
+                // Then fetch online results if needed
+                const onlineResults = await this.searchOnline(query);
+                this.showResults([...localResults, ...onlineResults]);
+            } catch (error) {
+                console.error('Search error:', error);
+            }
+        }, 300));
+    },
+
+    searchLocal(query) {
+        // Search through local storage, notes, and cached data
+        return [];
+    },
+
+    async searchOnline(query) {
+        // Implement privacy-focused meta search
+        return [];
+    },
+
+    debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+};
+
+// Material Design Ripple Effect
+function createRipple(event) {
+    const button = event.currentTarget;
+    const ripple = document.createElement('span');
+    const diameter = Math.max(button.clientWidth, button.clientHeight);
+    
+    ripple.style.width = ripple.style.height = `${diameter}px`;
+    ripple.style.left = `${event.clientX - button.offsetLeft - diameter / 2}px`;
+    ripple.style.top = `${event.clientY - button.offsetTop - diameter / 2}px`;
+    ripple.classList.add('ripple');
+    
+    button.appendChild(ripple);
+    ripple.addEventListener('animationend', () => ripple.remove());
+}
+
+// Apply ripple effect to all material buttons
+document.querySelectorAll('.material-fab, .material-button').forEach(button => {
+    button.addEventListener('click', createRipple);
+});
+
+// Enhanced Material Design Transitions
+const MaterialTransitions = {
+    init() {
+        this.setupCardTransitions();
+        this.setupInputTransitions();
+    },
+
+    setupCardTransitions() {
+        document.querySelectorAll('.material-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                requestAnimationFrame(() => {
+                    card.style.transform = 'translateY(-2px)';
+                });
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                requestAnimationFrame(() => {
+                    card.style.transform = 'translateY(0)';
+                });
+            });
+        });
+    },
+
+    setupInputTransitions() {
+        document.querySelectorAll('.material-input').forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentElement.classList.add('focused');
+            });
+            
+            input.addEventListener('blur', () => {
+                if (!input.value) {
+                    input.parentElement.classList.remove('focused');
+                }
+            });
+        });
+    }
+};
+
+// Initialize everything
+document.addEventListener('DOMContentLoaded', () => {
+    ThemeManager.init();
+    SearchManager.init();
+    MaterialTransitions.init();
+    // ...existing code...
+});
+
+// ...existing code...
