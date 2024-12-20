@@ -75,6 +75,16 @@
     --content-max-width: 1440px;
     --section-spacing: clamp(2rem, 5vw, 5rem);
     --grid-gap: clamp(1rem, 2vw, 2rem);
+
+    /* New modern color palette */
+    --primary-gradient: linear-gradient(135deg, var(--dark-primary), var(--dark-secondary));
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --card-hover-transform: translateY(-5px);
+    
+    /* Animation properties */
+    --bounce-timing: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --float-timing: cubic-bezier(0.43, 0.01, 0.17, 1);
 }
 
 /* Light theme variables */
@@ -446,10 +456,29 @@ button:focus, a:focus {
     background: linear-gradient(135deg, var(--dark-primary), var(--dark-secondary));
     border-radius: 24px;
     transition: transform 0.3s var(--transition-timing);
+    position: relative;
+    overflow: hidden;
+    background: var(--primary-gradient);
 }
 
 .tool-card:hover {
     transform: translateY(-5px);
+}
+
+.tool-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s var(--float-timing);
+}
+
+.tool-card:hover::before {
+    opacity: 1;
 }
 
 /* Theme toggle button */
@@ -510,6 +539,20 @@ button:focus, a:focus {
     .calculator {
         max-width: 100%;
     }
+
+    .tools-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .material-card {
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+    }
+
+    .tool-card::before {
+        display: none;
+    }
 }
 
 /* Material Design Components */
@@ -532,10 +575,17 @@ button:focus, a:focus {
         rgba(255, 255, 255, 0.01)
     );
     border: 1px solid rgba(255, 255, 255, 0.05);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    transition: all 0.4s var(--bounce-timing);
 }
 
 .material-card:hover {
     box-shadow: var(--md-elevation-4);
+    transform: var(--card-hover-transform);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
 }
 
 .material-card::before {
@@ -743,4 +793,37 @@ button:focus, a:focus {
 
 .section > * {
     animation: fadeScale 0.6s var(--transition-timing);
+}
+
+/* Utility Classes */
+.glass-effect {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+}
+
+.hover-float {
+    transition: transform 0.3s var(--float-timing);
+}
+
+.hover-float:hover {
+    transform: translateY(-8px);
+}
+
+/* Performance Optimizations */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+.hardware-accelerated {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+    will-change: transform;
 }
