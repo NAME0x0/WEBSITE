@@ -300,6 +300,7 @@ document.addEventListener('DOMContentLoaded', () => {
     SearchManager.init();
     MaterialTransitions.init();
     initCalculator();
+    initNotes();
     // ...existing code...
     
     // Add smooth page transitions
@@ -314,11 +315,14 @@ function initCalculator() {
     const display = calculator.querySelector('.calculator-display');
     const buttonsContainer = calculator.querySelector('.calculator-buttons');
     
+    // Clear previous value
+    display.value = '';
+    
     const buttons = [
         '7', '8', '9', '/',
         '4', '5', '6', '*',
         '1', '2', '3', '-',
-        '0', '.', '=', '+'
+        'C', '0', '=', '+'
     ];
     
     buttons.forEach(btn => {
@@ -331,7 +335,9 @@ function initCalculator() {
         buttonsContainer.appendChild(button);
         
         button.addEventListener('click', () => {
-            if(btn === '=') {
+            if(btn === 'C') {
+                display.value = '';
+            } else if(btn === '=') {
                 try {
                     display.value = eval(display.value);
                 } catch(e) {
@@ -342,6 +348,36 @@ function initCalculator() {
             }
         });
     });
+}
+
+// Update notes functionality
+function initNotes() {
+    const notesArea = document.querySelector('.notes-box');
+    const saveButton = notesArea.nextElementSibling;
+    
+    // Load saved notes
+    const savedNotes = localStorage.getItem('notes');
+    if (savedNotes) {
+        notesArea.value = savedNotes;
+    }
+    
+    // Save notes
+    saveButton.addEventListener('click', () => {
+        localStorage.setItem('notes', notesArea.value);
+        showToast('Notes saved successfully!');
+    });
+}
+
+// Add toast notification
+function showToast(message) {
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.remove();
+    }, 3000);
 }
 
 // Initialize everything when DOM is loaded
