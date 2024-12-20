@@ -17,10 +17,24 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-22.04  # Explicitly specify Ubuntu version
-
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          if [ -f package.json ]; then
+            npm ci
+          else
+            echo "No package.json found, skipping npm install"
+          fi
 
       - name: Validate HTML
         uses: Cyb3r-Jak3/html5validator-action@v7.2.0
@@ -42,7 +56,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: build  # Upload the build directory instead of the entire project
+          path: build  # Upload the build directory instead of entire project
 
   deploy:
     environment:
