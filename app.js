@@ -154,21 +154,62 @@ const StorageManager = {
     }
 };
 
-// Theme Management
+// Enhanced Theme Management
 const ThemeManager = {
     init() {
         const savedTheme = StorageManager.get('theme') || 'dark';
         document.documentElement.setAttribute('data-theme', savedTheme);
         this.setupThemeToggle();
+        this.setupTransitionEffects();
     },
     
     setupThemeToggle() {
         const themeToggle = document.getElementById('themeToggle');
         themeToggle.addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', newTheme);
+            this.toggleTheme();
+        });
+    },
+
+    setupTransitionEffects() {
+        document.documentElement.style.setProperty('--page-transition', '0.8s');
+        
+        const sections = document.querySelectorAll('.section');
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            },
+            { threshold: 0.1 }
+        );
+
+        sections.forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(20px)';
+            observer.observe(section);
+        });
+    },
+
+    toggleTheme() {
+        const root = document.documentElement;
+        const currentTheme = root.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        
+        // Add transition class
+        root.classList.add('theme-transitioning');
+        
+        // Animate theme change
+        requestAnimationFrame(() => {
+            root.setAttribute('data-theme', newTheme);
             StorageManager.set('theme', newTheme);
+            
+            // Remove transition class after animation
+            setTimeout(() => {
+                root.classList.remove('theme-transitioning');
+            }, 800);
         });
     }
 };
@@ -259,13 +300,15 @@ const MaterialTransitions = {
         document.querySelectorAll('.material-card').forEach(card => {
             card.addEventListener('mouseenter', () => {
                 requestAnimationFrame(() => {
-                    card.style.transform = 'translateY(-2px)';
+                    card.style.transform = 'translateY(-5px) scale(1.02)';
+                    card.style.boxShadow = '0 8px 16px rgba(0,0,0,0.2)';
                 });
             });
             
             card.addEventListener('mouseleave', () => {
                 requestAnimationFrame(() => {
-                    card.style.transform = 'translateY(0)';
+                    card.style.transform = 'translateY(0) scale(1)';
+                    card.style.boxShadow = '';
                 });
             });
         });
@@ -286,12 +329,17 @@ const MaterialTransitions = {
     }
 };
 
-// Initialize everything
+// Initialize everything with enhanced animations
 document.addEventListener('DOMContentLoaded', () => {
     ThemeManager.init();
     SearchManager.init();
     MaterialTransitions.init();
     // ...existing code...
+    
+    // Add smooth page transitions
+    window.addEventListener('beforeunload', () => {
+        document.body.classList.add('page-transition');
+    });
 });
 
 // ...existing code...
