@@ -139,9 +139,18 @@ body {
     overflow-x: hidden;
 }
 
-/* Applying the content-visibility to the .section class, dont add the style stuff onto the HTML side pls and thankyou :> */
-.section {
-    content-visibility: auto;
+/* Applying the content-visibility to the .section class with fallback for unsupported browsers */
+@supports (content-visibility: auto) {
+    .section {
+        content-visibility: auto;
+    }
+}
+
+/* Fallback for browsers that don't support content-visibility */
+@supports not (content-visibility: auto) {
+    .section {
+        display: block;
+    }
 }
 
 /* Normal Navigation Bar */
