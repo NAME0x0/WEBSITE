@@ -313,59 +313,118 @@ document.addEventListener('DOMContentLoaded', () => {
 function initCalculator() {
     const calculator = document.querySelector('.calculator');
     const display = calculator.querySelector('.calculator-display');
-    const buttonsContainer = calculator.querySelector('.calculator-buttons');
+    const basicButtons = calculator.querySelector('.calculator-buttons');
+    const scientificButtons = calculator.querySelector('.scientific-buttons');
+    const toggleButton = calculator.querySelector('.calculator-toggle');
     
-    // Clear previous value
-    display.value = '';
-    
-    const buttons = [
+    // Basic calculator buttons
+    const basicOps = [
         '7', '8', '9', '/',
         '4', '5', '6', '*',
         '1', '2', '3', '-',
         'C', '0', '=', '+'
     ];
     
+    // Scientific calculator buttons
+    const scientificOps = [
+        'sin', 'cos', 'tan', 'π',
+        'log', 'ln', 'e', '^',
+        '√', '(', ')', '%',
+        'x²', 'x³', '1/x', '!'
+    ];
+    
+    // Create basic buttons
+    createButtons(basicButtons, basicOps);
+    // Create scientific buttons
+    createButtons(scientificButtons, scientificOps);
+    
+    // Toggle scientific mode
+    toggleButton.addEventListener('click', () => {
+        calculator.classList.toggle('scientific');
+        toggleButton.textContent = calculator.classList.contains('scientific') 
+            ? 'Basic Mode' 
+            : 'Scientific Mode';
+    });
+}
+
+function createButtons(container, buttons) {
     buttons.forEach(btn => {
         const button = document.createElement('button');
         button.textContent = btn;
         button.className = 'calculator-btn';
-        if(['+', '-', '*', '/', '='].includes(btn)) {
-            button.classList.add('operator');
+        if(['sin', 'cos', 'tan', 'log', 'ln'].includes(btn)) {
+            button.classList.add('scientific-op');
         }
-        buttonsContainer.appendChild(button);
+        container.appendChild(button);
         
-        button.addEventListener('click', () => {
-            if(btn === 'C') {
-                display.value = '';
-            } else if(btn === '=') {
-                try {
-                    display.value = eval(display.value);
-                } catch(e) {
-                    display.value = 'Error';
-                }
-            } else {
-                display.value += btn;
-            }
-        });
+        button.addEventListener('click', () => handleCalculatorInput(btn));
     });
 }
 
-// Update notes functionality
+function handleCalculatorInput(value) {
+    const display = document.querySelector('.calculator-display');
+    
+    switch(value) {
+        case 'C':
+            display.value = '';
+            break;
+        case '=':
+            try {
+                display.value = evaluateExpression(display.value);
+            } catch(e) {
+                display.value = 'Error';
+            }
+            break;
+        default:
+            display.value += value;
+    }
+}
+
+function evaluateExpression(expr) {
+    // Add scientific calculator evaluation logic here
+    return eval(expr); // Basic evaluation for now
+}
+
+// Enhanced notes functionality
 function initNotes() {
     const notesArea = document.querySelector('.notes-box');
     const saveButton = notesArea.nextElementSibling;
+    const notesGrid = document.getElementById('saved-notes');
     
-    // Load saved notes
-    const savedNotes = localStorage.getItem('notes');
-    if (savedNotes) {
-        notesArea.value = savedNotes;
-    }
+    // Load and display saved notes
+    displaySavedNotes();
     
-    // Save notes
     saveButton.addEventListener('click', () => {
-        localStorage.setItem('notes', notesArea.value);
-        showToast('Notes saved successfully!');
+        if (!notesArea.value.trim()) return;
+        
+        const note = {
+            content: notesArea.value,
+            timestamp: new Date().toISOString(),
+            id: Date.now()
+        };
+        
+        const notes = JSON.parse(localStorage.getItem('notes') || '[]');
+        notes.unshift(note);
+        localStorage.setItem('notes', JSON.stringify(notes));
+        
+        displaySavedNotes();
+        notesArea.value = '';
+        showToast('Note saved successfully!');
     });
+}
+
+function displaySavedNotes() {
+    const notesGrid = document.getElementById('saved-notes');
+    const notes = JSON.parse(localStorage.getItem('notes') || '[]');
+    
+    notesGrid.innerHTML = notes.map(note => `
+        <div class="note-card">
+            <p>${note.content}</p>
+            <span class="note-timestamp">
+                ${new Date(note.timestamp).toLocaleDateString()}
+            </span>
+        </div>
+    `).join('');
 }
 
 // Add toast notification

@@ -40,10 +40,13 @@
                     <div class="tool-card">
                         <h3>Calculator</h3>
                         <div class="calculator">
-                            <label for="calc-display">Calculator Display</label>
+                            <button class="calculator-toggle">Scientific Mode</button>
                             <input type="text" id="calc-display" class="calculator-display" title="Calculator Display" placeholder="0" disabled>
                             <div class="calculator-buttons">
                                 <!-- Buttons will be added by JavaScript -->
+                            </div>
+                            <div class="scientific-buttons">
+                                <!-- Scientific buttons added by JS -->
                             </div>
                         </div>
                     </div>
@@ -58,9 +61,11 @@
 
         <section id="notes" class="section">
             <div class="section-container">
-                <h2>Notes</h2>
-                <div id="saved-notes" class="glass-effect">
-                    <!-- Notes will be dynamically added here -->
+                <h2>Notes Archive</h2>
+                <div class="notes-container">
+                    <div class="saved-notes-grid" id="saved-notes">
+                        <!-- Notes will be dynamically added here -->
+                    </div>
                 </div>
             </div>
         </section>
@@ -68,7 +73,12 @@
 
     <footer>
         <div class="footer-content">
-            <p>© 2024 Workspace. Made with ❤️</p>
+            <div class="footer-links">
+                <a href="#about">About</a>
+                <a href="#privacy">Privacy</a>
+                <a href="#terms">Terms</a>
+            </div>
+            <p>© 2024 Modern Workspace</p>
         </div>
     </footer>
 
