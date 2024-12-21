@@ -36,34 +36,15 @@ jobs:
 
       - name: Validate HTML
         uses: Cyb3r-Jak3/html5validator-action@v7.2.0
-      - uses: actions/checkout@v4
-      
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
-          
-      - name: Install dependencies
-        run: |
-          if [ -e package.json ]; then
-            npm ci
-          fi
-          
-      - name: Set up project structure
-        run: |
-          mkdir -p dist
-          cp -r index.html dist/
-          cp -r src dist/
-          cp style.css dist/
-          cp app.js dist/
-          if [ -d "images" ]; then
-            cp -r images dist/
-          fi
-          
+          root: dist/
+          format: text
+          log_level: INFO
+          config: .html5validator.yml
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
-        
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -75,7 +56,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-      
+    
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
