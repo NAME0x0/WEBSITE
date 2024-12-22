@@ -1012,3 +1012,80 @@ footer {
     from { transform: translateY(100%); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
 }
+
+/* Modern Footer Styling- centered footer for better seeing purposes mhm yes its like 3:30 rn omg */
+footer {
+    background: var(--glass-bg);
+    border-top: 1px solid var(--glass-border);
+    padding: 2rem var(--section-spacing);
+    margin-top: auto;
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+}
+
+.footer-logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.footer-links {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.footer-links a {
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    transition: color 0.3s var(--transition-timing);
+}
+
+.footer-links a:hover {
+    color: var(--accent-color);
+}
+
+.footer-social-icons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.footer-social-icons a {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--button-bg);
+    border-radius: 50%;
+    color: var(--text-secondary);
+    transition: background 0.3s var(--transition-timing), transform 0.3s var(--float-timing);
+}
+
+.footer-social-icons a:hover {
+    background: var(--hover-color);
+    transform: translateY(-4px);
+}
+
+.footer-credits {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-top: 1rem;
+    opacity: 0.7;
+}
+
+.footer-credits a {
+    color: var(--accent-color);
+    text-decoration: none;
+}
+
+.footer-credits a:hover {
+    text-decoration: underline;
+}
