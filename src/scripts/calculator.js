@@ -89,6 +89,9 @@ export class Calculator {
             case '!':
                 this.factorial();
                 break;
+            case '=':
+                this.calculate();
+                break;
             default:
                 this.handleBasicInput(value);
         }
@@ -97,23 +100,70 @@ export class Calculator {
     handleTrig(func) {
         const value = parseFloat(this.display.value);
         const inRadians = value * (Math.PI / 180); // Convert to radians
-        this.display.value = Math[func](inRadians);
+        this.display.value = this.roundResult(Math[func](inRadians));
     }
 
     handleLog(func) {
         const value = parseFloat(this.display.value);
-        this.display.value = func === 'log' ? Math.log10(value) : Math.log(value);
+        if (value <= 0 && func === 'log') {
+            this.display.value = 'Error';
+        } else {
+            this.display.value = this.roundResult(func === 'log' ? Math.log10(value) : Math.log(value));
+        }
     }
 
     handleSqrt() {
-        this.display.value = Math.sqrt(parseFloat(this.display.value));
+        const value = parseFloat(this.display.value);
+        if (value < 0) {
+            this.display.value = 'Error';
+        } else {
+            this.display.value = this.roundResult(Math.sqrt(value));
+        }
     }
 
     factorial() {
         const n = parseInt(this.display.value);
+        if (n < 0) {
+            this.display.value = 'Error';
+            return;
+        }
         let result = 1;
         for(let i = 2; i <= n; i++) result *= i;
-        this.display.value = result;
+        this.display.value = this.roundResult(result);
+    }
+
+    roundResult(value) {
+        return Math.round(value * 1000000) / 1000000; // Round to 6 decimal places
+    }
+
+    square() {
+        const value = parseFloat(this.display.value);
+        this.display.value = this.roundResult(value * value);
+    }
+
+    cube() {
+        const value = parseFloat(this.display.value);
+        this.display.value = this.roundResult(value * value * value);
+    }
+
+    calculate() {
+        try {
+            // If the expression is in scientific mode, parse it using eval
+            if (this.scientific) {
+                this.display.value = this.roundResult(eval(this.display.value.replace('×', '*').replace('÷', '/')));
+            }
+        } catch (e) {
+            this.display.value = 'Error';
+        }
+    }
+
+    handleBasicInput(value) {
+        if (this.newNumber) {
+            this.display.value = value;
+            this.newNumber = false;
+        } else {
+            this.display.value += value;
+        }
     }
 
     setupScientificMode() {
