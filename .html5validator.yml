@@ -1,7 +1,0 @@
-root: dist/
-match: "*.html"
-ignore:
-  - "dist/vendor/*"
-show-warnings: true
-format: text
-log_level: INFO
