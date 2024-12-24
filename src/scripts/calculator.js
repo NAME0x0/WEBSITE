@@ -2,52 +2,54 @@ export class Calculator {
     constructor(container) {
         this.container = container;
         this.display = container.querySelector('.calculator-display');
-        this.scientific = false;
+        this.memory = 0;
+        this.lastInput = '';
+        this.newNumber = true;
         this.init();
     }
 
     init() {
-        this.setupDisplay();
+        this.display.value = '0';
         this.setupButtons();
         this.setupScientificMode();
     }
 
-    setupDisplay() {
-        this.display.value = '0';
-        this.lastNumber = '';
-        this.operator = null;
-        this.newNumber = true;
-    }
-
     setupButtons() {
         const basicButtons = [
-            '7', '8', '9', '÷',
-            '4', '5', '6', '×',
-            '1', '2', '3', '-',
-            '0', '.', '=', '+'
+            ['7', '8', '9', '÷'],
+            ['4', '5', '6', '×'],
+            ['1', '2', '3', '-'],
+            ['C', '0', '=', '+']
         ];
 
         const scientificButtons = [
-            'sin', 'cos', 'tan', 'π',
-            'log', 'ln', 'e', '^',
-            '√', '(', ')', '%',
-            'x²', 'x³', '1/x', '!'
+            ['sin', 'cos', 'tan', 'π'],
+            ['log', 'ln', 'e', '^'],
+            ['√', '(', ')', '%'],
+            ['MC', 'MR', 'M+', 'M-']
         ];
 
-        this.createButtonGrid(basicButtons, false);
-        this.createButtonGrid(scientificButtons, true);
+        this.createButtonGrid(basicButtons, 'basic-buttons');
+        this.createButtonGrid(scientificButtons, 'scientific-buttons');
     }
 
-    createButtonGrid(buttons, isScientific) {
+    createButtonGrid(buttons, className) {
         const grid = document.createElement('div');
-        grid.className = isScientific ? 'scientific-buttons' : 'basic-buttons';
-        
-        buttons.forEach(btn => {
-            const button = document.createElement('button');
-            button.textContent = btn;
-            button.className = `calc-btn ${this.getButtonClass(btn)}`;
-            button.addEventListener('click', () => this.handleInput(btn));
-            grid.appendChild(button);
+        grid.className = className;
+
+        buttons.forEach(row => {
+            const rowDiv = document.createElement('div');
+            rowDiv.className = 'button-row';
+            
+            row.forEach(btn => {
+                const button = document.createElement('button');
+                button.textContent = btn;
+                button.className = `calc-btn ${this.getButtonClass(btn)}`;
+                button.addEventListener('click', () => this.handleInput(btn));
+                rowDiv.appendChild(button);
+            });
+            
+            grid.appendChild(rowDiv);
         });
 
         this.container.appendChild(grid);
@@ -61,109 +63,125 @@ export class Calculator {
     }
 
     handleInput(value) {
-        switch(value) {
-            case 'sin':
-            case 'cos':
-            case 'tan':
-                this.handleTrig(value);
-                break;
-            case 'log':
-            case 'ln':
-                this.handleLog(value);
-                break;
-            case '√':
-                this.handleSqrt();
-                break;
-            case 'π':
-                this.display.value = Math.PI;
-                break;
-            case 'e':
-                this.display.value = Math.E;
-                break;
-            case 'x²':
-                this.square();
-                break;
-            case 'x³':
-                this.cube();
-                break;
-            case '!':
-                this.factorial();
-                break;
-            case '=':
-                this.calculate();
-                break;
-            default:
-                this.handleBasicInput(value);
+        try {
+            switch(value) {
+                case 'C':
+                    this.clearDisplay();
+                    break;
+                case '=':
+                    this.evaluateExpression();
+                    break;
+                case 'sin':
+                case 'cos':
+                case 'tan':
+                    this.handleTrig(value);
+                    break;
+                case 'π':
+                    this.display.value = Math.PI;
+                    break;
+                case 'log':
+                    this.display.value = Math.log10(parseFloat(this.display.value));
+                    break;
+                case 'ln':
+                    this.display.value = Math.log(parseFloat(this.display.value));
+                    break;
+                case '√':
+                    this.display.value = Math.sqrt(parseFloat(this.display.value));
+                    break;
+                case 'x²':
+                    this.display.value = Math.pow(parseFloat(this.display.value), 2);
+                    break;
+                case 'x³':
+                    this.display.value = Math.pow(parseFloat(this.display.value), 3);
+                    break;
+                case '!':
+                    this.factorial();
+                    break;
+                case 'M+':
+                    this.memory += parseFloat(this.display.value);
+                    this.showMemoryIndicator();
+                    break;
+                case 'M-':
+                    this.memory -= parseFloat(this.display.value);
+                    this.showMemoryIndicator();
+                    break;
+                case 'MR':
+                    this.display.value = this.memory;
+                    break;
+                case 'MC':
+                    this.memory = 0;
+                    this.hideMemoryIndicator();
+                    break;
+                default:
+                    if (this.shouldResetDisplay) {
+                        this.display.value = value;
+                        this.shouldResetDisplay = false;
+                    } else {
+                        this.display.value += value;
+                    }
+            }
+        } catch (error) {
+            this.display.value = 'Error';
+            this.shouldResetDisplay = true;
         }
     }
 
-    handleTrig(func) {
-        const value = parseFloat(this.display.value);
-        const inRadians = value * (Math.PI / 180); // Convert to radians
-        this.display.value = this.roundResult(Math[func](inRadians));
-    }
-
-    handleLog(func) {
-        const value = parseFloat(this.display.value);
-        if (value <= 0 && func === 'log') {
+    evaluateExpression() {
+        try {
+            let expr = this.display.value
+                .replace(/×/g, '*')
+                .replace(/÷/g, '/')
+                .replace(/π/g, Math.PI)
+                .replace(/e/g, Math.E);
+            const result = Function('"use strict";return (' + expr + ')')();
+            this.display.value = Number.isInteger(result) ? result : result.toFixed(8);
+            this.shouldResetDisplay = true;
+        } catch (e) {
             this.display.value = 'Error';
-        } else {
-            this.display.value = this.roundResult(func === 'log' ? Math.log10(value) : Math.log(value));
-        }
-    }
-
-    handleSqrt() {
-        const value = parseFloat(this.display.value);
-        if (value < 0) {
-            this.display.value = 'Error';
-        } else {
-            this.display.value = this.roundResult(Math.sqrt(value));
+            this.shouldResetDisplay = true;
         }
     }
 
     factorial() {
         const n = parseInt(this.display.value);
-        if (n < 0) {
-            this.display.value = 'Error';
-            return;
-        }
+        if (n < 0) throw new Error('Invalid input');
         let result = 1;
-        for(let i = 2; i <= n; i++) result *= i;
-        this.display.value = this.roundResult(result);
+        for (let i = 2; i <= n; i++) result *= i;
+        this.display.value = result;
+        this.shouldResetDisplay = true;
     }
 
-    roundResult(value) {
-        return Math.round(value * 1000000) / 1000000; // Round to 6 decimal places
+    showMemoryIndicator() {
+        const indicator = this.container.querySelector('.memory-display');
+        if (indicator) indicator.classList.add('active');
     }
 
-    square() {
-        const value = parseFloat(this.display.value);
-        this.display.value = this.roundResult(value * value);
-    }
-
-    cube() {
-        const value = parseFloat(this.display.value);
-        this.display.value = this.roundResult(value * value * value);
+    hideMemoryIndicator() {
+        const indicator = this.container.querySelector('.memory-display');
+        if (indicator) indicator.classList.remove('active');
     }
 
     calculate() {
         try {
-            // If the expression is in scientific mode, parse it using eval
-            if (this.scientific) {
-                this.display.value = this.roundResult(eval(this.display.value.replace('×', '*').replace('÷', '/')));
-            }
+            let expression = this.display.value
+                .replace('×', '*')
+                .replace('÷', '/');
+            this.display.value = eval(expression);
+            this.newNumber = true;
         } catch (e) {
             this.display.value = 'Error';
         }
     }
 
-    handleBasicInput(value) {
-        if (this.newNumber) {
-            this.display.value = value;
-            this.newNumber = false;
-        } else {
-            this.display.value += value;
-        }
+    handleTrig(func) {
+        const value = parseFloat(this.display.value);
+        const inRadians = value * (Math.PI / 180);
+        this.display.value = Math[func](inRadians);
+        this.newNumber = true;
+    }
+
+    isOperator(value) {
+        return '+-×÷'.includes(value);
     }
 
     setupScientificMode() {

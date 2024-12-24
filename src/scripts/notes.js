@@ -1,138 +1,144 @@
 export class NotesManager {
     constructor(container) {
         this.container = container;
-        this.storage = localStorage;
-        this.notes = [];
+        this.notes = JSON.parse(localStorage.getItem('notes') || '[]');
         this.init();
     }
 
     init() {
-        this.setupNoteInput();
-        this.loadSavedNotes();
+        this.createNoteInput();
+        this.createNotesList();
         this.setupEventListeners();
+        this.renderNotes();
     }
 
-    setupNoteInput() {
+    createNoteInput() {
+        const noteForm = document.createElement('form');
+        noteForm.className = 'note-form';
+        
         const textarea = document.createElement('textarea');
         textarea.className = 'note-input';
-        textarea.placeholder = 'Write a note...';
-
-        const saveBtn = document.createElement('button');
-        saveBtn.className = 'save-note-btn';
-        saveBtn.textContent = 'Save';
-
-        this.container.querySelector('.notes-wrapper').appendChild(textarea);
-        this.container.querySelector('.notes-wrapper').appendChild(saveBtn);
+        textarea.placeholder = 'Write your note here...';
+        textarea.required = true;
+        
+        const buttonGroup = document.createElement('div');
+        buttonGroup.className = 'note-actions';
+        
+        const saveButton = document.createElement('button');
+        saveButton.type = 'submit';
+        saveButton.className = 'save-note-btn';
+        saveButton.textContent = 'Save';
+        
+        const clearButton = document.createElement('button');
+        clearButton.type = 'button';
+        clearButton.className = 'clear-note-btn';
+        clearButton.textContent = 'Clear';
+        
+        buttonGroup.appendChild(saveButton);
+        buttonGroup.appendChild(clearButton);
+        noteForm.appendChild(textarea);
+        noteForm.appendChild(buttonGroup);
+        
+        this.container.appendChild(noteForm);
+        
+        // Setup form handlers
+        noteForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.saveNote(textarea.value);
+            textarea.value = '';
+        });
+        
+        clearButton.addEventListener('click', () => {
+            textarea.value = '';
+            textarea.focus();
+        });
     }
 
-    loadSavedNotes() {
-        try {
-            const savedNotes = JSON.parse(this.storage.getItem('notes') || '[]');
-            this.notes = savedNotes;
-            this.renderNotes(this.notes);
-        } catch (e) {
-            console.error("Failed to load notes:", e);
-            this.notes = [];
-            this.renderNotes([]);
-        }
-    }
-
-    renderNotes(notes) {
-        const grid = document.createElement('div');
-        grid.className = 'notes-grid';
-
-        grid.innerHTML = notes.map(note => `
-            <div class="note-card glass-effect" data-id="${note.id}">
-                <p>${note.content}</p>
-                <div class="note-footer">
-                    <span class="note-date">${new Date(note.timestamp).toLocaleDateString()}</span>
-                    <button class="edit-note" aria-label="Edit note">✏️</button>
-                    <button class="delete-note" aria-label="Delete note">×</button>
-                </div>
-            </div>
-        `).join('');
-
-        const existingGrid = this.container.querySelector('.notes-grid');
-        if (existingGrid) existingGrid.remove();
-        this.container.appendChild(grid);
+    createNotesList() {
+        const notesGrid = document.createElement('div');
+        notesGrid.className = 'notes-grid';
+        this.container.appendChild(notesGrid);
     }
 
     setupEventListeners() {
-        const saveBtn = this.container.querySelector('.save-note-btn');
-        const textarea = this.container.querySelector('.note-input');
-
-        // Save note
-        saveBtn.addEventListener('click', () => {
-            const content = textarea.value.trim();
-            if (content === '') {
-                alert("Note content can't be empty!");
-                return;
-            }
-
-            const newNote = {
-                id: Date.now(),
-                content,
-                timestamp: new Date().toISOString()
-            };
-
-            this.notes.push(newNote);
-            this.saveNotes();
-            this.renderNotes(this.notes);
-            textarea.value = ''; // Clear the input
-        });
-
-        // Handle note deletion
-        this.container.addEventListener('click', (event) => {
-            if (event.target.classList.contains('delete-note')) {
-                const noteCard = event.target.closest('.note-card');
-                const noteId = noteCard.dataset.id;
+        // Delete note functionality
+        this.container.addEventListener('click', (e) => {
+            if (e.target.classList.contains('delete-note')) {
+                const noteId = parseInt(e.target.closest('.note-card').dataset.id);
                 this.deleteNote(noteId);
-            } else if (event.target.classList.contains('edit-note')) {
-                const noteCard = event.target.closest('.note-card');
-                const noteId = noteCard.dataset.id;
-                this.editNote(noteId);
             }
         });
     }
 
-    saveNotes() {
-        try {
-            this.storage.setItem('notes', JSON.stringify(this.notes));
-        } catch (e) {
-            console.error("Failed to save notes:", e);
+    renderNotes() {
+        const notesGrid = this.container.querySelector('.notes-grid');
+        notesGrid.innerHTML = this.notes.map(note => `
+            <div class="note-card" data-id="${note.id}">
+                <div class="note-content">${this.formatContent(note.content)}</div>
+                <div class="note-footer">
+                    <span class="note-date">${this.formatDate(note.timestamp)}</span>
+                    <button class="delete-note" title="Delete note">×</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    saveNote(content) {
+        if (!content.trim()) return;
+        
+        const note = {
+            id: Date.now(),
+            content: content.trim(),
+            timestamp: new Date().toISOString(),
+            lastModified: new Date().toISOString()
+        };
+
+        this.notes.unshift(note);
+        this.saveToStorage();
+        this.renderNotes();
+        this.showToast('Note saved successfully!');
+    }
+
+    deleteNote(id) {
+        const noteIndex = this.notes.findIndex(note => note.id === id);
+        if (noteIndex === -1) return;
+        
+        const note = this.notes[noteIndex];
+        if (confirm(`Delete note from ${this.formatDate(note.timestamp)}?`)) {
+            this.notes.splice(noteIndex, 1);
+            this.saveToStorage();
+            this.renderNotes();
+            this.showToast('Note deleted');
         }
     }
 
-    deleteNote(noteId) {
-        this.notes = this.notes.filter(note => note.id !== parseInt(noteId, 10));
-        this.saveNotes();
-        this.renderNotes(this.notes);
+    saveToStorage() {
+        localStorage.setItem('notes', JSON.stringify(this.notes));
     }
 
-    editNote(noteId) {
-        const note = this.notes.find(note => note.id === parseInt(noteId, 10));
-        if (!note) return;
+    formatContent(content) {
+        return content.replace(/\n/g, '<br>');
+    }
 
-        const textarea = this.container.querySelector('.note-input');
-        const saveBtn = this.container.querySelector('.save-note-btn');
+    formatDate(timestamp) {
+        const date = new Date(timestamp);
+        return new Intl.DateTimeFormat('en-US', {
+            month: 'short',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            hour12: true
+        }).format(date);
+    }
 
-        textarea.value = note.content; // Pre-fill textarea with the note content
-        saveBtn.textContent = 'Update'; // Change button text to "Update"
-
-        saveBtn.removeEventListener('click', this.saveNoteHandler);
-        saveBtn.addEventListener('click', () => {
-            const content = textarea.value.trim();
-            if (content === '') {
-                alert("Note content can't be empty!");
-                return;
-            }
-
-            note.content = content; // Update the note content
-            note.timestamp = new Date().toISOString(); // Update timestamp
-            this.saveNotes();
-            this.renderNotes(this.notes);
-            textarea.value = ''; // Clear the input
-            saveBtn.textContent = 'Save'; // Reset button text
-        });
+    showToast(message) {
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.remove();
+        }, 3000);
     }
 }

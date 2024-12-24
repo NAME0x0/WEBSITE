@@ -1,82 +1,50 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="system">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Workspace | Personal Dashboard</title>
-    <link rel="stylesheet" href="src/styles/core.css">
-    <link rel="stylesheet" href="src/styles/themes.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <title>Personalized Search Hub</title>
+    <meta name="description" content="Your personalized search hub with integrated tools">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/themes.css">
+    <!-- Preload critical assets -->
+    <link rel="preload" href="js/core.js" as="script">
+    <link rel="preload" href="css/style.css" as="style">
 </head>
 <body>
-    <div class="app-container">
-        <!-- Navigation -->
-        <nav class="main-nav glass-effect">
-            <div class="nav-brand">Workspace</div>
-            <div class="nav-controls">
-                <button class="theme-toggle" aria-label="Toggle theme">
-                    <svg class="sun-icon" viewBox="0 0 24 24"><!-- Sun SVG --></svg>
-                    <svg class="moon-icon" viewBox="0 0 24 24"><!-- Moon SVG --></svg>
-                </button>
-                <!-- Add these SVG icons -->
-                <svg class="hidden-svg">
-                    <symbol id="delete-icon" viewBox="0 0 24 24">
-                        <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" />
-                    </symbol>
-                    <symbol id="edit-icon" viewBox="0 0 24 24">
-                        <path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z" />
-                    </symbol>
-                </svg>
+    <div id="app">
+        <!-- Search Section -->
+        <section class="search-section">
+            <div class="search-engines">
+                <button class="engine-btn active" data-engine="google">G</button>
+                <button class="engine-btn" data-engine="ddg">D</button>
+                <button class="engine-btn" data-engine="bing">B</button>
             </div>
-        </nav>
+            <div class="search-box">
+                <input type="text" id="searchInput" autocomplete="off" placeholder="Search...">
+                <button id="searchBtn">Search</button>
+            </div>
+        </section>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Search Section -->
-            <section class="search-section glass-effect">
-                <div class="search-container">
-                    <input type="text" class="search-input" placeholder="Search anything...">
-                    <button class="search-button" title="Search" aria-label="Perform search">
-                        <svg viewBox="0 0 24 24"><!-- Search SVG --></svg>
-                    </button>
-                </div>
-            </section>
+        <!-- Quick Tools -->
+        <section class="tools-section">
+            <button class="tool-toggle" data-tool="notes">Quick Notes</button>
+            <button class="tool-toggle" data-tool="calculator">Calculator</button>
+            <button id="settingsToggle">
+                <svg class="icon" viewBox="0 0 24 24">
+                    <path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" />
+                </svg>
+            </button>
+        </section>
 
-            <!-- Tools Grid -->
-            <section class="tools-grid">
-                <!-- Calculator -->
-                <div class="tool-card glass-effect" id="calculator">
-                    <div class="tool-header">
-                        <h3>Calculator</h3>
-                        <button class="mode-toggle">Scientific</button>
-                    </div>
-                    <div class="calculator-wrapper">
-                        <span class="memory-display">M</span>
-                        <label for="calc-display" class="sr-only">Calculator Display</label>
-                        <input type="text" id="calc-display" class="calculator-display" title="Calculator Display" placeholder="0" disabled>
-                        <div class="basic-buttons">
-                            <!-- Basic buttons added by JS -->
-                        </div>
-                        <div class="scientific-buttons">
-                            <!-- Scientific buttons added by JS -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Notes -->
-                <div class="tool-card glass-effect" id="notes">
-                    <div class="tool-header">
-                        <h3>Quick Notes</h3>
-                        <button class="expand-toggle">Expand</button>
-                    </div>
-                    <div class="notes-wrapper">
-                        <!-- Notes content injected by JS -->
-                    </div>
-                </div>
-            </section>
-        </main>
+        <!-- Tool Panels (Hidden by default) -->
+        <div id="toolPanels">
+            <div class="panel" id="notesPanel"></div>
+            <div class="panel" id="calculatorPanel"></div>
+            <div class="panel" id="settingsPanel"></div>
+        </div>
     </div>
-    <!-- Scripts -->
-    <script type="module" src="src/scripts/main.js"></script>
+
+    <script type="module" src="js/core.js"></script>
 </body>
 </html>
