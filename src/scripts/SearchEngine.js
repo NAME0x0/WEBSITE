@@ -29,7 +29,11 @@ class SearchEngine {
         
         this.currentEngine = localStorage.getItem('defaultEngine') || 'google';
         this.searchHistory = [];
+        this.customEngines = JSON.parse(localStorage.getItem('customEngines') || '{}');
+        this.searchDelay = 300;
+        this.maxHistory = 100;
         this.init();
+        this.setupCustomEngines();
     }
 
     init() {
@@ -56,17 +60,29 @@ class SearchEngine {
     }
 
     async getSuggestions(query) {
+        if (!query.trim() || query.length < 2) return [];
+
         const engine = this.engines[this.currentEngine];
-        if (!engine.suggestUrl || query.length < 2) return [];
+        if (!engine.suggestUrl) return [];
 
         try {
-            const response = await fetch(`${engine.suggestUrl}?q=${encodeURIComponent(query)}`);
-            const data = await response.json();
-            return data[1] || [];
+            const results = await Promise.all([
+                this.getSearchHistory(query),
+                this.fetchOnlineSuggestions(query, engine)
+            ]);
+
+            return [...new Set([...results[0], ...results[1]])].slice(0, 10);
         } catch (error) {
             console.error('Error fetching suggestions:', error);
-            return [];
+            return this.getSearchHistory(query);
         }
+    }
+
+    getSearchHistory(query) {
+        return this.searchHistory
+            .filter(item => item.query.toLowerCase().includes(query.toLowerCase()))
+            .map(item => item.query)
+            .slice(0, 5);
     }
 
     addToHistory(query) {
@@ -81,6 +97,19 @@ class SearchEngine {
         localStorage.setItem('searchHistory', JSON.stringify(this.searchHistory));
         
         this.updateHistoryUI();
+    }
+
+    setupCustomEngines() {
+        const defaultCustomEngine = {
+            name: 'Custom',
+            url: 'https://${query}',
+            icon: 'path/to/default-icon.svg'
+        };
+
+        this.addCustomEngine = (engine) => {
+            this.customEngines[engine.name] = {...defaultCustomEngine, ...engine};
+            localStorage.setItem('customEngines', JSON.stringify(this.customEngines));
+        };
     }
 
     // ... rest of implementation

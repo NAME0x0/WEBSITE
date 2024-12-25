@@ -22,3 +22,32 @@
     --input-bg: rgba(0, 0, 0, 0.05);
     --shadow-color: rgba(0, 0, 0, 0.1);
 }
+
+/* Custom theme support */
+[data-theme="custom"] {
+    --bg-primary: var(--custom-bg-primary, #1a1a1a);
+    --bg-secondary: var(--custom-bg-secondary, #2d2d2d);
+    --text-primary: var(--custom-text-primary, #ffffff);
+    --text-secondary: var(--custom-text-secondary, rgba(255, 255, 255, 0.7));
+    --accent-primary: var(--custom-accent-primary, #6366f1);
+    --accent-secondary: var(--custom-accent-secondary, #3b82f6);
+}
+
+/* Theme transition animations */
+*, *::before, *::after {
+    transition: background-color 0.3s ease,
+                color 0.3s ease,
+                border-color 0.3s ease,
+                box-shadow 0.3s ease;
+}
+
+/* Smooth theme switching animation */
+.theme-transition {
+    animation: themeSwitch 0.5s ease;
+}
+
+@keyframes themeSwitch {
+    0% { filter: blur(0); }
+    50% { filter: blur(2px); }
+    100% { filter: blur(0); }
+}

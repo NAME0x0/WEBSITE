@@ -2,7 +2,10 @@ export class NotesManager {
     constructor(container) {
         this.container = container;
         this.notes = JSON.parse(localStorage.getItem('notes') || '[]');
+        this.categories = new Set(['Personal', 'Work', 'Ideas']);
+        this.tags = new Set();
         this.init();
+        this.enableRichText();
     }
 
     init() {
@@ -10,6 +13,29 @@ export class NotesManager {
         this.createNotesList();
         this.setupEventListeners();
         this.renderNotes();
+    }
+
+    enableRichText() {
+        const toolbar = document.createElement('div');
+        toolbar.className = 'rich-text-toolbar';
+        toolbar.innerHTML = `
+            <button data-command="bold" title="Bold"><b>B</b></button>
+            <button data-command="italic" title="Italic"><i>I</i></button>
+            <button data-command="underline" title="Underline"><u>U</u></button>
+            <select class="note-category">
+                ${Array.from(this.categories).map(cat => 
+                    `<option value="${cat}">${cat}</option>`
+                ).join('')}
+            </select>
+        `;
+
+        toolbar.addEventListener('click', e => {
+            if (e.target.dataset.command) {
+                document.execCommand(e.target.dataset.command, false, null);
+            }
+        });
+
+        this.container.insertBefore(toolbar, this.container.firstChild);
     }
 
     createNoteInput() {
@@ -86,11 +112,20 @@ export class NotesManager {
     saveNote(content) {
         if (!content.trim()) return;
         
+        const category = this.container.querySelector('.note-category').value;
+        const tags = content.match(/#[\w]+/g) || [];
+        
         const note = {
             id: Date.now(),
             content: content.trim(),
             timestamp: new Date().toISOString(),
-            lastModified: new Date().toISOString()
+            lastModified: new Date().toISOString(),
+            category,
+            tags,
+            style: {
+                color: this.currentColor,
+                fontSize: this.currentSize
+            }
         };
 
         this.notes.unshift(note);

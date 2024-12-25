@@ -6,6 +6,7 @@ export class Calculator {
         this.lastInput = '';
         this.newNumber = true;
         this.init();
+        this.addAdvancedFunctions();
     }
 
     init() {
@@ -112,6 +113,12 @@ export class Calculator {
                     this.memory = 0;
                     this.hideMemoryIndicator();
                     break;
+                case 'EE':
+                    this.scientificNotation();
+                    break;
+                case 'mod':
+                    this.appendOperator('%');
+                    break;
                 default:
                     if (this.shouldResetDisplay) {
                         this.display.value = value;
@@ -190,6 +197,22 @@ export class Calculator {
             this.scientific = !this.scientific;
             this.container.classList.toggle('scientific-mode');
             toggle.textContent = this.scientific ? 'Basic' : 'Scientific';
+        });
+    }
+
+    addAdvancedFunctions() {
+        const advancedFuncs = {
+            'sinh': Math.sinh,
+            'cosh': Math.cosh,
+            'tanh': Math.tanh,
+            'abs': Math.abs,
+            'rand': () => Math.random(),
+            'EE': (n, exp) => n * Math.pow(10, exp),
+            'mod': (a, b) => a % b
+        };
+
+        Object.entries(advancedFuncs).forEach(([name, func]) => {
+            this[name] = func;
         });
     }
 }
