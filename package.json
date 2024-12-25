@@ -1,0 +1,17 @@
+{
+  "name": "website",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "npm run build:css && npm run build:js",
+    "build:css": "sass src/styles/:dist/styles/ --style compressed",
+    "build:js": "terser src/scripts/ -o dist/scripts/ --compress --mangle",
+    "minify:html": "html-minifier --collapse-whitespace --remove-comments index.html -o dist/index.html"
+  },
+  "devDependencies": {
+    "sass": "^1.69.5",
+    "terser": "^5.24.0",
+    "html-minifier": "^4.0.0"
+  }
+}

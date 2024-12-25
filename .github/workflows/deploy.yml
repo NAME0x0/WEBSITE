@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,28 +24,13 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: |
-          npm install -g sass
-          npm install -g terser
-          npm install -g html-minifier
+        run: npm ci
 
       - name: Create dist directory
         run: mkdir -p dist/styles dist/scripts
 
-      - name: Process CSS
-        run: |
-          sass src/styles/:dist/styles/ --style compressed
-          cp src/styles/*.css dist/styles/
-
-      - name: Process JavaScript
-        run: |
-          for file in src/scripts/*.js; do
-            terser "$file" -c -m -o "dist/scripts/$(basename "$file")"
-          done
-
-      - name: Copy and minify HTML
-        run: |
-          html-minifier --collapse-whitespace --remove-comments --remove-optional-tags --remove-redundant-attributes --remove-script-type-attributes --remove-tag-whitespace --use-short-doctype --minify-css true --minify-js true index.html -o dist/index.html
+      - name: Build project
+        run: npm run build
 
       - name: Copy static assets
         run: |
@@ -66,12 +51,10 @@ jobs:
         uses: actions/deploy-pages@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: gh-pages
-          folder: dist
-          clean: true
 
-      - name: Deploy
+      - name: Deploy using peaceiris/actions-gh-pages
         uses: peaceiris/actions-gh-pages@v3
+        if: ${{ github.ref == 'refs/heads/main' }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
