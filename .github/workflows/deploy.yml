@@ -23,8 +23,10 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Clean install dependencies
+        run: |
+          npm ci
+          npm i -g sass terser html-minifier
 
       - name: Create dist directory
         run: mkdir -p dist/styles dist/scripts
