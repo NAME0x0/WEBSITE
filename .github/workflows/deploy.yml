@@ -14,53 +14,26 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-22.04
     steps:
-      # Checkout the repository
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Setup Node.js environment
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
 
-      # Step to install dependencies to sync package-lock.json
-      - name: Install dependencies to sync package-lock.json
-        run: npm install
-
-      # Clean install dependencies with npm ci
       - name: Clean install dependencies
-        run: npm ci
-        env:
-          CI: true
-
-      # Debug step: List installed node_modules
-      - name: List installed modules
-        run: ls -al node_modules
-
-      # Debug step: Display package-lock.json contents
-      - name: Display package-lock.json
-        run: cat package-lock.json
-
-      # Debug step: Inspect dependency tree
-      - name: Inspect dependency tree
-        run: npm ls
-
-      # Additional setup tools
-      - name: Install additional tools
         run: |
+          npm ci
           npm i -g sass terser html-minifier
 
-      # Create dist directory if it doesn't exist
       - name: Create dist directory
         run: mkdir -p dist/styles dist/scripts
 
-      # Run the build command
       - name: Build project
         run: npm run build
 
-      # Copy static assets to dist directory
       - name: Copy static assets
         run: |
           mkdir -p dist/assets
@@ -68,23 +41,19 @@ jobs:
             cp -r src/assets/* dist/assets/
           fi
 
-      # Configure GitHub Pages
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
-      # Upload build artifact
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: dist
 
-      # Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      # Additional peaceiris deployment (if necessary)
       - name: Deploy using peaceiris/actions-gh-pages
         uses: peaceiris/actions-gh-pages@v3
         if: ${{ github.ref == 'refs/heads/main' }}
