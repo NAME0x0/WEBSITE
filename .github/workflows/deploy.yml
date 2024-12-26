@@ -25,15 +25,13 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
-      # Debug step: Clear npm cache to avoid corrupt cache issues
-      - name: Clean npm cache
-        run: npm cache clean --force
+      # Step to install dependencies to sync package-lock.json
+      - name: Install dependencies to sync package-lock.json
+        run: npm install
 
-      # Install dependencies with additional logging
-      - name: Install dependencies
-        run: |
-          echo "Installing dependencies..."
-          npm ci
+      # Clean install dependencies with npm ci
+      - name: Clean install dependencies
+        run: npm ci
         env:
           CI: true
 
