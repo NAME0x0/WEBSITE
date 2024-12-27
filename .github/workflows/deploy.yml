@@ -68,11 +68,10 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
-      # Upload build artifact
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: build  # Upload the build directory instead of entire project
 
       # Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
