@@ -29,9 +29,15 @@ jobs:
       - name: Clean npm cache
         run: npm cache clean --force
 
-      # Install dependencies with additional logging
-      - name: Install dependencies
+      # Validate lockfile and install dependencies
+      - name: Validate and Install dependencies
         run: |
+          echo "Checking for lockfile consistency..."
+          npm install --package-lock-only
+          if ! git diff --exit-code package-lock.json; then
+            echo "Lockfile is inconsistent with package.json. Run 'npm install' locally to sync files.";
+            exit 1;
+          fi
           echo "Installing dependencies..."
           npm ci
         env:
