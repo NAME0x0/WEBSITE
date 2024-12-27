@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npm run build:css && npm run build:js",
     "build:css": "sass src/styles/:dist/styles/ --style compressed",
-    "build:js": "terser src/scripts/ -o dist/scripts/ --compress --mangle",
+    "build:js": "terser src/scripts/file1.js src/scripts/file2.js -o dist/scripts/main.js --compress --mangle",
     "minify:html": "html-minifier --input-dir src --output-dir dist --file-ext html --collapse-whitespace --remove-comments"
   },
   "dependencies": {
