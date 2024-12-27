@@ -25,10 +25,6 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
-      # Clean npm cache to avoid corrupt cache issues
-      - name: Clean npm cache
-        run: npm cache clean --force
-
       # Install dependencies using npm install (instead of npm ci)
       - name: Install dependencies
         run: npm install
