@@ -13,10 +13,16 @@ permissions:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    concurrency: ci-${{ github.sha }}
 
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
+
+      - name: Setup Node.js (if needed)
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
 
       - name: Install Dependencies
         run: npm install
@@ -24,18 +30,14 @@ jobs:
       - name: Build Site
         run: npm run build # Adjust if your build command is different.
 
-      - name: Upload Artifact
-        uses: actions/upload-pages-artifact@v1
-        with:
-          path: ./dist # Replace './dist' with your build output directory
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build-and-deploy
-    permissions:
-      pages: write
-      id-token: write
-
-    steps:
       - name: Deploy 🚀
-        uses: actions/deploy-pages@v1
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist # Replace './dist' with your build output directory
+          publish_branch: gh-pages
+          force_orphan: true
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: 'Deploy to GitHub Pages'
+          enable_jekyll: false
