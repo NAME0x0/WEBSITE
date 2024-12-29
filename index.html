@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Search Hub</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="theme-toggle">
+                <button id="themeToggle">🌓</button>
+            </div>
+        </header>
+
+        <main>
+            <div class="search-section">
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="Enter your search query...">
+                    <button id="searchBtn">Search</button>
+                </div>
+                <div class="search-engines">
+                    <button data-engine="google">Google</button>
+                    <button data-engine="duckduckgo">DuckDuckGo</button>
+                    <button data-engine="bing">Bing</button>
+                    <button data-engine="perplexity">Perplexity.ai</button>
+                </div>
+            </div>
+
+            <div class="tools-section">
+                <div class="tool" id="notes">
+                    <h3>Quick Notes</h3>
+                    <textarea id="notesArea" placeholder="Write your notes here..."></textarea>
+                </div>
+
+                <div class="tool" id="calculator">
+                    <h3>Calculator</h3>
+                    <label for="calcInput">Calculator Display</label>
+                    <input type="text" id="calcInput" title="Calculator Display" readonly>
+                    <div class="calc-buttons"></div>
+                </div>
+
+                <div class="tool" id="todo">
+                    <h3>To-Do List</h3>
+                    <div class="todo-input">
+                        <input type="text" id="todoInput" placeholder="Add a task...">
+                        <button id="addTodo">+</button>
+                    </div>
+                    <ul id="todoList"></ul>
+                </div>
+
+                <div class="tool" id="weather">
+                    <h3>Weather</h3>
+                    <div id="weatherInfo"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

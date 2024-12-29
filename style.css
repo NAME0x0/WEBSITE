@@ -1,0 +1,103 @@
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+    --bg-color: #f5f6fa;
+    --text-color: #2c3e50;
+    --tool-bg: #ffffff;
+}
+
+[data-theme="dark"] {
+    --primary-color: #34495e;
+    --secondary-color: #3498db;
+    --bg-color: #2c3e50;
+    --text-color: #ecf0f1;
+    --tool-bg: #34495e;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: all 0.3s ease;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.search-section {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.search-bar input {
+    width: 60%;
+    padding: 12px;
+    border: 2px solid var(--secondary-color);
+    border-radius: 25px;
+    font-size: 16px;
+}
+
+.search-engines {
+    margin-top: 1rem;
+}
+
+.search-engines button {
+    margin: 0 10px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 20px;
+    background: var(--secondary-color);
+    color: white;
+    cursor: pointer;
+}
+
+.tools-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 2rem;
+}
+
+.tool {
+    background: var(--tool-bg);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* Tool-specific styles */
+#notes textarea {
+    width: 100%;
+    height: 150px;
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid var(--secondary-color);
+    border-radius: 5px;
+}
+
+.calc-buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+    margin-top: 10px;
+}
+
+#todo .todo-input {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+#weatherInfo {
+    text-align: center;
+    margin-top: 10px;
+}
