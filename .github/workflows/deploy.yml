@@ -11,34 +11,18 @@ permissions:
   id-token: write
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
-    concurrency: ci-${{ github.sha }}
 
     steps:
-      - name: Checkout 🛎️
+      - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-
-      - name: Install Dependencies
-        run: |
-          cd src # Change this if your `package.json` is in a different directory
-          npm install
-
-      - name: Build Site
-        run: |
-          cd src # Change this if your `package.json` is in a different directory
-          npm run build
-
-      - name: Deploy 🚀
+      - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./src/dist # Adjust `./src/dist` if your build output is elsewhere
+          publish_dir: . # Use the root directory for static files
           publish_branch: gh-pages
           force_orphan: true
           user_name: 'github-actions[bot]'
