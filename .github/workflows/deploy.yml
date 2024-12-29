@@ -19,22 +19,26 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
 
-      - name: Setup Node.js (if needed)
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '16'
 
       - name: Install Dependencies
-        run: npm install
+        run: |
+          cd src # Change this if your `package.json` is in a different directory
+          npm install
 
       - name: Build Site
-        run: npm run build # Adjust if your build command is different.
+        run: |
+          cd src # Change this if your `package.json` is in a different directory
+          npm run build
 
       - name: Deploy 🚀
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist # Replace './dist' with your build output directory
+          publish_dir: ./src/dist # Adjust `./src/dist` if your build output is elsewhere
           publish_branch: gh-pages
           force_orphan: true
           user_name: 'github-actions[bot]'
