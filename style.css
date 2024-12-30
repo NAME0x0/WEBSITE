@@ -109,14 +109,45 @@ body {
     padding: 10px;
     border: 1px solid var(--secondary-color);
     border-radius: 5px;
+    font-size: 16px;
 }
 
 /* Calculator Tool */
+#calcInput {
+    width: 100%;
+    padding: 12px;
+    font-size: 18px;
+    margin-bottom: 10px;
+    border: 1px solid var(--secondary-color);
+    border-radius: 5px;
+    background-color: var(--bg-color);
+}
+
 .calc-buttons {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 5px;
+    gap: 10px;
     margin-top: 10px;
+}
+
+.calc-button {
+    padding: 15px;
+    font-size: 18px;
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.calc-button:hover {
+    background-color: var(--hover-bg);
+    transform: scale(1.05);
+}
+
+.calc-button:focus {
+    outline: 3px solid var(--focus-outline);
 }
 
 /* Todo Tool */
@@ -126,10 +157,36 @@ body {
     margin-bottom: 10px;
 }
 
+#todo input {
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    flex-grow: 1;
+    font-size: 16px;
+}
+
+#todo button {
+    padding: 10px 20px;
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#todo button:hover {
+    background-color: var(--hover-bg);
+}
+
 /* Weather Tool */
 #weatherInfo {
     text-align: center;
     margin-top: 10px;
+}
+
+#weatherInfo p {
+    font-size: 18px;
+    color: var(--text-color);
 }
 
 /* Responsive Design */
