@@ -19,17 +19,15 @@ document.addEventListener('DOMContentLoaded', () => {
         google: 'https://www.google.com/search?q=',
         duckduckgo: 'https://duckduckgo.com/?q=',
         bing: 'https://www.bing.com/search?q=',
-        perplexity: 'https://www.perplexity.ai/search?q='
+        perplexity: 'https://www.perplexity.ai/?q='
     };
 
     document.querySelector('.search-engines')?.addEventListener('click', (e) => {
         const engine = e.target.dataset.engine;
         if (engine && searchEngines[engine]) {
-            const query = encodeURIComponent(searchInput?.value.trim());
+            const query = encodeURIComponent(searchInput?.value || '');
             if (query) {
-                window.open(`${searchEngines[engine]}${query}`, '_blank');
-            } else {
-                alert('Please enter a search query.');
+                window.open(searchEngines[engine] + query, '_blank');
             }
         }
     });
@@ -47,24 +45,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const calcInput = document.getElementById('calcInput');
     const calcButtons = document.querySelector('.calc-buttons');
     if (calcButtons && calcInput) {
-        const buttons = 'C789/456*123-0.=+'.split('');
+        const buttons = ['C', '7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'];
+
         buttons.forEach((btn) => {
             const button = document.createElement('button');
             button.textContent = btn;
+            button.classList.add('calc-button'); // Add a class for styling
+
             button.addEventListener('click', () => {
                 if (btn === 'C') {
-                    calcInput.value = '';
+                    calcInput.value = ''; // Clear the input
                 } else if (btn === '=') {
                     try {
-                        calcInput.value = eval(calcInput.value) || '';
+                        calcInput.value = eval(calcInput.value) || ''; // Evaluate the expression
                     } catch {
-                        calcInput.value = 'Error';
+                        calcInput.value = 'Error'; // Display error if evaluation fails
                     }
                 } else {
-                    calcInput.value += btn;
+                    calcInput.value += btn; // Append the button value to the input field
                 }
             });
-            calcButtons.appendChild(button);
+
+            calcButtons.appendChild(button); // Append button to the container
         });
     }
 
@@ -105,8 +107,8 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     if (addTodoButton && todoInput && todoList) {
-        window.toggleTodo = toggleTodo;
-        window.deleteTodo = deleteTodo;
+        window.toggleTodo = toggleTodo; // Expose for event handlers
+        window.deleteTodo = deleteTodo; // Expose for event handlers
         addTodoButton.addEventListener('click', addTodo);
         updateTodos();
     }
@@ -118,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 const { latitude, longitude } = position.coords;
                 const response = await fetch(
-                    `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=your_api_key_here`
+                    `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=c94855a6ee90b695d89354f672ca47bc`
                 );
                 if (!response.ok) throw new Error('Weather data fetch failed');
                 const data = await response.json();
