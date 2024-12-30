@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelector('.search-engines')?.addEventListener('click', (e) => {
         const engine = e.target.dataset.engine;
+        console.log(engine); // Check if engine is correctly detected
         if (engine && searchEngines[engine]) {
             const query = encodeURIComponent(searchInput?.value || '');
             if (query) {
@@ -107,31 +108,10 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     if (addTodoButton && todoInput && todoList) {
-        window.toggleTodo = toggleTodo; // Expose for event handlers
-        window.deleteTodo = deleteTodo; // Expose for event handlers
+        window.toggleTodo = toggleTodo;
+        window.deleteTodo = deleteTodo;
+
         addTodoButton.addEventListener('click', addTodo);
         updateTodos();
-    }
-
-    // Weather Functionality
-    const weatherInfo = document.getElementById('weatherInfo');
-    if (weatherInfo) {
-        navigator.geolocation.getCurrentPosition(async (position) => {
-            try {
-                const { latitude, longitude } = position.coords;
-                const response = await fetch(
-                    `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=c94855a6ee90b695d89354f672ca47bc`
-                );
-                if (!response.ok) throw new Error('Weather data fetch failed');
-                const data = await response.json();
-                weatherInfo.innerHTML = `
-                    <p>${data.name}</p>
-                    <p>${Math.round(data.main.temp)}°C</p>
-                    <p>${data.weather[0].main}</p>
-                `;
-            } catch (error) {
-                weatherInfo.innerHTML = `<p>Error fetching weather data</p>`;
-            }
-        });
     }
 });
