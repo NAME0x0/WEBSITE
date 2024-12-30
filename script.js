@@ -19,15 +19,17 @@ document.addEventListener('DOMContentLoaded', () => {
         google: 'https://www.google.com/search?q=',
         duckduckgo: 'https://duckduckgo.com/?q=',
         bing: 'https://www.bing.com/search?q=',
-        perplexity: 'https://www.perplexity.ai/?q='
+        perplexity: 'https://www.perplexity.ai/search?q='
     };
 
     document.querySelector('.search-engines')?.addEventListener('click', (e) => {
         const engine = e.target.dataset.engine;
         if (engine && searchEngines[engine]) {
-            const query = encodeURIComponent(searchInput?.value || '');
+            const query = encodeURIComponent(searchInput?.value.trim());
             if (query) {
-                window.open(searchEngines[engine] + query, '_blank');
+                window.open(`${searchEngines[engine]}${query}`, '_blank');
+            } else {
+                alert('Please enter a search query.');
             }
         }
     });
@@ -45,12 +47,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const calcInput = document.getElementById('calcInput');
     const calcButtons = document.querySelector('.calc-buttons');
     if (calcButtons && calcInput) {
-        const buttons = '789/456*123-0.=+'.split('');
-        buttons.forEach(btn => {
+        const buttons = 'C789/456*123-0.=+'.split('');
+        buttons.forEach((btn) => {
             const button = document.createElement('button');
             button.textContent = btn;
             button.addEventListener('click', () => {
-                if (btn === '=') {
+                if (btn === 'C') {
+                    calcInput.value = '';
+                } else if (btn === '=') {
                     try {
                         calcInput.value = eval(calcInput.value) || '';
                     } catch {
@@ -101,8 +105,8 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     if (addTodoButton && todoInput && todoList) {
-        window.toggleTodo = toggleTodo; // Expose for event handlers
-        window.deleteTodo = deleteTodo; // Expose for event handlers
+        window.toggleTodo = toggleTodo;
+        window.deleteTodo = deleteTodo;
         addTodoButton.addEventListener('click', addTodo);
         updateTodos();
     }
@@ -114,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 const { latitude, longitude } = position.coords;
                 const response = await fetch(
-                    `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=c94855a6ee90b695d89354f672ca47bc`
+                    `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=your_api_key_here`
                 );
                 if (!response.ok) throw new Error('Weather data fetch failed');
                 const data = await response.json();
