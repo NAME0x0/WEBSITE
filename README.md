@@ -1,4 +1,4 @@
-[# WEBSITE
+# WEBSITE
 
 ## Overview
 This is a custom personal website with innovative features:
@@ -29,4 +29,4 @@ Type `?jpeg` in the URL to trigger a surprise!
 - CSS3
 - Vanilla JavaScript
 - GitHub Pages
-](https://github.com/NAME0x0/WEBSITE)
+(https://github.com/NAME0x0/WEBSITE)
