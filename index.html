@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Ultimate Dashboard</title>
+  <title>Futuristic Dashboard</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body data-theme="light">
   <div class="container">
     <header>
       <div class="branding">
-        <h1>My Dashboard</h1>
-        <p class="tagline">Your personalized portal to the web</p>
+        <h1>Futuristic Dashboard</h1>
+        <p class="tagline">Step into the future of productivity</p>
       </div>
       <div class="header-controls">
         <button id="themeToggle" title="Toggle Theme">🌗</button>
@@ -26,7 +26,7 @@
     <main class="dashboard">
       <section id="notes" class="widget">
         <h2>Notes</h2>
-        <textarea id="notesArea" placeholder="Jot down your ideas..."></textarea>
+        <textarea id="notesArea" placeholder="Your thoughts..."></textarea>
       </section>
 
       <section id="calculator" class="widget">
@@ -38,7 +38,7 @@
       <section id="todo" class="widget">
         <h2>To‑Do List</h2>
         <div class="todo-input">
-          <input type="text" id="todoInput" placeholder="Enter new task...">
+          <input type="text" id="todoInput" placeholder="New task...">
           <button id="addTodo" title="Add Task">➕</button>
         </div>
         <ul id="todoList"></ul>
@@ -49,6 +49,11 @@
         <div id="weatherInfo">
           <p>Loading weather...</p>
         </div>
+      </section>
+
+      <section id="clock" class="widget">
+        <h2>Clock</h2>
+        <div id="clockDisplay">--:--:--</div>
       </section>
     </main>
   </div>
@@ -72,6 +77,7 @@
           <label><input type="checkbox" name="widgetCalculator" checked> Calculator</label>
           <label><input type="checkbox" name="widgetTodo" checked> To‑Do List</label>
           <label><input type="checkbox" name="widgetWeather" checked> Weather</label>
+          <label><input type="checkbox" name="widgetClock" checked> Clock</label>
         </fieldset>
         <button type="submit">Save Settings</button>
       </form>
