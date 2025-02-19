@@ -1,28 +1,26 @@
 # WEBSITE
 
 ## Overview
-This project is a fully functional, customizable personal dashboard that doubles as a search engine. It is designed for users to perform web searches using their preferred search engine while managing personal tools such as notes, a calculator, a to‑do list, and weather updates—all within a minimalistic, smooth, and responsive interface.
+This project transforms your personal website into a highly customizable, state-of-the-art dashboard that doubles as a powerful search engine. Designed with modern aesthetics and advanced UI/UX features, this project offers users an immersive experience with:
 
-## Features
-- **Customizable Search Engine:** Set your default search engine (Google, DuckDuckGo, Bing, or Perplexity.ai) and perform searches directly from the dashboard.
-- **Personal Dashboard:** Manage your daily tasks with integrated widgets:
-  - 📝 **Notes:** Save and retrieve your personal notes.
-  - 🔢 **Calculator:** Perform basic arithmetic calculations.
-  - ✅ **To‑Do List:** Keep track of your tasks.
-  - 🌤 **Weather Widget:** Get current weather updates based on your location.
-- **Custom Settings:** Use the settings panel to choose your default search engine and decide which widgets are visible.
-- **Theme Toggle:** Switch between light and dark modes for a comfortable viewing experience.
-- **Responsive Design:** Enjoy a smooth experience on any device.
+- **Customizable Search**: Choose your preferred search engine (Google, DuckDuckGo, Bing, or Perplexity.ai) and search seamlessly.
+- **Interactive Widgets**: Manage your daily workflow with integrated tools:
+  - 📝 **Notes**: Capture and save your thoughts.
+  - 🔢 **Calculator**: Execute arithmetic operations with ease.
+  - ✅ **To‑Do List**: Organize your tasks efficiently.
+  - 🌤 **Weather**: Get live weather updates based on your location.
+- **Personalization Settings**: A sleek settings modal allows you to set defaults and toggle widget visibility.
+- **Theme Toggle & Animations**: Switch between light and dark modes with smooth transitions, and enjoy subtle, dynamic background animations.
 
 ## How to Use
 1. Open `index.html` in your browser.
-2. Use the search bar at the top to perform searches with your default search engine.
-3. Interact with the dashboard widgets (Notes, Calculator, To‑Do List, Weather).
-4. Click the "Settings" button to customize your dashboard preferences.
-5. Your settings are saved locally for a personalized experience every time you visit.
+2. Use the prominent search bar to query the web using your default search engine.
+3. Interact with the dashboard widgets to take notes, calculate, manage tasks, or check the weather.
+4. Click the "Settings" button to customize your experience.
+5. All preferences are saved locally for a consistently personalized experience.
 
 ## Technologies
 - HTML5
-- CSS3
+- CSS3 (with advanced animations and glassmorphism)
 - Vanilla JavaScript
-- Open‑Meteo API for weather data
+- Open‑Meteo API (for weather updates)
