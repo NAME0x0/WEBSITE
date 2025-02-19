@@ -1,118 +1,192 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // Theme Toggle
-  const themeToggle = document.getElementById('themeToggle');
-  themeToggle?.addEventListener('click', () => {
-    const currentTheme = document.body.dataset.theme === 'dark' ? 'light' : 'dark';
-    document.body.dataset.theme = currentTheme;
-    localStorage.setItem('theme', currentTheme);
-  });
+  // Default settings
+  const defaultSettings = {
+    defaultEngine: 'google',
+    widgetNotes: true,
+    widgetCalculator: true,
+    widgetTodo: true,
+    widgetWeather: true
+  };
+  let settings = JSON.parse(localStorage.getItem('dashboardSettings')) || defaultSettings;
 
-  // Restore Theme
+  // Apply widget visibility based on settings
+  function applyWidgetVisibility() {
+    document.getElementById('notes').style.display = settings.widgetNotes ? 'block' : 'none';
+    document.getElementById('calculator').style.display = settings.widgetCalculator ? 'block' : 'none';
+    document.getElementById('todo').style.display = settings.widgetTodo ? 'block' : 'none';
+    document.getElementById('weather').style.display = settings.widgetWeather ? 'block' : 'none';
+  }
+  applyWidgetVisibility();
+
+  // Theme toggle functionality
+  const themeToggle = document.getElementById('themeToggle');
+  themeToggle.addEventListener('click', () => {
+    const currentTheme = document.body.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.body.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+  });
+  // Restore theme from localStorage if available
   const savedTheme = localStorage.getItem('theme');
   if (savedTheme) {
-    document.body.dataset.theme = savedTheme;
+    document.body.setAttribute('data-theme', savedTheme);
   }
 
-  // Search Functionality
+  // Search functionality
   const searchInput = document.getElementById('searchInput');
+  const searchBtn = document.getElementById('searchBtn');
   const searchEngines = {
     google: 'https://www.google.com/search?q=',
     duckduckgo: 'https://duckduckgo.com/?q=',
     bing: 'https://www.bing.com/search?q=',
     perplexity: 'https://www.perplexity.ai/?q='
   };
-
-  document.querySelector('.search-engines')?.addEventListener('click', (e) => {
-    const engine = e.target.dataset.engine;
-    if (engine && searchEngines[engine]) {
-      const query = encodeURIComponent(searchInput?.value || '');
-      if (query) {
-        window.open(searchEngines[engine] + query, '_blank');
-      }
+  searchBtn.addEventListener('click', () => {
+    const query = encodeURIComponent(searchInput.value.trim());
+    if (query) {
+      const engineUrl = searchEngines[settings.defaultEngine] || searchEngines.google;
+      window.open(engineUrl + query, '_blank');
+    }
+  });
+  // Allow Enter key to trigger search
+  searchInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      searchBtn.click();
     }
   });
 
-  // Notes Functionality
+  // Settings modal functionality
+  const settingsToggle = document.getElementById('settingsToggle');
+  const settingsModal = document.getElementById('settingsModal');
+  const closeSettings = document.getElementById('closeSettings');
+  const settingsForm = document.getElementById('settingsForm');
+
+  settingsToggle.addEventListener('click', () => {
+    // Pre-fill settings form with current values
+    settingsForm.elements['defaultEngine'].value = settings.defaultEngine;
+    settingsForm.elements['widgetNotes'].checked = settings.widgetNotes;
+    settingsForm.elements['widgetCalculator'].checked = settings.widgetCalculator;
+    settingsForm.elements['widgetTodo'].checked = settings.widgetTodo;
+    settingsForm.elements['widgetWeather'].checked = settings.widgetWeather;
+    settingsModal.style.display = 'block';
+  });
+
+  closeSettings.addEventListener('click', () => {
+    settingsModal.style.display = 'none';
+  });
+
+  window.addEventListener('click', (e) => {
+    if (e.target === settingsModal) {
+      settingsModal.style.display = 'none';
+    }
+  });
+
+  settingsForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const formData = new FormData(settingsForm);
+    settings.defaultEngine = formData.get('defaultEngine');
+    settings.widgetNotes = formData.get('widgetNotes') === 'on';
+    settings.widgetCalculator = formData.get('widgetCalculator') === 'on';
+    settings.widgetTodo = formData.get('widgetTodo') === 'on';
+    settings.widgetWeather = formData.get('widgetWeather') === 'on';
+    localStorage.setItem('dashboardSettings', JSON.stringify(settings));
+    applyWidgetVisibility();
+    settingsModal.style.display = 'none';
+  });
+
+  // Notes functionality
   const notesArea = document.getElementById('notesArea');
-  if (notesArea) {
-    notesArea.value = localStorage.getItem('notes') || '';
-    notesArea.addEventListener('input', () => {
-      localStorage.setItem('notes', notesArea.value);
-    });
-  }
+  notesArea.value = localStorage.getItem('notes') || '';
+  notesArea.addEventListener('input', () => {
+    localStorage.setItem('notes', notesArea.value);
+  });
 
-  // Calculator
+  // Calculator functionality
   const calcInput = document.getElementById('calcInput');
-  const calcButtons = document.querySelector('.calc-buttons');
-  if (calcButtons && calcInput) {
-    const buttons = ['C', '7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'];
-    buttons.forEach((btn) => {
-      const button = document.createElement('button');
-      button.textContent = btn;
-      button.classList.add('calc-button');
-      button.addEventListener('click', () => {
-        if (btn === 'C') {
-          calcInput.value = '';
-        } else if (btn === '=') {
-          try {
-            calcInput.value = eval(calcInput.value) || '';
-          } catch {
-            calcInput.value = 'Error';
-          }
-        } else {
-          calcInput.value += btn;
+  const calcButtonsContainer = document.querySelector('.calc-buttons');
+  const calcButtons = ['C', '7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'];
+  calcButtons.forEach((btn) => {
+    const button = document.createElement('button');
+    button.textContent = btn;
+    button.classList.add('calc-button');
+    button.addEventListener('click', () => {
+      if (btn === 'C') {
+        calcInput.value = '';
+      } else if (btn === '=') {
+        try {
+          calcInput.value = eval(calcInput.value) || '';
+        } catch {
+          calcInput.value = 'Error';
         }
-      });
-      calcButtons.appendChild(button);
+      } else {
+        calcInput.value += btn;
+      }
     });
-  }
+    calcButtonsContainer.appendChild(button);
+  });
 
-  // Todo List
+  // To‑Do List functionality
   const todoInput = document.getElementById('todoInput');
   const todoList = document.getElementById('todoList');
   const addTodoButton = document.getElementById('addTodo');
   let todos = JSON.parse(localStorage.getItem('todos')) || [];
-
-  const updateTodos = () => {
+  function updateTodos() {
     localStorage.setItem('todos', JSON.stringify(todos));
-    todoList.innerHTML = todos.map((todo, i) => `
+    todoList.innerHTML = todos.map((todo, index) => `
       <li>
-        <input type="checkbox" ${todo.done ? 'checked' : ''} onchange="toggleTodo(${i})">
+        <input type="checkbox" ${todo.done ? 'checked' : ''} onchange="toggleTodo(${index})">
         <span>${todo.text}</span>
-        <button onclick="deleteTodo(${i})">×</button>
+        <button onclick="deleteTodo(${index})">×</button>
       </li>
     `).join('');
-  };
-
-  const addTodo = () => {
+  }
+  addTodoButton.addEventListener('click', () => {
     const text = todoInput.value.trim();
     if (text) {
       todos.push({ text, done: false });
       todoInput.value = '';
       updateTodos();
     }
-  };
-
-  const toggleTodo = (index) => {
+  });
+  window.toggleTodo = function(index) {
     todos[index].done = !todos[index].done;
     updateTodos();
   };
-
-  const deleteTodo = (index) => {
+  window.deleteTodo = function(index) {
     todos.splice(index, 1);
     updateTodos();
   };
+  updateTodos();
 
-  if (addTodoButton && todoInput && todoList) {
-    window.toggleTodo = toggleTodo;
-    window.deleteTodo = deleteTodo;
-    addTodoButton.addEventListener('click', addTodo);
-    updateTodos();
+  // Weather Widget functionality using Open‑Meteo API
+  const weatherInfo = document.getElementById('weatherInfo');
+  function fetchWeather(lat, lon) {
+    fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`)
+      .then(response => response.json())
+      .then(data => {
+        if (data && data.current_weather) {
+          const weather = data.current_weather;
+          weatherInfo.innerHTML = `<p>Temp: ${weather.temperature}°C, Wind: ${weather.windspeed} km/h</p>`;
+        } else {
+          weatherInfo.innerHTML = '<p>Weather data unavailable.</p>';
+        }
+      })
+      .catch(() => {
+        weatherInfo.innerHTML = '<p>Error fetching weather data.</p>';
+      });
   }
-
-  // Experimental CSS Search Engine Activation
-  const params = new URLSearchParams(window.location.search);
-  if (params.has('css')) {
-    document.body.classList.add('css-search-enabled');
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        fetchWeather(latitude, longitude);
+      },
+      () => {
+        weatherInfo.innerHTML = '<p>Unable to retrieve your location.</p>';
+      }
+    );
+  } else {
+    weatherInfo.innerHTML = '<p>Geolocation is not supported by this browser.</p>';
   }
 });
