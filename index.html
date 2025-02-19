@@ -2,28 +2,31 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Personal Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ultimate Dashboard</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body data-theme="light">
   <div class="container">
     <header>
-      <h1>Personal Dashboard</h1>
+      <div class="branding">
+        <h1>My Dashboard</h1>
+        <p class="tagline">Your personalized portal to the web</p>
+      </div>
       <div class="header-controls">
-        <button id="themeToggle">🌗</button>
-        <button id="settingsToggle">⚙️ Settings</button>
+        <button id="themeToggle" title="Toggle Theme">🌗</button>
+        <button id="settingsToggle" title="Settings">⚙️</button>
       </div>
       <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Search the web...">
-        <button id="searchBtn">Search</button>
+        <input type="text" id="searchInput" placeholder="Search the web..." autofocus>
+        <button id="searchBtn" title="Search">🔍</button>
       </div>
     </header>
 
     <main class="dashboard">
       <section id="notes" class="widget">
         <h2>Notes</h2>
-        <textarea id="notesArea" placeholder="Write your notes here..."></textarea>
+        <textarea id="notesArea" placeholder="Jot down your ideas..."></textarea>
       </section>
 
       <section id="calculator" class="widget">
@@ -35,8 +38,8 @@
       <section id="todo" class="widget">
         <h2>To‑Do List</h2>
         <div class="todo-input">
-          <input type="text" id="todoInput" placeholder="New task...">
-          <button id="addTodo">Add</button>
+          <input type="text" id="todoInput" placeholder="Enter new task...">
+          <button id="addTodo" title="Add Task">➕</button>
         </div>
         <ul id="todoList"></ul>
       </section>
@@ -44,7 +47,7 @@
       <section id="weather" class="widget">
         <h2>Weather</h2>
         <div id="weatherInfo">
-          <p>Fetching weather data...</p>
+          <p>Loading weather...</p>
         </div>
       </section>
     </main>
@@ -53,7 +56,7 @@
   <!-- Settings Modal -->
   <div id="settingsModal" class="modal">
     <div class="modal-content">
-      <span id="closeSettings" class="close">&times;</span>
+      <span id="closeSettings" class="close" title="Close Settings">&times;</span>
       <h2>Dashboard Settings</h2>
       <form id="settingsForm">
         <fieldset>
@@ -64,7 +67,7 @@
           <label><input type="radio" name="defaultEngine" value="perplexity"> Perplexity.ai</label>
         </fieldset>
         <fieldset>
-          <legend>Widget Visibility</legend>
+          <legend>Widgets</legend>
           <label><input type="checkbox" name="widgetNotes" checked> Notes</label>
           <label><input type="checkbox" name="widgetCalculator" checked> Calculator</label>
           <label><input type="checkbox" name="widgetTodo" checked> To‑Do List</label>
