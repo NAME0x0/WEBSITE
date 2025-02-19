@@ -5,7 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
     widgetNotes: true,
     widgetCalculator: true,
     widgetTodo: true,
-    widgetWeather: true
+    widgetWeather: true,
+    widgetClock: true
   };
   let settings = JSON.parse(localStorage.getItem('dashboardSettings')) || defaultSettings;
 
@@ -15,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('calculator').style.display = settings.widgetCalculator ? 'block' : 'none';
     document.getElementById('todo').style.display = settings.widgetTodo ? 'block' : 'none';
     document.getElementById('weather').style.display = settings.widgetWeather ? 'block' : 'none';
+    document.getElementById('clock').style.display = settings.widgetClock ? 'block' : 'none';
   }
   applyWidgetVisibility();
 
@@ -68,6 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
     settingsForm.elements['widgetCalculator'].checked = settings.widgetCalculator;
     settingsForm.elements['widgetTodo'].checked = settings.widgetTodo;
     settingsForm.elements['widgetWeather'].checked = settings.widgetWeather;
+    settingsForm.elements['widgetClock'].checked = settings.widgetClock;
     settingsModal.style.display = 'block';
   });
   closeSettings.addEventListener('click', () => settingsModal.style.display = 'none');
@@ -80,6 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
     settings.widgetCalculator = formData.get('widgetCalculator') === 'on';
     settings.widgetTodo = formData.get('widgetTodo') === 'on';
     settings.widgetWeather = formData.get('widgetWeather') === 'on';
+    settings.widgetClock = formData.get('widgetClock') === 'on';
     localStorage.setItem('dashboardSettings', JSON.stringify(settings));
     applyWidgetVisibility();
     settingsModal.style.display = 'none';
@@ -173,4 +177,13 @@ document.addEventListener('DOMContentLoaded', () => {
   } else {
     weatherInfo.innerHTML = '<p>Geolocation not supported.</p>';
   }
+
+  // Clock Widget - update every second
+  const clockDisplay = document.getElementById('clockDisplay');
+  function updateClock() {
+    const now = new Date();
+    clockDisplay.textContent = now.toLocaleTimeString();
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
 });
