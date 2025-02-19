@@ -1,22 +1,21 @@
-/* Root Variables */
+/* Root Variables & Dark Theme Overrides */
 :root {
   --primary-color: #2c3e50;
   --secondary-color: #3498db;
   --bg-color: #f5f6fa;
   --text-color: #2c3e50;
-  --widget-bg: #ffffff;
+  --widget-bg: rgba(255, 255, 255, 0.8);
   --border-color: #ccc;
   --hover-bg: #2980b9;
   --focus-outline: #8e44ad;
   --spacing: 20px;
+  --transition-speed: 0.3s;
 }
-
-/* Dark theme overrides */
 [data-theme="dark"] {
   --primary-color: #ecf0f1;
   --bg-color: #2c3e50;
   --text-color: #ecf0f1;
-  --widget-bg: #34495e;
+  --widget-bg: rgba(44, 62, 80, 0.8);
 }
 
 /* Global Reset */
@@ -25,151 +24,168 @@
   padding: 0;
   box-sizing: border-box;
 }
-
 body {
   font-family: 'Segoe UI', sans-serif;
-  background-color: var(--bg-color);
+  background: var(--bg-color);
   color: var(--text-color);
-  transition: all 0.3s ease;
+  transition: background var(--transition-speed), color var(--transition-speed);
+  overflow-x: hidden;
 }
 
-/* Container */
+/* Background Animation (Gradient) */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, #ff9a9e, #fad0c4, #fad0c4, #fbc2eb, #a18cd1);
+  background-size: 400% 400%;
+  z-index: -1;
+  animation: gradientShift 15s ease infinite;
+}
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Container & Header */
 .container {
   max-width: 1200px;
-  margin: 0 auto;
+  margin: auto;
   padding: var(--spacing);
 }
-
-/* Header */
 header {
   text-align: center;
   margin-bottom: var(--spacing);
 }
-
-header h1 {
-  margin-bottom: 10px;
-  font-size: 2.5rem;
+.branding h1 {
+  font-size: 3rem;
+  letter-spacing: 2px;
+  margin-bottom: 5px;
 }
-
+.tagline {
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  opacity: 0.8;
+}
 .header-controls {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
   margin-bottom: 15px;
 }
-
 .header-controls button {
   background: var(--secondary-color);
   border: none;
   color: #fff;
-  padding: 8px 12px;
-  margin: 0 5px;
-  border-radius: 5px;
+  padding: 10px 15px;
+  border-radius: 50px;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: background var(--transition-speed);
 }
-
 .header-controls button:hover {
   background: var(--hover-bg);
 }
-
 .search-container {
   display: flex;
   justify-content: center;
+  align-items: center;
   margin-bottom: var(--spacing);
 }
-
 .search-container input[type="text"] {
   width: 60%;
-  padding: 10px;
+  padding: 12px 20px;
   border: 2px solid var(--border-color);
-  border-radius: 25px 0 0 25px;
-  font-size: 16px;
+  border-radius: 50px 0 0 50px;
+  font-size: 1rem;
   outline: none;
-  transition: border-color 0.3s ease;
+  transition: border var(--transition-speed);
 }
-
 .search-container input[type="text"]:focus {
   border-color: var(--focus-outline);
 }
-
 .search-container button {
-  padding: 10px 20px;
+  padding: 12px 20px;
   border: none;
   background: var(--secondary-color);
   color: #fff;
-  font-size: 16px;
-  border-radius: 0 25px 25px 0;
+  font-size: 1rem;
+  border-radius: 0 50px 50px 0;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: background var(--transition-speed);
 }
-
 .search-container button:hover {
   background: var(--hover-bg);
 }
 
-/* Dashboard Layout */
+/* Dashboard Layout & Widgets */
 .dashboard {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: var(--spacing);
 }
-
-/* Widget Styles */
 .widget {
   background: var(--widget-bg);
   padding: var(--spacing);
-  border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.3s ease;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(8px);
+  transition: transform var(--transition-speed), box-shadow var(--transition-speed);
 }
-
+.widget:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
 .widget h2 {
-  margin-bottom: 10px;
-  font-size: 1.5rem;
+  margin-bottom: 15px;
+  font-size: 1.8rem;
   color: var(--primary-color);
 }
 
 /* Notes Widget */
 #notes textarea {
   width: 100%;
-  height: 150px;
-  padding: 10px;
+  height: 160px;
+  padding: 12px;
   border: 1px solid var(--border-color);
-  border-radius: 5px;
-  font-size: 16px;
+  border-radius: 10px;
+  font-size: 1rem;
+  resize: none;
 }
 
 /* Calculator Widget */
 #calcInput {
   width: 100%;
   padding: 12px;
-  font-size: 18px;
+  font-size: 1.2rem;
   margin-bottom: 10px;
   border: 1px solid var(--border-color);
-  border-radius: 5px;
+  border-radius: 10px;
   background-color: var(--bg-color);
+  text-align: right;
 }
-
 .calc-buttons {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 10px;
 }
-
 .calc-button {
   padding: 15px;
-  font-size: 18px;
+  font-size: 1.1rem;
   background: var(--secondary-color);
   color: #fff;
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease;
+  transition: background var(--transition-speed), transform 0.2s;
 }
-
 .calc-button:hover {
   background: var(--hover-bg);
   transform: scale(1.05);
 }
-
 .calc-button:focus {
   outline: 3px solid var(--focus-outline);
 }
@@ -178,53 +194,46 @@ header h1 {
 .todo-input {
   display: flex;
   gap: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
-
 .todo-input input[type="text"] {
   flex: 1;
-  padding: 10px;
+  padding: 12px;
   border: 1px solid var(--border-color);
-  border-radius: 5px;
-  font-size: 16px;
+  border-radius: 10px;
+  font-size: 1rem;
 }
-
 .todo-input button {
-  padding: 10px 20px;
+  padding: 12px 20px;
   background: var(--secondary-color);
   color: #fff;
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: background var(--transition-speed);
 }
-
 .todo-input button:hover {
   background: var(--hover-bg);
 }
-
 #todoList {
   list-style: none;
 }
-
 #todoList li {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px;
+  padding: 10px;
   border-bottom: 1px solid var(--border-color);
 }
-
 #todoList li span {
   flex: 1;
   margin-left: 10px;
 }
-
 #todoList li button {
   background: transparent;
   border: none;
   color: var(--secondary-color);
-  font-size: 18px;
+  font-size: 1.2rem;
   cursor: pointer;
 }
 
@@ -232,14 +241,7 @@ header h1 {
 #weatherInfo {
   text-align: center;
   margin-top: 10px;
-  font-size: 16px;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .search-container input[type="text"] {
-    width: 80%;
-  }
+  font-size: 1.1rem;
 }
 
 /* Settings Modal */
@@ -252,62 +254,75 @@ header h1 {
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0,0,0,0.6);
+  transition: opacity var(--transition-speed);
 }
-
 .modal-content {
   background: var(--widget-bg);
-  margin: 10% auto;
+  margin: 8% auto;
   padding: var(--spacing);
   border: 1px solid var(--border-color);
-  width: 80%;
+  width: 90%;
   max-width: 500px;
-  border-radius: 10px;
+  border-radius: 15px;
   position: relative;
+  animation: modalAppear 0.5s ease;
 }
-
+@keyframes modalAppear {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 .close {
   position: absolute;
   top: 10px;
   right: 15px;
   color: var(--text-color);
-  font-size: 24px;
+  font-size: 28px;
   font-weight: bold;
   cursor: pointer;
 }
-
 .modal-content h2 {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
   text-align: center;
 }
-
 .modal-content form fieldset {
   border: 1px solid var(--border-color);
   padding: 10px;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
-
 .modal-content form fieldset legend {
   padding: 0 5px;
   font-weight: bold;
 }
-
 .modal-content form label {
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
+  font-size: 1rem;
 }
-
 .modal-content form button {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   background: var(--secondary-color);
   color: #fff;
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
-  transition: background 0.3s ease;
+  font-size: 1rem;
+  transition: background var(--transition-speed);
 }
-
 .modal-content form button:hover {
   background: var(--hover-bg);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .search-container input[type="text"] {
+    width: 80%;
+  }
+  .branding h1 {
+    font-size: 2.5rem;
+  }
+  .tagline {
+    font-size: 1rem;
+  }
 }
