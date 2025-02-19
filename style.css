@@ -200,3 +200,65 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+/* Experimental CSS Search Engine Section */
+.css-search-section {
+    display: none;
+    margin-top: 2rem;
+    padding: var(--spacing);
+    background: var(--tool-bg);
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+body.css-search-enabled .css-search-section {
+    display: block;
+}
+
+.css-search-section h2 {
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+}
+
+.css-search-bar input {
+    width: 60%;
+    padding: 10px;
+    border: 2px solid var(--border-color);
+    border-radius: 25px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+.css-search-bar input:focus {
+    outline: none;
+    border-color: var(--focus-outline);
+}
+
+.css-search-results {
+    list-style: none;
+    margin-top: 1rem;
+    padding: 0;
+}
+
+.css-search-results li {
+    padding: 8px;
+    margin: 5px auto;
+    width: 50%;
+    background: var(--secondary-color);
+    color: #fff;
+    border-radius: 5px;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+.css-search-results li:hover {
+    transform: scale(1.05);
+}
+
+.css-search-note {
+    font-size: 0.9rem;
+    color: var(--text-color);
+    margin-top: 1rem;
+}
