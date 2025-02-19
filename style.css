@@ -1,21 +1,28 @@
 /* Root Variables & Dark Theme Overrides */
 :root {
-  --primary-color: #2c3e50;
-  --secondary-color: #3498db;
-  --bg-color: #f5f6fa;
-  --text-color: #2c3e50;
-  --widget-bg: rgba(255, 255, 255, 0.8);
-  --border-color: #ccc;
-  --hover-bg: #2980b9;
-  --focus-outline: #8e44ad;
+  --primary-color: #ffffff;
+  --secondary-color: #0abde3;
+  --accent-color: #ff6b6b;
+  --bg-color: #1e1e2f;
+  --text-color: #ffffff;
+  --widget-bg: rgba(255, 255, 255, 0.1);
+  --border-color: rgba(255, 255, 255, 0.2);
+  --hover-bg: #0a91ba;
+  --focus-outline: #ff6b6b;
   --spacing: 20px;
   --transition-speed: 0.3s;
 }
+[data-theme="light"] {
+  --bg-color: #f0f0f0;
+  --text-color: #333333;
+  --widget-bg: rgba(255, 255, 255, 0.8);
+  --border-color: #ccc;
+}
 [data-theme="dark"] {
-  --primary-color: #ecf0f1;
-  --bg-color: #2c3e50;
-  --text-color: #ecf0f1;
-  --widget-bg: rgba(44, 62, 80, 0.8);
+  --bg-color: #1e1e2f;
+  --text-color: #ffffff;
+  --widget-bg: rgba(255, 255, 255, 0.1);
+  --border-color: rgba(255, 255, 255, 0.2);
 }
 
 /* Global Reset */
@@ -32,7 +39,7 @@ body {
   overflow-x: hidden;
 }
 
-/* Background Animation (Gradient) */
+/* Animated Background */
 body::before {
   content: "";
   position: fixed;
@@ -40,12 +47,12 @@ body::before {
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(45deg, #ff9a9e, #fad0c4, #fad0c4, #fbc2eb, #a18cd1);
+  background: linear-gradient(135deg, #0abde3, #ff6b6b, #9b59b6);
   background-size: 400% 400%;
   z-index: -1;
-  animation: gradientShift 15s ease infinite;
+  animation: gradientAnimation 20s ease infinite;
 }
-@keyframes gradientShift {
+@keyframes gradientAnimation {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
@@ -60,6 +67,7 @@ body::before {
 header {
   text-align: center;
   margin-bottom: var(--spacing);
+  padding: var(--spacing) 0;
 }
 .branding h1 {
   font-size: 3rem;
@@ -75,12 +83,12 @@ header {
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 .header-controls button {
   background: var(--secondary-color);
   border: none;
-  color: #fff;
+  color: var(--text-color);
   padding: 10px 15px;
   border-radius: 50px;
   cursor: pointer;
@@ -103,6 +111,7 @@ header {
   font-size: 1rem;
   outline: none;
   transition: border var(--transition-speed);
+  background: rgba(255, 255, 255, 0.2);
 }
 .search-container input[type="text"]:focus {
   border-color: var(--focus-outline);
@@ -111,7 +120,7 @@ header {
   padding: 12px 20px;
   border: none;
   background: var(--secondary-color);
-  color: #fff;
+  color: var(--text-color);
   font-size: 1rem;
   border-radius: 0 50px 50px 0;
   cursor: pointer;
@@ -131,18 +140,19 @@ header {
   background: var(--widget-bg);
   padding: var(--spacing);
   border-radius: 15px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color);
   transition: transform var(--transition-speed), box-shadow var(--transition-speed);
 }
 .widget:hover {
   transform: translateY(-5px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
 }
 .widget h2 {
   margin-bottom: 15px;
   font-size: 1.8rem;
-  color: var(--primary-color);
+  color: var(--secondary-color);
 }
 
 /* Notes Widget */
@@ -154,6 +164,7 @@ header {
   border-radius: 10px;
   font-size: 1rem;
   resize: none;
+  background: rgba(255, 255, 255, 0.3);
 }
 
 /* Calculator Widget */
@@ -176,7 +187,7 @@ header {
   padding: 15px;
   font-size: 1.1rem;
   background: var(--secondary-color);
-  color: #fff;
+  color: var(--text-color);
   border: none;
   border-radius: 10px;
   cursor: pointer;
@@ -202,11 +213,12 @@ header {
   border: 1px solid var(--border-color);
   border-radius: 10px;
   font-size: 1rem;
+  background: rgba(255, 255, 255, 0.3);
 }
 .todo-input button {
   padding: 12px 20px;
   background: var(--secondary-color);
-  color: #fff;
+  color: var(--text-color);
   border: none;
   border-radius: 10px;
   cursor: pointer;
@@ -244,6 +256,16 @@ header {
   font-size: 1.1rem;
 }
 
+/* Clock Widget */
+#clockDisplay {
+  font-size: 2rem;
+  text-align: center;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  letter-spacing: 2px;
+}
+
 /* Settings Modal */
 .modal {
   display: none;
@@ -254,7 +276,7 @@ header {
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgba(0,0,0,0.6);
+  background-color: rgba(0,0,0,0.7);
   transition: opacity var(--transition-speed);
 }
 .modal-content {
@@ -303,7 +325,7 @@ header {
   width: 100%;
   padding: 12px;
   background: var(--secondary-color);
-  color: #fff;
+  color: var(--text-color);
   border: none;
   border-radius: 10px;
   cursor: pointer;
