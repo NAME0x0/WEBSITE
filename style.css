@@ -1,264 +1,313 @@
+/* Root Variables */
 :root {
-    --primary-color: #2c3e50;
-    --secondary-color: #3498db;
-    --bg-color: #f5f6fa;
-    --text-color: #2c3e50;
-    --tool-bg: #ffffff;
-    --border-color: #ccc;
-    --hover-bg: #2980b9;
-    --focus-outline: #8e44ad;
-    --spacing: 20px;
+  --primary-color: #2c3e50;
+  --secondary-color: #3498db;
+  --bg-color: #f5f6fa;
+  --text-color: #2c3e50;
+  --widget-bg: #ffffff;
+  --border-color: #ccc;
+  --hover-bg: #2980b9;
+  --focus-outline: #8e44ad;
+  --spacing: 20px;
 }
 
+/* Dark theme overrides */
 [data-theme="dark"] {
-    --primary-color: #34495e;
-    --secondary-color: #3498db;
-    --bg-color: #2c3e50;
-    --text-color: #ecf0f1;
-    --tool-bg: #34495e;
+  --primary-color: #ecf0f1;
+  --bg-color: #2c3e50;
+  --text-color: #ecf0f1;
+  --widget-bg: #34495e;
 }
 
+/* Global Reset */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-    font-family: 'Segoe UI', system-ui, sans-serif;
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    transition: all 0.3s ease;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: all 0.3s ease;
 }
 
+/* Container */
 .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: var(--spacing);
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing);
 }
 
-/* Search Section */
-.search-section {
-    text-align: center;
-    margin: 2rem 0;
+/* Header */
+header {
+  text-align: center;
+  margin-bottom: var(--spacing);
 }
 
-.search-bar input {
-    width: 60%;
-    padding: 12px;
-    border: 2px solid var(--border-color);
-    border-radius: 25px;
-    font-size: 16px;
-    transition: border-color 0.3s ease;
+header h1 {
+  margin-bottom: 10px;
+  font-size: 2.5rem;
 }
 
-.search-bar input:focus {
-    outline: none;
-    border-color: var(--focus-outline);
+.header-controls {
+  margin-bottom: 15px;
 }
 
-.search-engines {
-    margin-top: 1rem;
+.header-controls button {
+  background: var(--secondary-color);
+  border: none;
+  color: #fff;
+  padding: 8px 12px;
+  margin: 0 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
 }
 
-.search-engines button {
-    margin: 0 10px;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 20px;
-    background: var(--secondary-color);
-    color: white;
-    cursor: pointer;
-    transition: background 0.3s ease, transform 0.2s ease;
+.header-controls button:hover {
+  background: var(--hover-bg);
 }
 
-.search-engines button:hover {
-    background: var(--hover-bg);
-    transform: scale(1.05);
+.search-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--spacing);
 }
 
-.search-engines button:focus {
-    outline: 3px solid var(--focus-outline);
+.search-container input[type="text"] {
+  width: 60%;
+  padding: 10px;
+  border: 2px solid var(--border-color);
+  border-radius: 25px 0 0 25px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s ease;
 }
 
-/* Tools Section */
-.tools-section {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: var(--spacing);
-    margin-top: 2rem;
+.search-container input[type="text"]:focus {
+  border-color: var(--focus-outline);
 }
 
-.tool {
-    background: var(--tool-bg);
-    padding: var(--spacing);
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    transition: box-shadow 0.3s ease;
+.search-container button {
+  padding: 10px 20px;
+  border: none;
+  background: var(--secondary-color);
+  color: #fff;
+  font-size: 16px;
+  border-radius: 0 25px 25px 0;
+  cursor: pointer;
+  transition: background 0.3s ease;
 }
 
-.tool:hover {
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+.search-container button:hover {
+  background: var(--hover-bg);
 }
 
-/* Notes Tool */
+/* Dashboard Layout */
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--spacing);
+}
+
+/* Widget Styles */
+.widget {
+  background: var(--widget-bg);
+  padding: var(--spacing);
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.widget h2 {
+  margin-bottom: 10px;
+  font-size: 1.5rem;
+  color: var(--primary-color);
+}
+
+/* Notes Widget */
 #notes textarea {
-    width: 100%;
-    height: 150px;
-    margin-top: 10px;
-    padding: 10px;
-    border: 1px solid var(--secondary-color);
-    border-radius: 5px;
-    font-size: 16px;
+  width: 100%;
+  height: 150px;
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  font-size: 16px;
 }
 
-/* Calculator Tool */
+/* Calculator Widget */
 #calcInput {
-    width: 100%;
-    padding: 12px;
-    font-size: 18px;
-    margin-bottom: 10px;
-    border: 1px solid var(--secondary-color);
-    border-radius: 5px;
-    background-color: var(--bg-color);
+  width: 100%;
+  padding: 12px;
+  font-size: 18px;
+  margin-bottom: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  background-color: var(--bg-color);
 }
 
 .calc-buttons {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
 }
 
 .calc-button {
-    padding: 15px;
-    font-size: 18px;
-    background-color: var(--secondary-color);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+  padding: 15px;
+  font-size: 18px;
+  background: var(--secondary-color);
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
 .calc-button:hover {
-    background-color: var(--hover-bg);
-    transform: scale(1.05);
+  background: var(--hover-bg);
+  transform: scale(1.05);
 }
 
 .calc-button:focus {
-    outline: 3px solid var(--focus-outline);
+  outline: 3px solid var(--focus-outline);
 }
 
-/* Todo Tool */
-#todo .todo-input {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 10px;
+/* To‑Do Widget */
+.todo-input {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 
-#todo input {
-    padding: 10px;
-    border: 1px solid var(--border-color);
-    border-radius: 5px;
-    flex-grow: 1;
-    font-size: 16px;
+.todo-input input[type="text"] {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  font-size: 16px;
 }
 
-#todo button {
-    padding: 10px 20px;
-    background-color: var(--secondary-color);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+.todo-input button {
+  padding: 10px 20px;
+  background: var(--secondary-color);
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
 }
 
-#todo button:hover {
-    background-color: var(--hover-bg);
+.todo-input button:hover {
+  background: var(--hover-bg);
 }
 
-/* Weather Tool */
+#todoList {
+  list-style: none;
+}
+
+#todoList li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+#todoList li span {
+  flex: 1;
+  margin-left: 10px;
+}
+
+#todoList li button {
+  background: transparent;
+  border: none;
+  color: var(--secondary-color);
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* Weather Widget */
 #weatherInfo {
-    text-align: center;
-    margin-top: 10px;
+  text-align: center;
+  margin-top: 10px;
+  font-size: 16px;
 }
 
-#weatherInfo p {
-    font-size: 18px;
-    color: var(--text-color);
-}
-
-/* Responsive Design */
+/* Responsive */
 @media (max-width: 768px) {
-    .search-bar input {
-        width: 90%;
-        font-size: 14px;
-    }
-
-    .tools-section {
-        grid-template-columns: 1fr;
-    }
+  .search-container input[type="text"] {
+    width: 80%;
+  }
 }
 
-/* Experimental CSS Search Engine Section */
-.css-search-section {
-    display: none;
-    margin-top: 2rem;
-    padding: var(--spacing);
-    background: var(--tool-bg);
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    text-align: center;
-    transition: all 0.3s ease;
+/* Settings Modal */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 100;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.5);
 }
 
-body.css-search-enabled .css-search-section {
-    display: block;
+.modal-content {
+  background: var(--widget-bg);
+  margin: 10% auto;
+  padding: var(--spacing);
+  border: 1px solid var(--border-color);
+  width: 80%;
+  max-width: 500px;
+  border-radius: 10px;
+  position: relative;
 }
 
-.css-search-section h2 {
-    margin-bottom: 1rem;
-    color: var(--primary-color);
+.close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  color: var(--text-color);
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
-.css-search-bar input {
-    width: 60%;
-    padding: 10px;
-    border: 2px solid var(--border-color);
-    border-radius: 25px;
-    font-size: 16px;
-    transition: border-color 0.3s ease;
+.modal-content h2 {
+  margin-bottom: 15px;
+  text-align: center;
 }
 
-.css-search-bar input:focus {
-    outline: none;
-    border-color: var(--focus-outline);
+.modal-content form fieldset {
+  border: 1px solid var(--border-color);
+  padding: 10px;
+  margin-bottom: 15px;
 }
 
-.css-search-results {
-    list-style: none;
-    margin-top: 1rem;
-    padding: 0;
+.modal-content form fieldset legend {
+  padding: 0 5px;
+  font-weight: bold;
 }
 
-.css-search-results li {
-    padding: 8px;
-    margin: 5px auto;
-    width: 50%;
-    background: var(--secondary-color);
-    color: #fff;
-    border-radius: 5px;
-    transition: transform 0.3s ease;
-    cursor: pointer;
+.modal-content form label {
+  display: block;
+  margin-bottom: 8px;
 }
 
-.css-search-results li:hover {
-    transform: scale(1.05);
+.modal-content form button {
+  width: 100%;
+  padding: 10px;
+  background: var(--secondary-color);
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
 }
 
-.css-search-note {
-    font-size: 0.9rem;
-    color: var(--text-color);
-    margin-top: 1rem;
+.modal-content form button:hover {
+  background: var(--hover-bg);
 }
