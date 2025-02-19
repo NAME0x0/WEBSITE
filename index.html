@@ -3,72 +3,76 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Utility Tools</title>
+  <title>Personal Dashboard</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body data-theme="light">
   <div class="container">
     <header>
-      <h1>Utility Tools</h1>
-      <button id="themeToggle">🌗</button>
+      <h1>Personal Dashboard</h1>
+      <div class="header-controls">
+        <button id="themeToggle">🌗</button>
+        <button id="settingsToggle">⚙️ Settings</button>
+      </div>
+      <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search the web...">
+        <button id="searchBtn">Search</button>
+      </div>
     </header>
 
-    <section class="search-section">
-      <div class="search-bar">
-        <input type="text" id="searchInput" placeholder="Search...">
-      </div>
-      <div class="search-engines">
-        <button data-engine="google">Google</button>
-        <button data-engine="duckduckgo">DuckDuckGo</button>
-        <button data-engine="bing">Bing</button>
-        <button data-engine="perplexity">Perplexity.ai</button>
-      </div>
-    </section>
-
-    <section class="tools-section">
-      <div id="notes" class="tool">
+    <main class="dashboard">
+      <section id="notes" class="widget">
         <h2>Notes</h2>
-        <textarea id="notesArea"></textarea>
-      </div>
+        <textarea id="notesArea" placeholder="Write your notes here..."></textarea>
+      </section>
 
-      <div id="calculator" class="tool">
+      <section id="calculator" class="widget">
         <h2>Calculator</h2>
-        <input type="text" id="calcInput" readonly>
+        <input type="text" id="calcInput" readonly placeholder="0">
         <div class="calc-buttons"></div>
-      </div>
+      </section>
 
-      <div id="todo" class="tool">
-        <h2>To Do List</h2>
+      <section id="todo" class="widget">
+        <h2>To‑Do List</h2>
         <div class="todo-input">
-          <input type="text" id="todoInput" placeholder="Enter a new task">
+          <input type="text" id="todoInput" placeholder="New task...">
           <button id="addTodo">Add</button>
         </div>
         <ul id="todoList"></ul>
-      </div>
+      </section>
 
-      <div id="weather" class="tool">
+      <section id="weather" class="widget">
         <h2>Weather</h2>
         <div id="weatherInfo">
-          <p>Weather data will appear here.</p>
+          <p>Fetching weather data...</p>
         </div>
-      </div>
-    </section>
+      </section>
+    </main>
+  </div>
 
-    <!-- Experimental CSS Search Engine Section -->
-    <section id="cssSearch" class="css-search-section">
-      <h2>CSS Search Engine (Experimental)</h2>
-      <div class="css-search-bar">
-        <input type="text" id="cssSearchInput" placeholder="Type to 'search'...">
-      </div>
-      <ul class="css-search-results">
-        <li data-key="home">Home</li>
-        <li data-key="about">About</li>
-        <li data-key="services">Services</li>
-        <li data-key="contact">Contact</li>
-        <li data-key="blog">Blog</li>
-      </ul>
-      <p class="css-search-note">Note: This is a playful demo using CSS transitions and pseudo-classes.</p>
-    </section>
+  <!-- Settings Modal -->
+  <div id="settingsModal" class="modal">
+    <div class="modal-content">
+      <span id="closeSettings" class="close">&times;</span>
+      <h2>Dashboard Settings</h2>
+      <form id="settingsForm">
+        <fieldset>
+          <legend>Default Search Engine</legend>
+          <label><input type="radio" name="defaultEngine" value="google" checked> Google</label>
+          <label><input type="radio" name="defaultEngine" value="duckduckgo"> DuckDuckGo</label>
+          <label><input type="radio" name="defaultEngine" value="bing"> Bing</label>
+          <label><input type="radio" name="defaultEngine" value="perplexity"> Perplexity.ai</label>
+        </fieldset>
+        <fieldset>
+          <legend>Widget Visibility</legend>
+          <label><input type="checkbox" name="widgetNotes" checked> Notes</label>
+          <label><input type="checkbox" name="widgetCalculator" checked> Calculator</label>
+          <label><input type="checkbox" name="widgetTodo" checked> To‑Do List</label>
+          <label><input type="checkbox" name="widgetWeather" checked> Weather</label>
+        </fieldset>
+        <button type="submit">Save Settings</button>
+      </form>
+    </div>
   </div>
 
   <script src="script.js"></script>
