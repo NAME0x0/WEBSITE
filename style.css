@@ -167,6 +167,16 @@ header {
   background: rgba(255, 255, 255, 0.3);
 }
 
+.star {
+  display: none; /* Hide the star initially */
+  font-size: 10px; /* Adjust size of the star */
+  margin-left: 5px; /* Space between the settings icon and the star */
+}
+
+#settingsToggle:hover .star {
+  display: inline; /* Show the star when the button is hovered */
+}
+
 /* Calculator Widget */
 #calcInput {
   width: 100%;
