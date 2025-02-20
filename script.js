@@ -85,10 +85,19 @@ document.addEventListener('DOMContentLoaded', () => {
   notesArea.value = localStorage.getItem('notes') || '';
   notesArea.addEventListener('input', () => localStorage.setItem('notes', notesArea.value));
 
-  // Calculator Widget (Secure)
+  // Calculator Widget (Fixed Button Rendering)
   const calcInput = document.getElementById('calcInput');
   const calcButtonsContainer = document.querySelector('.calc-buttons');
   const calcButtons = ['C', '7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'];
+  
+  // Ensure buttons are created dynamically
+  calcButtons.forEach(button => {
+    const btnElement = document.createElement('button');
+    btnElement.textContent = button;
+    btnElement.classList.add('calc-button');
+    calcButtonsContainer.appendChild(btnElement);
+  });
+
   function handleCalculatorInput(value) {
     if (value === 'C') calcInput.value = '';
     else if (value === '=') {
