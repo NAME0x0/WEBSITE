@@ -163,12 +163,4 @@ document.addEventListener('DOMContentLoaded', () => {
   updateClock();
   setInterval(updateClock, 1000);
 });
-  // Add Tiny Emoji in the Top Right Corner
-  const emojiElement = document.createElement('div');
-  emojiElement.textContent = '✨'; // You can change this emoji if you want
-  emojiElement.style.position = 'fixed';
-  emojiElement.style.top = '10px';
-  emojiElement.style.right = '10px';
-  emojiElement.style.fontSize = '20px';
-  emojiElement.style.cursor = 'pointer';
-  document.body.appendChild(emojiElement);
+ //tiny emoji did not get added but we move
