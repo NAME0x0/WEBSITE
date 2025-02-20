@@ -94,30 +94,6 @@ document.addEventListener('DOMContentLoaded', () => {
   notesArea.value = localStorage.getItem('notes') || '';
   notesArea.addEventListener('input', () => localStorage.setItem('notes', notesArea.value));
 
-  // Calculator Widget
-  const calcInput = document.getElementById('calcInput');
-  const calcButtonsContainer = document.querySelector('.calc-buttons');
-  const calcButtons = ['C', '7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'];
-  calcButtons.forEach((btn) => {
-    const button = document.createElement('button');
-    button.textContent = btn;
-    button.classList.add('calc-button');
-    button.addEventListener('click', () => {
-      if (btn === 'C') {
-        calcInput.value = '';
-      } else if (btn === '=') {
-        try {
-          calcInput.value = eval(calcInput.value) || '';
-        } catch {
-          calcInput.value = 'Error';
-        }
-      } else {
-        calcInput.value += btn;
-      }
-    });
-    calcButtonsContainer.appendChild(button);
-  });
-
   // To‑Do List Widget
   const todoInput = document.getElementById('todoInput');
   const todoList = document.getElementById('todoList');
@@ -177,6 +153,15 @@ document.addEventListener('DOMContentLoaded', () => {
   } else {
     weatherInfo.innerHTML = '<p>Geolocation not supported.</p>';
   }
+
+  // Tiny Emoji on the top right
+  const emojiElement = document.createElement('div');
+  emojiElement.textContent = '✨';
+  emojiElement.style.position = 'absolute';
+  emojiElement.style.top = '10px';
+  emojiElement.style.right = '10px';
+  emojiElement.style.fontSize = '20px';
+  document.body.appendChild(emojiElement);
 
   // Clock Widget - update every second
   const clockDisplay = document.getElementById('clockDisplay');
