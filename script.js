@@ -10,28 +10,32 @@ document.addEventListener('DOMContentLoaded', () => {
   };
   let settings = JSON.parse(localStorage.getItem('dashboardSettings')) || defaultSettings;
 
+  // Cache DOM Elements
+  const widgets = {
+    notes: document.getElementById('notes'),
+    calculator: document.getElementById('calculator'),
+    todo: document.getElementById('todo'),
+    weather: document.getElementById('weather'),
+    clock: document.getElementById('clock')
+  };
+
   // Apply Widget Visibility
   function applyWidgetVisibility() {
-    document.getElementById('notes').style.display = settings.widgetNotes ? 'block' : 'none';
-    document.getElementById('calculator').style.display = settings.widgetCalculator ? 'block' : 'none';
-    document.getElementById('todo').style.display = settings.widgetTodo ? 'block' : 'none';
-    document.getElementById('weather').style.display = settings.widgetWeather ? 'block' : 'none';
-    document.getElementById('clock').style.display = settings.widgetClock ? 'block' : 'none';
+    Object.keys(widgets).forEach(key => {
+      if (settings[`widget${key.charAt(0).toUpperCase() + key.slice(1)}`] !== undefined) {
+        widgets[key].style.display = settings[`widget${key.charAt(0).toUpperCase() + key.slice(1)}`] ? 'block' : 'none';
+      }
+    });
   }
   applyWidgetVisibility();
 
   // Theme Toggle
   const themeToggle = document.getElementById('themeToggle');
   themeToggle.addEventListener('click', () => {
-    const currentTheme = document.body.getAttribute('data-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    document.body.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
+    const isDark = document.body.classList.toggle('dark-theme');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
   });
-  const savedTheme = localStorage.getItem('theme');
-  if (savedTheme) {
-    document.body.setAttribute('data-theme', savedTheme);
-  }
+  document.body.classList.toggle('dark-theme', localStorage.getItem('theme') === 'dark');
 
   // Search Functionality
   const searchInput = document.getElementById('searchInput');
@@ -44,18 +48,10 @@ document.addEventListener('DOMContentLoaded', () => {
   };
   function performSearch() {
     const query = encodeURIComponent(searchInput.value.trim());
-    if (query) {
-      const engineUrl = searchEngines[settings.defaultEngine] || searchEngines.google;
-      window.open(engineUrl + query, '_blank');
-    }
+    if (query) window.open((searchEngines[settings.defaultEngine] || searchEngines.google) + query, '_blank');
   }
   searchBtn.addEventListener('click', performSearch);
-  searchInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      performSearch();
-    }
-  });
+  searchInput.addEventListener('keypress', (e) => e.key === 'Enter' && performSearch());
 
   // Settings Modal Functionality
   const settingsToggle = document.getElementById('settingsToggle');
@@ -64,26 +60,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const settingsForm = document.getElementById('settingsForm');
 
   settingsToggle.addEventListener('click', () => {
-    // Pre-fill settings form with current values
-    settingsForm.elements['defaultEngine'].value = settings.defaultEngine;
-    settingsForm.elements['widgetNotes'].checked = settings.widgetNotes;
-    settingsForm.elements['widgetCalculator'].checked = settings.widgetCalculator;
-    settingsForm.elements['widgetTodo'].checked = settings.widgetTodo;
-    settingsForm.elements['widgetWeather'].checked = settings.widgetWeather;
-    settingsForm.elements['widgetClock'].checked = settings.widgetClock;
+    Object.keys(settings).forEach(key => {
+      if (settingsForm.elements[key]) {
+        settingsForm.elements[key].type === 'checkbox' ?
+          settingsForm.elements[key].checked = settings[key] :
+          settingsForm.elements[key].value = settings[key];
+      }
+    });
     settingsModal.style.display = 'block';
   });
   closeSettings.addEventListener('click', () => settingsModal.style.display = 'none');
-  window.addEventListener('click', (e) => { if (e.target === settingsModal) settingsModal.style.display = 'none'; });
+  window.addEventListener('click', (e) => e.target === settingsModal && (settingsModal.style.display = 'none'));
   settingsForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const formData = new FormData(settingsForm);
-    settings.defaultEngine = formData.get('defaultEngine');
-    settings.widgetNotes = formData.get('widgetNotes') === 'on';
-    settings.widgetCalculator = formData.get('widgetCalculator') === 'on';
-    settings.widgetTodo = formData.get('widgetTodo') === 'on';
-    settings.widgetWeather = formData.get('widgetWeather') === 'on';
-    settings.widgetClock = formData.get('widgetClock') === 'on';
+    Object.keys(settings).forEach(key => settings[key] = formData.get(key) === 'on' ? true : formData.get(key));
     localStorage.setItem('dashboardSettings', JSON.stringify(settings));
     applyWidgetVisibility();
     settingsModal.style.display = 'none';
@@ -94,44 +85,36 @@ document.addEventListener('DOMContentLoaded', () => {
   notesArea.value = localStorage.getItem('notes') || '';
   notesArea.addEventListener('input', () => localStorage.setItem('notes', notesArea.value));
 
-  // Calculator Widget
+  // Calculator Widget (Secure)
   const calcInput = document.getElementById('calcInput');
   const calcButtonsContainer = document.querySelector('.calc-buttons');
   const calcButtons = ['C', '7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'];
-  calcButtons.forEach((btn) => {
-    const button = document.createElement('button');
-    button.textContent = btn;
-    button.classList.add('calc-button');
-    button.addEventListener('click', () => {
-      if (btn === 'C') {
-        calcInput.value = '';
-      } else if (btn === '=') {
-        try {
-          calcInput.value = eval(calcInput.value) || '';
-        } catch {
-          calcInput.value = 'Error';
-        }
-      } else {
-        calcInput.value += btn;
-      }
-    });
-    calcButtonsContainer.appendChild(button);
+  function handleCalculatorInput(value) {
+    if (value === 'C') calcInput.value = '';
+    else if (value === '=') {
+      try { calcInput.value = new Function(`return ${calcInput.value}`)(); } 
+      catch { calcInput.value = 'Error'; }
+    } else calcInput.value += value;
+  }
+  calcButtonsContainer.addEventListener('click', (e) => {
+    if (e.target.classList.contains('calc-button')) handleCalculatorInput(e.target.textContent);
   });
 
-  // To‑Do List Widget
+  // To-Do List Widget (Efficient Updates)
   const todoInput = document.getElementById('todoInput');
   const todoList = document.getElementById('todoList');
   const addTodoButton = document.getElementById('addTodo');
   let todos = JSON.parse(localStorage.getItem('todos')) || [];
   function updateTodos() {
     localStorage.setItem('todos', JSON.stringify(todos));
-    todoList.innerHTML = todos.map((todo, idx) => `
-      <li>
-        <input type="checkbox" ${todo.done ? 'checked' : ''} onchange="toggleTodo(${idx})">
-        <span>${todo.text}</span>
-        <button onclick="deleteTodo(${idx})" title="Delete Task">×</button>
-      </li>
-    `).join('');
+    todoList.innerHTML = '';
+    const fragment = document.createDocumentFragment();
+    todos.forEach((todo, idx) => {
+      const li = document.createElement('li');
+      li.innerHTML = `<input type="checkbox" ${todo.done ? 'checked' : ''} onchange="toggleTodo(${idx})"> <span>${todo.text}</span> <button onclick="deleteTodo(${idx})">×</button>`;
+      fragment.appendChild(li);
+    });
+    todoList.appendChild(fragment);
   }
   addTodoButton.addEventListener('click', () => {
     const text = todoInput.value.trim();
@@ -141,49 +124,31 @@ document.addEventListener('DOMContentLoaded', () => {
       updateTodos();
     }
   });
-  window.toggleTodo = function(idx) {
-    todos[idx].done = !todos[idx].done;
-    updateTodos();
-  };
-  window.deleteTodo = function(idx) {
-    todos.splice(idx, 1);
-    updateTodos();
-  };
+  window.toggleTodo = idx => { todos[idx].done = !todos[idx].done; updateTodos(); };
+  window.deleteTodo = idx => { todos.splice(idx, 1); updateTodos(); };
   updateTodos();
 
-  // Weather Widget using Open‑Meteo API
+  // Weather Widget with Better Error Handling
   const weatherInfo = document.getElementById('weatherInfo');
-  function fetchWeather(lat, lon) {
-    fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`)
-      .then(response => response.json())
-      .then(data => {
-        if (data && data.current_weather) {
-          const { temperature, windspeed } = data.current_weather;
-          weatherInfo.innerHTML = `<p>Temp: ${temperature}°C | Wind: ${windspeed} km/h</p>`;
-        } else {
-          weatherInfo.innerHTML = '<p>Weather data unavailable.</p>';
-        }
-      })
-      .catch(() => weatherInfo.innerHTML = '<p>Error fetching weather data.</p>');
+  async function fetchWeather(lat, lon) {
+    try {
+      const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+      if (!response.ok) throw new Error('Failed to fetch data');
+      const data = await response.json();
+      if (data.current_weather) {
+        const { temperature, windspeed } = data.current_weather;
+        weatherInfo.innerHTML = `<p>Temp: ${temperature}°C | Wind: ${windspeed} km/h</p>`;
+      }
+    } catch {
+      weatherInfo.innerHTML = '<p>Error fetching weather data.</p>';
+    }
   }
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        fetchWeather(latitude, longitude);
-      },
-      () => weatherInfo.innerHTML = '<p>Location access denied.</p>'
-    );
-  } else {
-    weatherInfo.innerHTML = '<p>Geolocation not supported.</p>';
-  }
+  navigator.geolocation?.getCurrentPosition(
+    ({ coords }) => fetchWeather(coords.latitude, coords.longitude),
+    () => weatherInfo.innerHTML = '<p>Location access denied.</p>'
+  );
 
-  // Clock Widget - update every second
+  // Clock Widget
   const clockDisplay = document.getElementById('clockDisplay');
-  function updateClock() {
-    const now = new Date();
-    clockDisplay.textContent = now.toLocaleTimeString();
-  }
-  updateClock();
-  setInterval(updateClock, 1000);
+  setInterval(() => clockDisplay.textContent = new Date().toLocaleTimeString(), 1000);
 });
