@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-// Settings Modal Functionality
+  // Settings Modal Functionality
   const settingsToggle = document.getElementById('settingsToggle');
   const settingsModal = document.getElementById('settingsModal');
   const closeSettings = document.getElementById('closeSettings');
@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
     applyWidgetVisibility();
     settingsModal.style.display = 'none';
   });
-  
+
   // Notes Widget
   const notesArea = document.getElementById('notesArea');
   notesArea.value = localStorage.getItem('notes') || '';
