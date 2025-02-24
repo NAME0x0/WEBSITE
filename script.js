@@ -58,13 +58,14 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Settings Modal Functionality
-  const settingsToggle = document.getElementById('settingsToggle');
-  const settingsModal = document.getElementById('settingsModal');
-  const closeSettings = document.getElementById('closeSettings');
-  const settingsForm = document.getElementById('settingsForm');
+const settingsToggle = document.getElementById('settingsToggle');
+const settingsModal = document.getElementById('settingsModal');
+const closeSettings = document.getElementById('closeSettings');
+const settingsForm = document.getElementById('settingsForm');
 
+if (settingsToggle && settingsModal && settingsForm) {
   settingsToggle.addEventListener('click', () => {
-    // Pre-fill settings form with current values
+    console.log("Settings button clicked"); // Debugging: Check if this runs
     settingsForm.elements['defaultEngine'].value = settings.defaultEngine;
     settingsForm.elements['widgetNotes'].checked = settings.widgetNotes;
     settingsForm.elements['widgetCalculator'].checked = settings.widgetCalculator;
@@ -73,8 +74,17 @@ document.addEventListener('DOMContentLoaded', () => {
     settingsForm.elements['widgetClock'].checked = settings.widgetClock;
     settingsModal.style.display = 'block';
   });
-  closeSettings.addEventListener('click', () => settingsModal.style.display = 'none');
-  window.addEventListener('click', (e) => { if (e.target === settingsModal) settingsModal.style.display = 'none'; });
+
+  closeSettings.addEventListener('click', () => {
+    settingsModal.style.display = 'none';
+  });
+
+  window.addEventListener('click', (e) => {
+    if (e.target === settingsModal) {
+      settingsModal.style.display = 'none';
+    }
+  });
+
   settingsForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const formData = new FormData(settingsForm);
@@ -88,6 +98,9 @@ document.addEventListener('DOMContentLoaded', () => {
     applyWidgetVisibility();
     settingsModal.style.display = 'none';
   });
+} else {
+  console.error("Settings elements not found in the DOM.");
+}
 
   // Notes Widget
   const notesArea = document.getElementById('notesArea');
