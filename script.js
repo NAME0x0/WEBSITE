@@ -8,22 +8,91 @@ document.addEventListener('DOMContentLoaded', () => {
     widgetWeather: true,
     widgetClock: true
   };
-
-  let storedSettings = localStorage.getItem('dashboardSettings');
-  let settings = storedSettings ? JSON.parse(storedSettings) : defaultSettings;
+  let settings = JSON.parse(localStorage.getItem('dashboardSettings')) || defaultSettings;
 
   // Apply Widget Visibility
   function applyWidgetVisibility() {
-    const widgets = ['notes', 'calculator', 'todo', 'weather', 'clock'];
-    widgets.forEach(widget => {
-      const element = document.getElementById(widget);
-      if (element) {
-        element.style.display = settings[`widget${widget.charAt(0).toUpperCase() + widget.slice(1)}`] ? 'block' : 'none';
-      }
-    });
+    document.getElementById('notes').style.display = settings.widgetNotes ? 'block' : 'none';
+    document.getElementById('calculator').style.display = settings.widgetCalculator ? 'block' : 'none';
+    document.getElementById('todo').style.display = settings.widgetTodo ? 'block' : 'none';
+    document.getElementById('weather').style.display = settings.widgetWeather ? 'block' : 'none';
+    document.getElementById('clock').style.display = settings.widgetClock ? 'block' : 'none';
   }
   applyWidgetVisibility();
 
+  // Theme Toggle
+  const themeToggle = document.getElementById('themeToggle');
+  themeToggle.addEventListener('click', () => {
+    const currentTheme = document.body.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.body.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+  });
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme) {
+    document.body.setAttribute('data-theme', savedTheme);
+  }
+
+  // Search Functionality
+  const searchInput = document.getElementById('searchInput');
+  const searchBtn = document.getElementById('searchBtn');
+  const searchEngines = {
+    google: 'https://www.google.com/search?q=',
+    duckduckgo: 'https://duckduckgo.com/?q=',
+    bing: 'https://www.bing.com/search?q=',
+    perplexity: 'https://www.perplexity.ai/?q='
+  };
+  function performSearch() {
+    const query = encodeURIComponent(searchInput.value.trim());
+    if (query) {
+      const engineUrl = searchEngines[settings.defaultEngine] || searchEngines.google;
+      window.open(engineUrl + query, '_blank');
+    }
+  }
+  searchBtn.addEventListener('click', performSearch);
+  searchInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      performSearch();
+    }
+  });
+
+  // Settings Modal Functionality
+  const settingsToggle = document.getElementById('settingsToggle');
+  const settingsModal = document.getElementById('settingsModal');
+  const closeSettings = document.getElementById('closeSettings');
+  const settingsForm = document.getElementById('settingsForm');
+
+  settingsToggle.addEventListener('click', () => {
+    // Pre-fill settings form with current values
+    settingsForm.elements['defaultEngine'].value = settings.defaultEngine;
+    settingsForm.elements['widgetNotes'].checked = settings.widgetNotes;
+    settingsForm.elements['widgetCalculator'].checked = settings.widgetCalculator;
+    settingsForm.elements['widgetTodo'].checked = settings.widgetTodo;
+    settingsForm.elements['widgetWeather'].checked = settings.widgetWeather;
+    settingsForm.elements['widgetClock'].checked = settings.widgetClock;
+    settingsModal.style.display = 'block';
+  });
+  closeSettings.addEventListener('click', () => settingsModal.style.display = 'none');
+  window.addEventListener('click', (e) => { if (e.target === settingsModal) settingsModal.style.display = 'none'; });
+  settingsForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const formData = new FormData(settingsForm);
+    settings.defaultEngine = formData.get('defaultEngine');
+    settings.widgetNotes = formData.get('widgetNotes') === 'on';
+    settings.widgetCalculator = formData.get('widgetCalculator') === 'on';
+    settings.widgetTodo = formData.get('widgetTodo') === 'on';
+    settings.widgetWeather = formData.get('widgetWeather') === 'on';
+    settings.widgetClock = formData.get('widgetClock') === 'on';
+    localStorage.setItem('dashboardSettings', JSON.stringify(settings));
+    applyWidgetVisibility();
+    settingsModal.style.display = 'none';
+  });
+
+  // Notes Widget
+  const notesArea = document.getElementById('notesArea');
+  notesArea.value = localStorage.getItem('notes') || '';
+  notesArea.addEventListener('input', () => localStorage.setItem('notes', notesArea.value));
   // Calculator Widget - Ensure Elements Exist Before Running Script
   const calcInput = document.getElementById('calcInput');
   const calcButtonsContainer = document.querySelector('.calc-buttons');
