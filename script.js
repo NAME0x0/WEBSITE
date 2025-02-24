@@ -57,22 +57,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Settings Modal Functionality
-const settingsToggle = document.getElementById('settingsToggle');
-const settingsModal = document.getElementById('settingsModal');
-const closeSettings = document.getElementById('closeSettings');
-const settingsForm = document.getElementById('settingsForm');
+// Settings Modal Functionality
+  const settingsToggle = document.getElementById('settingsToggle');
+  const settingsModal = document.getElementById('settingsModal');
+  const closeSettings = document.getElementById('closeSettings');
+  const settingsForm = document.getElementById('settingsForm');
 
-if (settingsToggle && settingsModal && closeSettings && settingsForm) {
   settingsToggle.addEventListener('click', () => {
-    console.log("Settings button clicked"); // Debugging
-
-    // Ensure settingsForm exists before modifying elements
-    if (!settingsForm.elements['defaultEngine']) {
-      console.error("Settings form elements not found!");
-      return;
-    }
-
     // Pre-fill settings form with current values
     settingsForm.elements['defaultEngine'].value = settings.defaultEngine;
     settingsForm.elements['widgetNotes'].checked = settings.widgetNotes;
@@ -80,21 +71,12 @@ if (settingsToggle && settingsModal && closeSettings && settingsForm) {
     settingsForm.elements['widgetTodo'].checked = settings.widgetTodo;
     settingsForm.elements['widgetWeather'].checked = settings.widgetWeather;
     settingsForm.elements['widgetClock'].checked = settings.widgetClock;
-    
     settingsModal.style.display = 'block';
   });
-
   closeSettings.addEventListener('click', () => settingsModal.style.display = 'none');
-
-  window.addEventListener('click', (e) => {
-    if (e.target === settingsModal) {
-      settingsModal.style.display = 'none';
-    }
-  });
-
+  window.addEventListener('click', (e) => { if (e.target === settingsModal) settingsModal.style.display = 'none'; });
   settingsForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    
     const formData = new FormData(settingsForm);
     settings.defaultEngine = formData.get('defaultEngine');
     settings.widgetNotes = formData.get('widgetNotes') === 'on';
@@ -102,14 +84,11 @@ if (settingsToggle && settingsModal && closeSettings && settingsForm) {
     settings.widgetTodo = formData.get('widgetTodo') === 'on';
     settings.widgetWeather = formData.get('widgetWeather') === 'on';
     settings.widgetClock = formData.get('widgetClock') === 'on';
-
     localStorage.setItem('dashboardSettings', JSON.stringify(settings));
     applyWidgetVisibility();
     settingsModal.style.display = 'none';
   });
-} else {
-  console.error("One or more settings modal elements not found in the DOM.");
-}
+  
   // Notes Widget
   const notesArea = document.getElementById('notesArea');
   notesArea.value = localStorage.getItem('notes') || '';
