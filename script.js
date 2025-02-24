@@ -63,21 +63,28 @@ const settingsModal = document.getElementById('settingsModal');
 const closeSettings = document.getElementById('closeSettings');
 const settingsForm = document.getElementById('settingsForm');
 
-if (settingsToggle && settingsModal && settingsForm) {
+if (settingsToggle && settingsModal && closeSettings && settingsForm) {
   settingsToggle.addEventListener('click', () => {
-    console.log("Settings button clicked"); // Debugging: Check if this runs
+    console.log("Settings button clicked"); // Debugging
+
+    // Ensure settingsForm exists before modifying elements
+    if (!settingsForm.elements['defaultEngine']) {
+      console.error("Settings form elements not found!");
+      return;
+    }
+
+    // Pre-fill settings form with current values
     settingsForm.elements['defaultEngine'].value = settings.defaultEngine;
     settingsForm.elements['widgetNotes'].checked = settings.widgetNotes;
     settingsForm.elements['widgetCalculator'].checked = settings.widgetCalculator;
     settingsForm.elements['widgetTodo'].checked = settings.widgetTodo;
     settingsForm.elements['widgetWeather'].checked = settings.widgetWeather;
     settingsForm.elements['widgetClock'].checked = settings.widgetClock;
+    
     settingsModal.style.display = 'block';
   });
 
-  closeSettings.addEventListener('click', () => {
-    settingsModal.style.display = 'none';
-  });
+  closeSettings.addEventListener('click', () => settingsModal.style.display = 'none');
 
   window.addEventListener('click', (e) => {
     if (e.target === settingsModal) {
@@ -87,6 +94,7 @@ if (settingsToggle && settingsModal && settingsForm) {
 
   settingsForm.addEventListener('submit', (e) => {
     e.preventDefault();
+    
     const formData = new FormData(settingsForm);
     settings.defaultEngine = formData.get('defaultEngine');
     settings.widgetNotes = formData.get('widgetNotes') === 'on';
@@ -94,14 +102,14 @@ if (settingsToggle && settingsModal && settingsForm) {
     settings.widgetTodo = formData.get('widgetTodo') === 'on';
     settings.widgetWeather = formData.get('widgetWeather') === 'on';
     settings.widgetClock = formData.get('widgetClock') === 'on';
+
     localStorage.setItem('dashboardSettings', JSON.stringify(settings));
     applyWidgetVisibility();
     settingsModal.style.display = 'none';
   });
 } else {
-  console.error("Settings elements not found in the DOM.");
+  console.error("One or more settings modal elements not found in the DOM.");
 }
-
   // Notes Widget
   const notesArea = document.getElementById('notesArea');
   notesArea.value = localStorage.getItem('notes') || '';
@@ -124,7 +132,7 @@ if (settingsToggle && settingsModal && settingsForm) {
           calcInput.value = '';
         } else if (btn === '=') {
           try {
-            calcInput.value = Function(`"use strict"; return (${calcInput.value})`)();
+            calcInput.value = Function("use strict"; return (${calcInput.value}))();
           } catch {
             calcInput.value = 'Error';
           }
@@ -192,13 +200,13 @@ if (settingsToggle && settingsModal && settingsForm) {
 
   function updateTodos() {
     localStorage.setItem('todos', JSON.stringify(todos));
-    todoList.innerHTML = todos.map((todo, idx) => `
+    todoList.innerHTML = todos.map((todo, idx) => 
       <li>
         <input type="checkbox" ${todo.done ? 'checked' : ''} onchange="toggleTodo(${idx})">
         <span>${todo.text}</span>
         <button onclick="deleteTodo(${idx})" title="Delete Task">×</button>
       </li>
-    `).join('');
+    ).join('');
   }
 
   addTodoButton.addEventListener('click', () => {
@@ -225,12 +233,12 @@ if (settingsToggle && settingsModal && settingsForm) {
   const weatherInfo = document.getElementById('weatherInfo');
 
   function fetchWeather(lat, lon) {
-    fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`)
+    fetch(https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true)
       .then(response => response.json())
       .then(data => {
         if (data && data.current_weather) {
           const { temperature, windspeed } = data.current_weather;
-          weatherInfo.innerHTML = `<p>Temp: ${temperature}°C | Wind: ${windspeed} km/h</p>`;
+          weatherInfo.innerHTML = <p>Temp: ${temperature}°C | Wind: ${windspeed} km/h</p>;
         } else {
           weatherInfo.innerHTML = '<p>Weather data unavailable.</p>';
         }
