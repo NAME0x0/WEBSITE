@@ -12,26 +12,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Apply Widget Visibility
   function applyWidgetVisibility() {
-    document.getElementById('notes').style.display = settings.widgetNotes ? 'block' : 'none';
-    document.getElementById('calculator').style.display = settings.widgetCalculator ? 'block' : 'none';
-    document.getElementById('todo').style.display = settings.widgetTodo ? 'block' : 'none';
-    document.getElementById('weather').style.display = settings.widgetWeather ? 'block' : 'none';
-    document.getElementById('clock').style.display = settings.widgetClock ? 'block' : 'none';
+    ['notes', 'calculator', 'todo', 'weather', 'clock'].forEach(widget => {
+      document.getElementById(widget).style.display = settings[`widget${widget.charAt(0).toUpperCase() + widget.slice(1)}`] ? 'block' : 'none';
+    });
   }
   applyWidgetVisibility();
 
   // Theme Toggle
   const themeToggle = document.getElementById('themeToggle');
   themeToggle.addEventListener('click', () => {
-    const currentTheme = document.body.getAttribute('data-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    const newTheme = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
     document.body.setAttribute('data-theme', newTheme);
     localStorage.setItem('theme', newTheme);
   });
+
   const savedTheme = localStorage.getItem('theme');
-  if (savedTheme) {
-    document.body.setAttribute('data-theme', savedTheme);
-  }
+  if (savedTheme) document.body.setAttribute('data-theme', savedTheme);
 
   // Search Functionality
   const searchInput = document.getElementById('searchInput');
@@ -42,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
     bing: 'https://www.bing.com/search?q=',
     perplexity: 'https://www.perplexity.ai/?q='
   };
+
   function performSearch() {
     const query = encodeURIComponent(searchInput.value.trim());
     if (query) {
@@ -49,6 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
       window.open(engineUrl + query, '_blank');
     }
   }
+
   searchBtn.addEventListener('click', performSearch);
   searchInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
@@ -64,26 +62,30 @@ document.addEventListener('DOMContentLoaded', () => {
   const settingsForm = document.getElementById('settingsForm');
 
   settingsToggle.addEventListener('click', () => {
-    // Pre-fill settings form with current values
-    settingsForm.elements['defaultEngine'].value = settings.defaultEngine;
-    settingsForm.elements['widgetNotes'].checked = settings.widgetNotes;
-    settingsForm.elements['widgetCalculator'].checked = settings.widgetCalculator;
-    settingsForm.elements['widgetTodo'].checked = settings.widgetTodo;
-    settingsForm.elements['widgetWeather'].checked = settings.widgetWeather;
-    settingsForm.elements['widgetClock'].checked = settings.widgetClock;
+    Object.keys(defaultSettings).forEach(key => {
+      if (settingsForm.elements[key]) {
+        if (typeof settings[key] === 'boolean') {
+          settingsForm.elements[key].checked = settings[key];
+        } else {
+          settingsForm.elements[key].value = settings[key];
+        }
+      }
+    });
     settingsModal.style.display = 'block';
   });
+
   closeSettings.addEventListener('click', () => settingsModal.style.display = 'none');
-  window.addEventListener('click', (e) => { if (e.target === settingsModal) settingsModal.style.display = 'none'; });
+  window.addEventListener('click', (e) => {
+    if (e.target === settingsModal) settingsModal.style.display = 'none';
+  });
+
   settingsForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const formData = new FormData(settingsForm);
-    settings.defaultEngine = formData.get('defaultEngine');
-    settings.widgetNotes = formData.get('widgetNotes') === 'on';
-    settings.widgetCalculator = formData.get('widgetCalculator') === 'on';
-    settings.widgetTodo = formData.get('widgetTodo') === 'on';
-    settings.widgetWeather = formData.get('widgetWeather') === 'on';
-    settings.widgetClock = formData.get('widgetClock') === 'on';
+    Object.keys(defaultSettings).forEach(key => {
+      settings[key] = formData.get(key) === 'on' || formData.get(key);
+    });
+
     localStorage.setItem('dashboardSettings', JSON.stringify(settings));
     applyWidgetVisibility();
     settingsModal.style.display = 'none';
@@ -91,18 +93,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Notes Widget
   const notesArea = document.getElementById('notesArea');
-  notesArea.value = localStorage.getItem('notes') || '';
-  notesArea.addEventListener('input', () => localStorage.setItem('notes', notesArea.value));
-  // Calculator Widget - Ensure Elements Exist Before Running Script
+  if (notesArea) {
+    notesArea.value = localStorage.getItem('notes') || '';
+    notesArea.addEventListener('input', () => localStorage.setItem('notes', notesArea.value));
+  }
+
+  // Calculator Widget
   const calcInput = document.getElementById('calcInput');
   const calcButtonsContainer = document.querySelector('.calc-buttons');
-
-  console.log(calcButtonsContainer); // Debugging: Ensure this exists
-
   if (calcInput && calcButtonsContainer) {
     const calcButtons = ['C', '7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'];
 
-    calcButtons.forEach((btn) => {
+    calcButtons.forEach(btn => {
       const button = document.createElement('button');
       button.textContent = btn;
       button.classList.add('calc-button');
@@ -111,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
           calcInput.value = '';
         } else if (btn === '=') {
           try {
-            calcInput.value = Function("use strict"; return (${calcInput.value}))();
+            calcInput.value = Function(`"use strict"; return (${calcInput.value})`)();
           } catch {
             calcInput.value = 'Error';
           }
@@ -121,54 +123,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       calcButtonsContainer.appendChild(button);
     });
-  } else {
-    console.error("Calculator elements not found in the DOM. Make sure your HTML has the correct IDs and classes.");
-  }
-
-  // Theme Toggle
-  const themeToggle = document.getElementById('themeToggle');
-  themeToggle.addEventListener('click', () => {
-    const currentTheme = document.body.getAttribute('data-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    document.body.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
-  });
-  const savedTheme = localStorage.getItem('theme');
-  if (savedTheme) {
-    document.body.setAttribute('data-theme', savedTheme);
-  }
-
-  // Search Functionality
-  const searchInput = document.getElementById('searchInput');
-  const searchBtn = document.getElementById('searchBtn');
-  const searchEngines = {
-    google: 'https://www.google.com/search?q=',
-    duckduckgo: 'https://duckduckgo.com/?q=',
-    bing: 'https://www.bing.com/search?q=',
-    perplexity: 'https://www.perplexity.ai/?q='
-  };
-
-  function performSearch() {
-    const query = encodeURIComponent(searchInput.value.trim());
-    if (query) {
-      const engineUrl = searchEngines[settings.defaultEngine] || searchEngines.google;
-      window.open(engineUrl + query, '_blank');
-    }
-  }
-
-  searchBtn.addEventListener('click', performSearch);
-  searchInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      performSearch();
-    }
-  });
-
-  // Notes Widget
-  const notesArea = document.getElementById('notesArea');
-  if (notesArea) {
-    notesArea.value = localStorage.getItem('notes') || '';
-    notesArea.addEventListener('input', () => localStorage.setItem('notes', notesArea.value));
   }
 
   // To-Do List Widget
@@ -179,13 +133,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function updateTodos() {
     localStorage.setItem('todos', JSON.stringify(todos));
-    todoList.innerHTML = todos.map((todo, idx) => 
+    todoList.innerHTML = todos.map((todo, idx) => `
       <li>
         <input type="checkbox" ${todo.done ? 'checked' : ''} onchange="toggleTodo(${idx})">
         <span>${todo.text}</span>
         <button onclick="deleteTodo(${idx})" title="Delete Task">×</button>
       </li>
-    ).join('');
+    `).join('');
   }
 
   addTodoButton.addEventListener('click', () => {
@@ -212,12 +166,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const weatherInfo = document.getElementById('weatherInfo');
 
   function fetchWeather(lat, lon) {
-    fetch(https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true)
+    fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`)
       .then(response => response.json())
       .then(data => {
-        if (data && data.current_weather) {
+        if (data?.current_weather) {
           const { temperature, windspeed } = data.current_weather;
-          weatherInfo.innerHTML = <p>Temp: ${temperature}°C | Wind: ${windspeed} km/h</p>;
+          weatherInfo.innerHTML = `<p>Temp: ${temperature}°C | Wind: ${windspeed} km/h</p>`;
         } else {
           weatherInfo.innerHTML = '<p>Weather data unavailable.</p>';
         }
@@ -227,10 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        fetchWeather(latitude, longitude);
-      },
+      position => fetchWeather(position.coords.latitude, position.coords.longitude),
       () => weatherInfo.innerHTML = '<p>Location access denied.</p>'
     );
   } else {
@@ -241,9 +192,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const clockDisplay = document.getElementById('clockDisplay');
 
   function updateClock() {
-    const now = new Date();
-    clockDisplay.textContent = now.toLocaleTimeString();
+    clockDisplay.textContent = new Date().toLocaleTimeString();
   }
+
   updateClock();
   setInterval(updateClock, 1000);
 });
