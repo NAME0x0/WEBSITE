@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Futuristic Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-theme="light">
+  <div class="container">
+    <header>
+      <div class="branding">
+        <h1>Futuristic Dashboard</h1>
+        <p class="tagline">Step into the future of productivity</p>
+      </div>
+      <div class="header-controls">
+        <button id="themeToggle" title="Toggle Theme">🌗</button>
+        <button id="settingsToggle" title="Settings">⚙️<span class="star">⭐</span></button>
+      </div>
+      <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search the web..." autofocus>
+        <button id="searchBtn" title="Search">🔍</button>
+      </div>
+    </header>
+
+    <main class="dashboard">
+      <section id="notes" class="widget">
+        <h2>Notes</h2>
+        <textarea id="notesArea" placeholder="Your thoughts..."></textarea>
+      </section>
+
+      <section id="calculator" class="widget">
+        <h2>Calculator</h2>
+        <input type="text" id="calcInput" readonly placeholder="0">
+        <div class="calc-buttons"></div>
+      </section>
+
+      <section id="todo" class="widget">
+        <h2>To‑Do List</h2>
+        <div class="todo-input">
+          <input type="text" id="todoInput" placeholder="New task...">
+          <button id="addTodo" title="Add Task">➕</button>
+        </div>
+        <ul id="todoList"></ul>
+      </section>
+
+      <section id="weather" class="widget">
+        <h2>Weather</h2>
+        <div id="weatherInfo">
+          <p>Loading weather...</p>
+        </div>
+      </section>
+
+      <section id="clock" class="widget">
+        <h2>Clock</h2>
+        <div id="clockDisplay">--:--:--</div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Settings Modal -->
+  <div id="settingsModal" class="modal">
+    <div class="modal-content">
+      <span id="closeSettings" class="close" title="Close Settings">&times;</span>
+      <h2>Dashboard Settings</h2>
+      <form id="settingsForm">
+        <fieldset>
+          <legend>Default Search Engine</legend>
+          <label><input type="radio" name="defaultEngine" value="google" checked> Google</label>
+          <label><input type="radio" name="defaultEngine" value="duckduckgo"> DuckDuckGo</label>
+          <label><input type="radio" name="defaultEngine" value="bing"> Bing</label>
+          <label><input type="radio" name="defaultEngine" value="perplexity"> Perplexity.ai</label>
+        </fieldset>
+        <fieldset>
+          <legend>Widgets</legend>
+          <label><input type="checkbox" name="widgetNotes" checked> Notes</label>
+          <label><input type="checkbox" name="widgetCalculator" checked> Calculator</label>
+          <label><input type="checkbox" name="widgetTodo" checked> To‑Do List</label>
+          <label><input type="checkbox" name="widgetWeather" checked> Weather</label>
+          <label><input type="checkbox" name="widgetClock" checked> Clock</label>
+        </fieldset>
+        <button type="submit">Save Settings</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

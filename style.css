@@ -1,0 +1,360 @@
+/* Root Variables & Dark Theme Overrides */
+:root {
+  --primary-color: #ffffff;
+  --secondary-color: #0abde3;
+  --accent-color: #ff6b6b;
+  --bg-color: #1e1e2f;
+  --text-color: #ffffff;
+  --widget-bg: rgba(255, 255, 255, 0.1);
+  --border-color: rgba(255, 255, 255, 0.2);
+  --hover-bg: #0a91ba;
+  --focus-outline: #ff6b6b;
+  --spacing: 20px;
+  --transition-speed: 0.3s;
+}
+[data-theme="light"] {
+  --bg-color: #f0f0f0;
+  --text-color: #333333;
+  --widget-bg: rgba(255, 255, 255, 0.8);
+  --border-color: #ccc;
+}
+[data-theme="dark"] {
+  --bg-color: #1e1e2f;
+  --text-color: #ffffff;
+  --widget-bg: rgba(255, 255, 255, 0.1);
+  --border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Global Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: var(--bg-color);
+  color: var(--text-color);
+  transition: background var(--transition-speed), color var(--transition-speed);
+  overflow-x: hidden;
+}
+
+/* Animated Background */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #0abde3, #ff6b6b, #9b59b6);
+  background-size: 400% 400%;
+  z-index: -1;
+  animation: gradientAnimation 20s ease infinite;
+}
+@keyframes gradientAnimation {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Container & Header */
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: var(--spacing);
+}
+header {
+  text-align: center;
+  margin-bottom: var(--spacing);
+  padding: var(--spacing) 0;
+}
+.branding h1 {
+  font-size: 3rem;
+  letter-spacing: 2px;
+  margin-bottom: 5px;
+}
+.tagline {
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  opacity: 0.8;
+}
+.header-controls {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.header-controls button {
+  background: var(--secondary-color);
+  border: none;
+  color: var(--text-color);
+  padding: 10px 15px;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: background var(--transition-speed);
+}
+.header-controls button:hover {
+  background: var(--hover-bg);
+}
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: var(--spacing);
+}
+.search-container input[type="text"] {
+  width: 60%;
+  padding: 12px 20px;
+  border: 2px solid var(--border-color);
+  border-radius: 50px 0 0 50px;
+  font-size: 1rem;
+  outline: none;
+  transition: border var(--transition-speed);
+  background: rgba(255, 255, 255, 0.2);
+}
+.search-container input[type="text"]:focus {
+  border-color: var(--focus-outline);
+}
+.search-container button {
+  padding: 12px 20px;
+  border: none;
+  background: var(--secondary-color);
+  color: var(--text-color);
+  font-size: 1rem;
+  border-radius: 0 50px 50px 0;
+  cursor: pointer;
+  transition: background var(--transition-speed);
+}
+.search-container button:hover {
+  background: var(--hover-bg);
+}
+
+/* Dashboard Layout & Widgets */
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--spacing);
+}
+.widget {
+  background: var(--widget-bg);
+  padding: var(--spacing);
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color);
+  transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+}
+.widget:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+}
+.widget h2 {
+  margin-bottom: 15px;
+  font-size: 1.8rem;
+  color: var(--secondary-color);
+}
+
+/* Notes Widget */
+#notes textarea {
+  width: 100%;
+  height: 160px;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  font-size: 1rem;
+  resize: none;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.star {
+  display: none; /* Hide the star initially */
+  font-size: 10px; /* Adjust size of the star */
+  margin-left: 5px; /* Space between the settings icon and the star */
+}
+
+#settingsToggle:hover .star {
+  display: inline; /* Show the star when the button is hovered */
+}
+
+/* Calculator Widget */
+#calcInput {
+  width: 100%;
+  padding: 12px;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  background-color: var(--bg-color);
+  text-align: right;
+}
+.calc-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.calc-button {
+  padding: 15px;
+  font-size: 1.1rem;
+  background: var(--secondary-color);
+  color: var(--text-color);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background var(--transition-speed), transform 0.2s;
+}
+.calc-button:hover {
+  background: var(--hover-bg);
+  transform: scale(1.05);
+}
+.calc-button:focus {
+  outline: 3px solid var(--focus-outline);
+}
+
+/* To‑Do Widget */
+.todo-input {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+.todo-input input[type="text"] {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  font-size: 1rem;
+  background: rgba(255, 255, 255, 0.3);
+}
+.todo-input button {
+  padding: 12px 20px;
+  background: var(--secondary-color);
+  color: var(--text-color);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background var(--transition-speed);
+}
+.todo-input button:hover {
+  background: var(--hover-bg);
+}
+#todoList {
+  list-style: none;
+}
+#todoList li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid var(--border-color);
+}
+#todoList li span {
+  flex: 1;
+  margin-left: 10px;
+}
+#todoList li button {
+  background: transparent;
+  border: none;
+  color: var(--secondary-color);
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+/* Weather Widget */
+#weatherInfo {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 1.1rem;
+}
+
+/* Clock Widget */
+#clockDisplay {
+  font-size: 2rem;
+  text-align: center;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  letter-spacing: 2px;
+}
+
+/* Settings Modal */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 100;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100vh; /* Use viewport height to ensure full coverage */
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.7);
+  transition: opacity var(--transition-speed);
+}
+.modal-content {
+  background: var(--widget-bg);
+  margin: 8% auto;
+  padding: var(--spacing);
+  border: 1px solid var(--border-color);
+  width: 90%;
+  max-width: 500px;
+  border-radius: 15px;
+  position: relative;
+  animation: modalAppear 0.5s ease;
+}
+@keyframes modalAppear {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  color: var(--text-color);
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.modal-content h2 {
+  margin-bottom: 20px;
+  text-align: center;
+}
+.modal-content form fieldset {
+  border: 1px solid var(--border-color);
+  padding: 10px;
+  margin-bottom: 20px;
+}
+.modal-content form fieldset legend {
+  padding: 0 5px;
+  font-weight: bold;
+}
+.modal-content form label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+.modal-content form button {
+  width: 100%;
+  padding: 12px;
+  background: var(--secondary-color);
+  color: var(--text-color);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background var(--transition-speed);
+}
+.modal-content form button:hover {
+  background: var(--hover-bg);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .search-container input[type="text"] {
+    width: 80%;
+  }
+  .branding h1 {
+    font-size: 2.5rem;
+  }
+  .tagline {
+    font-size: 1rem;
+  }
+}
