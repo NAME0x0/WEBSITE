@@ -9,6 +9,52 @@ document.addEventListener('DOMContentLoaded', () => {
     widgetClock: true
   };
   let settings = JSON.parse(localStorage.getItem('dashboardSettings')) || defaultSettings;
+// Calculator Widget
+const calcInput = document.getElementById('calcInput');
+const calcButtonsContainer = document.querySelector('.calc-buttons');
+const calcButtons = ['C', '7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'];
+calcButtons.forEach((btn) => {
+  const button = document.createElement('button');
+  button.textContent = btn;
+  button.classList.add('calc-button');
+  button.addEventListener('click', () => {
+    if (btn === 'C') {
+      calcInput.value = '';
+    } else if (btn === '=') {
+      try {
+        calcInput.value = eval(calcInput.value) || '';
+      } catch {
+        calcInput.value = 'Error';
+      }
+    } else {
+      calcInput.value += btn;
+    }
+  });
+  calcButtonsContainer.appendChild(button);
+});
+// Calculator Widget
+const calcInput = document.getElementById('calcInput');
+const calcButtonsContainer = document.querySelector('.calc-buttons');
+const calcButtons = ['C', '7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'];
+calcButtons.forEach((btn) => {
+  const button = document.createElement('button');
+  button.textContent = btn;
+  button.classList.add('calc-button');
+  button.addEventListener('click', () => {
+    if (btn === 'C') {
+      calcInput.value = '';
+    } else if (btn === '=') {
+      try {
+        calcInput.value = eval(calcInput.value) || '';
+      } catch {
+        calcInput.value = 'Error';
+      }
+    } else {
+      calcInput.value += btn;
+    }
+  });
+  calcButtonsContainer.appendChild(button);
+});
 
   // Apply Widget Visibility
   function applyWidgetVisibility() {
