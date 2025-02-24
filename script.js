@@ -9,53 +9,58 @@ document.addEventListener('DOMContentLoaded', () => {
     widgetClock: true
   };
   let settings = JSON.parse(localStorage.getItem('dashboardSettings')) || defaultSettings;
-// Calculator Widget
-const calcInput = document.getElementById('calcInput');
-const calcButtonsContainer = document.querySelector('.calc-buttons');
-const calcButtons = ['C', '7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'];
-calcButtons.forEach((btn) => {
-  const button = document.createElement('button');
-  button.textContent = btn;
-  button.classList.add('calc-button');
-  button.addEventListener('click', () => {
-    if (btn === 'C') {
-      calcInput.value = '';
-    } else if (btn === '=') {
-      try {
-        calcInput.value = eval(calcInput.value) || '';
-      } catch {
-        calcInput.value = 'Error';
-      }
-    } else {
-      calcInput.value += btn;
-    }
-  });
-  calcButtonsContainer.appendChild(button);
-});
-// Calculator Widget
-const calcInput = document.getElementById('calcInput');
-const calcButtonsContainer = document.querySelector('.calc-buttons');
-const calcButtons = ['C', '7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'];
-calcButtons.forEach((btn) => {
-  const button = document.createElement('button');
-  button.textContent = btn;
-  button.classList.add('calc-button');
-  button.addEventListener('click', () => {
-    if (btn === 'C') {
-      calcInput.value = '';
-    } else if (btn === '=') {
-      try {
-        calcInput.value = eval(calcInput.value) || '';
-      } catch {
-        calcInput.value = 'Error';
-      }
-    } else {
-      calcInput.value += btn;
-    }
-  });
-  calcButtonsContainer.appendChild(button);
-});
+document.addEventListener('DOMContentLoaded', () => {
+  // Default Settings
+  const defaultSettings = {
+    defaultEngine: 'google',
+    widgetNotes: true,
+    widgetCalculator: true,
+    widgetTodo: true,
+    widgetWeather: true,
+    widgetClock: true
+  };
+  let settings = JSON.parse(localStorage.getItem('dashboardSettings')) || defaultSettings;
 
+  // Apply Widget Visibility
+  function applyWidgetVisibility() {
+    document.getElementById('notes').style.display = settings.widgetNotes ? 'block' : 'none';
+    document.getElementById('calculator').style.display = settings.widgetCalculator ? 'block' : 'none';
+    document.getElementById('todo').style.display = settings.widgetTodo ? 'block' : 'none';
+    document.getElementById('weather').style.display = settings.widgetWeather ? 'block' : 'none';
+    document.getElementById('clock').style.display = settings.widgetClock ? 'block' : 'none';
+  }
+  applyWidgetVisibility();
+
+  // Calculator Widget - Ensure Elements Exist Before Running Script
+  const calcInput = document.getElementById('calcInput');
+  const calcButtonsContainer = document.querySelector('.calc-buttons');
+
+  if (calcInput && calcButtonsContainer) {
+    const calcButtons = ['C', '7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'];
+    
+    calcButtons.forEach((btn) => {
+      const button = document.createElement('button');
+      button.textContent = btn;
+      button.classList.add('calc-button');
+      button.addEventListener('click', () => {
+        if (btn === 'C') {
+          calcInput.value = '';
+        } else if (btn === '=') {
+          try {
+            calcInput.value = eval(calcInput.value) || '';
+          } catch {
+            calcInput.value = 'Error';
+          }
+        } else {
+          calcInput.value += btn;
+        }
+      });
+      calcButtonsContainer.appendChild(button);
+    });
+  } else {
+    console.error("Calculator elements not found in the DOM. Make sure your HTML has the correct IDs and classes.");
+  }
+});
   // Apply Widget Visibility
   function applyWidgetVisibility() {
     document.getElementById('notes').style.display = settings.widgetNotes ? 'block' : 'none';
