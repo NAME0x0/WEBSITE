@@ -8,21 +8,27 @@ document.addEventListener('DOMContentLoaded', () => {
     widgetWeather: true,
     widgetClock: true
   };
-  let settings = JSON.parse(localStorage.getItem('dashboardSettings')) || defaultSettings;
+
+  let storedSettings = localStorage.getItem('dashboardSettings');
+  let settings = storedSettings ? JSON.parse(storedSettings) : defaultSettings;
 
   // Apply Widget Visibility
   function applyWidgetVisibility() {
-    document.getElementById('notes').style.display = settings.widgetNotes ? 'block' : 'none';
-    document.getElementById('calculator').style.display = settings.widgetCalculator ? 'block' : 'none';
-    document.getElementById('todo').style.display = settings.widgetTodo ? 'block' : 'none';
-    document.getElementById('weather').style.display = settings.widgetWeather ? 'block' : 'none';
-    document.getElementById('clock').style.display = settings.widgetClock ? 'block' : 'none';
+    const widgets = ['notes', 'calculator', 'todo', 'weather', 'clock'];
+    widgets.forEach(widget => {
+      const element = document.getElementById(widget);
+      if (element) {
+        element.style.display = settings[`widget${widget.charAt(0).toUpperCase() + widget.slice(1)}`] ? 'block' : 'none';
+      }
+    });
   }
   applyWidgetVisibility();
 
   // Calculator Widget - Ensure Elements Exist Before Running Script
   const calcInput = document.getElementById('calcInput');
   const calcButtonsContainer = document.querySelector('.calc-buttons');
+
+  console.log(calcButtonsContainer); // Debugging: Ensure this exists
 
   if (calcInput && calcButtonsContainer) {
     const calcButtons = ['C', '7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'];
@@ -36,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
           calcInput.value = '';
         } else if (btn === '=') {
           try {
-            calcInput.value = eval(calcInput.value) || '';
+            calcInput.value = Function(`"use strict"; return (${calcInput.value})`)();
           } catch {
             calcInput.value = 'Error';
           }
@@ -89,45 +95,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Settings Modal Functionality
-  const settingsToggle = document.getElementById('settingsToggle');
-  const settingsModal = document.getElementById('settingsModal');
-  const closeSettings = document.getElementById('closeSettings');
-  const settingsForm = document.getElementById('settingsForm');
-
-  settingsToggle.addEventListener('click', () => {
-    settingsForm.elements['defaultEngine'].value = settings.defaultEngine;
-    settingsForm.elements['widgetNotes'].checked = settings.widgetNotes;
-    settingsForm.elements['widgetCalculator'].checked = settings.widgetCalculator;
-    settingsForm.elements['widgetTodo'].checked = settings.widgetTodo;
-    settingsForm.elements['widgetWeather'].checked = settings.widgetWeather;
-    settingsForm.elements['widgetClock'].checked = settings.widgetClock;
-    settingsModal.style.display = 'block';
-  });
-
-  closeSettings.addEventListener('click', () => settingsModal.style.display = 'none');
-  window.addEventListener('click', (e) => {
-    if (e.target === settingsModal) settingsModal.style.display = 'none';
-  });
-
-  settingsForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const formData = new FormData(settingsForm);
-    settings.defaultEngine = formData.get('defaultEngine');
-    settings.widgetNotes = formData.get('widgetNotes') === 'on';
-    settings.widgetCalculator = formData.get('widgetCalculator') === 'on';
-    settings.widgetTodo = formData.get('widgetTodo') === 'on';
-    settings.widgetWeather = formData.get('widgetWeather') === 'on';
-    settings.widgetClock = formData.get('widgetClock') === 'on';
-    localStorage.setItem('dashboardSettings', JSON.stringify(settings));
-    applyWidgetVisibility();
-    settingsModal.style.display = 'none';
-  });
-
   // Notes Widget
   const notesArea = document.getElementById('notesArea');
-  notesArea.value = localStorage.getItem('notes') || '';
-  notesArea.addEventListener('input', () => localStorage.setItem('notes', notesArea.value));
+  if (notesArea) {
+    notesArea.value = localStorage.getItem('notes') || '';
+    notesArea.addEventListener('input', () => localStorage.setItem('notes', notesArea.value));
+  }
 
   // To-Do List Widget
   const todoInput = document.getElementById('todoInput');
