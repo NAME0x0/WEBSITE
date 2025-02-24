@@ -9,17 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
     widgetClock: true
   };
   let settings = JSON.parse(localStorage.getItem('dashboardSettings')) || defaultSettings;
-document.addEventListener('DOMContentLoaded', () => {
-  // Default Settings
-  const defaultSettings = {
-    defaultEngine: 'google',
-    widgetNotes: true,
-    widgetCalculator: true,
-    widgetTodo: true,
-    widgetWeather: true,
-    widgetClock: true
-  };
-  let settings = JSON.parse(localStorage.getItem('dashboardSettings')) || defaultSettings;
 
   // Apply Widget Visibility
   function applyWidgetVisibility() {
@@ -37,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (calcInput && calcButtonsContainer) {
     const calcButtons = ['C', '7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', '.', '=', '+'];
-    
+
     calcButtons.forEach((btn) => {
       const button = document.createElement('button');
       button.textContent = btn;
@@ -60,16 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
   } else {
     console.error("Calculator elements not found in the DOM. Make sure your HTML has the correct IDs and classes.");
   }
-});
-  // Apply Widget Visibility
-  function applyWidgetVisibility() {
-    document.getElementById('notes').style.display = settings.widgetNotes ? 'block' : 'none';
-    document.getElementById('calculator').style.display = settings.widgetCalculator ? 'block' : 'none';
-    document.getElementById('todo').style.display = settings.widgetTodo ? 'block' : 'none';
-    document.getElementById('weather').style.display = settings.widgetWeather ? 'block' : 'none';
-    document.getElementById('clock').style.display = settings.widgetClock ? 'block' : 'none';
-  }
-  applyWidgetVisibility();
 
   // Theme Toggle
   const themeToggle = document.getElementById('themeToggle');
@@ -93,6 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
     bing: 'https://www.bing.com/search?q=',
     perplexity: 'https://www.perplexity.ai/?q='
   };
+
   function performSearch() {
     const query = encodeURIComponent(searchInput.value.trim());
     if (query) {
@@ -100,6 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
       window.open(engineUrl + query, '_blank');
     }
   }
+
   searchBtn.addEventListener('click', performSearch);
   searchInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
@@ -115,7 +96,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const settingsForm = document.getElementById('settingsForm');
 
   settingsToggle.addEventListener('click', () => {
-    // Pre-fill settings form with current values
     settingsForm.elements['defaultEngine'].value = settings.defaultEngine;
     settingsForm.elements['widgetNotes'].checked = settings.widgetNotes;
     settingsForm.elements['widgetCalculator'].checked = settings.widgetCalculator;
@@ -124,8 +104,12 @@ document.addEventListener('DOMContentLoaded', () => {
     settingsForm.elements['widgetClock'].checked = settings.widgetClock;
     settingsModal.style.display = 'block';
   });
+
   closeSettings.addEventListener('click', () => settingsModal.style.display = 'none');
-  window.addEventListener('click', (e) => { if (e.target === settingsModal) settingsModal.style.display = 'none'; });
+  window.addEventListener('click', (e) => {
+    if (e.target === settingsModal) settingsModal.style.display = 'none';
+  });
+
   settingsForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const formData = new FormData(settingsForm);
@@ -145,11 +129,12 @@ document.addEventListener('DOMContentLoaded', () => {
   notesArea.value = localStorage.getItem('notes') || '';
   notesArea.addEventListener('input', () => localStorage.setItem('notes', notesArea.value));
 
-  // To‑Do List Widget
+  // To-Do List Widget
   const todoInput = document.getElementById('todoInput');
   const todoList = document.getElementById('todoList');
   const addTodoButton = document.getElementById('addTodo');
   let todos = JSON.parse(localStorage.getItem('todos')) || [];
+
   function updateTodos() {
     localStorage.setItem('todos', JSON.stringify(todos));
     todoList.innerHTML = todos.map((todo, idx) => `
@@ -160,6 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
       </li>
     `).join('');
   }
+
   addTodoButton.addEventListener('click', () => {
     const text = todoInput.value.trim();
     if (text) {
@@ -168,18 +154,21 @@ document.addEventListener('DOMContentLoaded', () => {
       updateTodos();
     }
   });
+
   window.toggleTodo = function(idx) {
     todos[idx].done = !todos[idx].done;
     updateTodos();
   };
+
   window.deleteTodo = function(idx) {
     todos.splice(idx, 1);
     updateTodos();
   };
   updateTodos();
 
-  // Weather Widget using Open‑Meteo API
+  // Weather Widget using Open-Meteo API
   const weatherInfo = document.getElementById('weatherInfo');
+
   function fetchWeather(lat, lon) {
     fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`)
       .then(response => response.json())
@@ -193,6 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
       })
       .catch(() => weatherInfo.innerHTML = '<p>Error fetching weather data.</p>');
   }
+
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -207,6 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Clock Widget - update every second
   const clockDisplay = document.getElementById('clockDisplay');
+
   function updateClock() {
     const now = new Date();
     clockDisplay.textContent = now.toLocaleTimeString();
@@ -214,4 +205,3 @@ document.addEventListener('DOMContentLoaded', () => {
   updateClock();
   setInterval(updateClock, 1000);
 });
- //tiny emoji did not get added but we move
