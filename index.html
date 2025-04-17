@@ -4,217 +4,256 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Glassmorphic Dashboard</title>
+  <!-- Google Font: Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#1e1e2f">
   <!-- Add Marked.js library -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <!-- Add Three.js for WebGL background -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body data-theme="light">
+  <!-- WebGL Background Canvas -->
+  <canvas id="backgroundCanvas"></canvas>
+  
   <div class="container">
-    <header>
+    <header class="main-header">
       <div class="branding">
-        <h1>Glassmorphic Dashboard</h1>
-        <p class="tagline">Step into the future of productivity</p>
+        <h1>Dashboard</h1>
+        <p class="tagline">Your Productivity Hub</p>
       </div>
       <div class="header-controls">
-        <button id="themeToggle" title="Toggle Theme" aria-label="Toggle dark or light theme">🌗</button>
-        <button id="settingsToggle" title="Settings" aria-label="Open dashboard settings">⚙️<span class="star">⭐</span></button>
+        <button id="themeToggle" title="Toggle Theme" aria-label="Toggle theme">🌓</button>
+        <button id="settingsToggle" title="Settings" aria-label="Open settings">⚙️</button>
+        <button id="focusToggle" title="Focus Mode (Alt+F)" aria-label="Toggle focus mode">🎯</button>
       </div>
-      <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Search the web..." autofocus aria-label="Search input">
-        <button id="voiceSearchBtn" title="Voice Search" aria-label="Search with your voice">🎤</button>
-        <button id="searchBtn" title="Search" aria-label="Perform search">🔍</button>
-        <div id="searchSuggestions" class="search-suggestions"></div>
+      <div class="search-area">
+        <div class="search-container">
+          <input type="text" id="searchInput" placeholder="Search the web..." aria-label="Search input">
+          <div class="search-button-group">
+            <button id="voiceSearchBtn" title="Voice Search" aria-label="Search with voice">🎤</button>
+            <button id="searchBtn" title="Search" aria-label="Perform search">🔍</button>
+          </div>
+          <div id="searchSuggestions" class="search-suggestions"></div>
+        </div>
+        <div class="search-history">
+          <button id="lastSearchBtn" title="Run Last Search" aria-label="Run last search query">↩️</button>
+          <button id="favoriteSearchBtn" title="Favorite Searches" aria-label="Show favorite searches">⭐</button>
+        </div>
       </div>
-      <div class="search-history">
-        <button id="lastSearchBtn" title="Repeat Last Search" aria-label="Repeat last search">↩️</button>
-        <button id="favoriteSearchBtn" title="Favorite Searches" aria-label="View favorite searches">⭐</button>
+      <div class="scroll-indicator">
+        <span>Scroll to explore widgets</span>
+        <div class="scroll-arrow">→</div>
       </div>
     </header>
 
     <main class="dashboard" id="widgetsContainer">
-      <section id="notes" class="widget" aria-labelledby="notes-title">
-        <div class="widget-header">
-          <h2 id="notes-title">📝 Notes</h2>
-          <div class="widget-controls">
-            <button class="widget-control" id="notesMarkdownToggle" title="Toggle Markdown Preview" aria-label="Toggle markdown preview">📄</button>
-            <button class="widget-control" id="notesSnapshot" title="Save Snapshot" aria-label="Save note snapshot">📸</button>
-            <button class="widget-control" id="notesHistoryToggle" title="View Snapshots" aria-label="View note snapshots">📜</button> <!-- Added History Toggle -->
-          </div>
-        </div>
-        <div class="tabs">
-          <button class="tab active" data-target="editor">Editor</button>
-          <button class="tab" data-target="preview">Preview</button>
-        </div>
-        <div id="notesEditor" class="tab-content active">
-          <textarea id="notesArea" placeholder="Your thoughts..." aria-label="Notes text area"></textarea>
-          <div class="tags-container">
-            <input type="text" id="tagInput" placeholder="Add tags..." aria-label="Add tags">
-            <div id="tagsDisplay"></div>
-          </div>
-        </div>
-        <div id="notesPreview" class="tab-content markdown-preview"></div>
-        <!-- Added Snapshot History Section -->
-        <div id="notesHistory" class="notes-history" style="display: none;">
-          <h3>Snapshots</h3>
-          <ul id="snapshotList"></ul>
-        </div>
-      </section>
-
-      <section id="calculator" class="widget" aria-labelledby="calculator-title">
-        <div class="widget-header">
-          <h2 id="calculator-title">🔢 Calculator</h2>
-          <div class="widget-controls">
-            <button class="widget-control" id="calcModeStandard" title="Standard Mode" aria-label="Switch to standard calculator">📊</button>
-            <button class="widget-control" id="calcModeScientific" title="Scientific Mode" aria-label="Switch to scientific calculator">🔬</button>
-            <button class="widget-control" id="calcModeProgramming" title="Programming Mode" aria-label="Switch to programming calculator">💻</button>
-          </div>
-        </div>
-        <input type="text" id="calcInput" readonly placeholder="0" aria-label="Calculator display">
-        <div class="calc-buttons"></div>
-        <div class="calc-history">
-          <h3>History</h3>
-          <ul id="calcHistoryList"></ul>
-        </div>
-      </section>
-
-      <section id="todo" class="widget" aria-labelledby="todo-title">
-        <div class="widget-header">
-          <h2 id="todo-title">✅ To-Do List</h2>
-          <div class="widget-controls">
-            <button class="widget-control" id="todoKanban" title="Kanban View" aria-label="Switch to Kanban view">📋</button>
-            <button class="widget-control" id="todoList" title="List View" aria-label="Switch to list view">📝</button>
-          </div>
-        </div>
-        <div class="todo-input">
-          <input type="text" id="todoInput" placeholder="New task..." aria-label="New task input">
-          <button id="addTodo" title="Add Task" aria-label="Add task">➕</button>
-        </div>
-        <div class="todo-options">
-          <label for="todoDate">Due date: <input type="date" id="todoDate" aria-label="Due date"></label>
-          <label for="todoRecurring">
-            <input type="checkbox" id="todoRecurring" aria-label="Recurring task">
-            Recurring
-          </label>
-        </div>
-        <div id="todoListView">
-          <ul id="todoList"></ul>
-        </div>
-        <div id="todoKanbanView" class="kanban-container">
-          <div class="kanban-column" id="todoToDo" ondragover="dragOver(event)" ondrop="drop(event)"> <!-- Added drag/drop handlers -->
-            <h3>To Do</h3>
-            <div class="kanban-items"></div>
-          </div>
-          <div class="kanban-column" id="todoInProgress" ondragover="dragOver(event)" ondrop="drop(event)"> <!-- Added drag/drop handlers -->
-            <h3>In Progress</h3>
-            <div class="kanban-items"></div>
-          </div>
-          <div class="kanban-column" id="todoDone" ondragover="dragOver(event)" ondrop="drop(event)"> <!-- Added drag/drop handlers -->
-            <h3>Done</h3>
-            <div class="kanban-items"></div>
-          </div>
-        </div>
-      </section>
-
-      <section id="weather" class="widget" aria-labelledby="weather-title">
-        <div class="widget-header">
-          <h2 id="weather-title">🌤️ Weather</h2>
-          <div class="widget-controls">
-            <button class="widget-control" id="weatherRefresh" title="Refresh Weather" aria-label="Refresh weather data">🔄</button>
-            <button class="widget-control" id="weatherLocation" title="Change Location" aria-label="Change weather location">📍</button>
-          </div>
-        </div>
-        <div id="weatherInfo">
-          <p>Loading weather...</p>
-        </div>
-        <!-- Added Hourly Forecast Container -->
-        <div id="weatherHourly" class="hourly-forecast-container">
-          <h3>Hourly</h3>
-          <div id="hourlyForecastList" class="hourly-list"></div>
-        </div>
-        <div id="weatherForecast" class="forecast-container"></div>
-        <div id="airQuality">
-          <h3>Air Quality</h3>
-          <div id="aqiInfo">Loading AQI data...</div>
-        </div>
-      </section>
-
-      <section id="clock" class="widget" aria-labelledby="clock-title">
-        <div class="widget-header">
-          <h2 id="clock-title">⏰ Clock</h2>
-          <div class="widget-controls">
-            <button class="widget-control" id="clockSwitch" title="Switch Clock Type" aria-label="Switch between analog and digital">🔄</button>
-            <button class="widget-control" id="timerToggle" title="Timer Mode" aria-label="Toggle timer mode">⏲️</button>
-          </div>
-        </div>
-        <div class="clock-container">
-          <div id="clockDigital" class="clock-display">--:--:--</div>
-          <div id="clockAnalog" class="analog-clock-container">
-            <div class="analog-clock">
-              <div class="hour-hand"></div>
-              <div class="minute-hand"></div>
-              <div class="second-hand"></div>
-              <div class="clock-center"></div>
-              <div class="clock-markings"></div>
+      <!-- Widget sections with loading spinners -->
+      <div class="widget-page" data-widget="notes">
+        <section id="notes" class="widget" aria-labelledby="notes-title">
+          <div class="widget-header">
+            <h2 id="notes-title">📝 Notes</h2>
+            <div class="widget-controls">
+              <button class="widget-control" id="notesMarkdownToggle" title="Toggle Markdown Preview" aria-label="Toggle markdown preview">📄</button>
+              <button class="widget-control" id="notesSnapshot" title="Save Snapshot" aria-label="Save note snapshot">📸</button>
+              <button class="widget-control" id="notesHistoryToggle" title="View Snapshots" aria-label="View note snapshots">📜</button> <!-- Added History Toggle -->
             </div>
           </div>
-        </div>
-        <div id="timerSection" class="timer-section">
-          <div class="timer-display">
-            <span id="timerMinutes">25</span>:<span id="timerSeconds">00</span>
+          <div class="tabs">
+            <button class="tab active" data-target="editor">Editor</button>
+            <button class="tab" data-target="preview">Preview</button>
           </div>
-          <div class="timer-controls">
-            <button id="startTimer" class="timer-button">Start</button>
-            <button id="resetTimer" class="timer-button">Reset</button>
+          <div id="notesEditor" class="tab-content active">
+            <textarea id="notesArea" placeholder="Your thoughts..." aria-label="Notes text area"></textarea>
+            <div class="tags-container">
+              <input type="text" id="tagInput" placeholder="Add tags..." aria-label="Add tags">
+              <div id="tagsDisplay"></div>
+            </div>
           </div>
-          <div class="timer-presets">
-            <button class="preset" data-minutes="25">25m</button>
-            <button class="preset" data-minutes="5">5m</button>
-            <button class="preset" data-minutes="15">15m</button>
-            <button class="preset" data-minutes="50">50m</button>
+          <div id="notesPreview" class="tab-content markdown-preview"></div>
+          <!-- Added Snapshot History Section -->
+          <div id="notesHistory" class="notes-history" style="display: none;">
+            <h3>Snapshots</h3>
+            <ul id="snapshotList"></ul>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
 
-      <section id="finance" class="widget" aria-labelledby="finance-title">
-        <div class="widget-header">
-          <h2 id="finance-title">📈 Finance</h2>
-          <div class="widget-controls">
-            <button class="widget-control" id="financeAddSymbol" title="Add Symbol" aria-label="Add new stock/crypto symbol">➕</button> <!-- Updated aria-label -->
-            <button class="widget-control" id="financeToggleType" title="Toggle Crypto/Stocks" aria-label="Toggle between crypto and stocks">💱</button> <!-- Changed ID -->
+      <div class="widget-page" data-widget="calculator">
+        <section id="calculator" class="widget" aria-labelledby="calculator-title">
+          <div class="widget-header">
+            <h2 id="calculator-title">🔢 Calculator</h2>
+            <div class="widget-controls">
+              <button class="widget-control" id="calcModeStandard" title="Standard Mode" aria-label="Switch to standard calculator">📊</button>
+              <button class="widget-control" id="calcModeScientific" title="Scientific Mode" aria-label="Switch to scientific calculator">🔬</button>
+              <button class="widget-control" id="calcModeProgramming" title="Programming Mode" aria-label="Switch to programming calculator">💻</button>
+            </div>
           </div>
-        </div>
-        <div id="watchlist" class="finance-watchlist"></div>
-      </section>
+          <input type="text" id="calcInput" readonly placeholder="0" aria-label="Calculator display">
+          <div class="calc-buttons"></div>
+          <div class="calc-history">
+            <h3>History</h3>
+            <ul id="calcHistoryList"></ul>
+          </div>
+        </section>
+      </div>
 
-      <section id="news" class="widget" aria-labelledby="news-title">
-        <div class="widget-header">
-          <h2 id="news-title">📰 News</h2>
-          <div class="widget-controls">
-            <button class="widget-control" id="newsRefresh" title="Refresh News" aria-label="Refresh news feed">🔄</button>
-            <button class="widget-control" id="newsSettings" title="News Settings" aria-label="News settings">⚙️</button>
+      <div class="widget-page" data-widget="todo">
+        <section id="todo" class="widget" aria-labelledby="todo-title">
+          <div class="widget-header">
+            <h2 id="todo-title">✅ To-Do List</h2>
+            <div class="widget-controls">
+              <button class="widget-control" id="todoKanban" title="Kanban View" aria-label="Switch to Kanban view">📋</button>
+              <button class="widget-control" id="todoList" title="List View" aria-label="Switch to list view">📝</button>
+            </div>
           </div>
-        </div>
-        <div class="news-categories">
-          <button class="news-category active" data-category="general">General</button>
-          <button class="news-category" data-category="technology">Tech</button>
-          <button class="news-category" data-category="business">Business</button>
-          <button class="news-category" data-category="health">Health</button>
-          <button class="news-category" data-category="science">Science</button> <!-- Added Category -->
-          <button class="news-category" data-category="sports">Sports</button> <!-- Added Category -->
-          <button class="news-category" data-category="entertainment">Entertainment</button> <!-- Added Category -->
-        </div>
-        <div id="newsContainer" class="news-container">
-          <p>Loading news...</p>
-        </div>
-        <div id="readLaterList" class="read-later-container">
-          <h3>Read Later</h3>
-          <ul id="readLaterItems"></ul>
-        </div>
-      </section>
+          <div class="todo-input">
+            <input type="text" id="todoInput" placeholder="New task..." aria-label="New task input">
+            <button id="addTodo" title="Add Task" aria-label="Add task">➕</button>
+          </div>
+          <div class="todo-options">
+            <label for="todoDate">Due date: <input type="date" id="todoDate" aria-label="Due date"></label>
+            <label for="todoRecurring">
+              <input type="checkbox" id="todoRecurring" aria-label="Recurring task">
+              Recurring
+            </label>
+          </div>
+          <div id="todoListView">
+            <ul id="todoList"></ul>
+          </div>
+          <div id="todoKanbanView" class="kanban-container">
+            <div class="kanban-column" id="todoToDo" ondragover="dragOver(event)" ondrop="drop(event)"> <!-- Added drag/drop handlers -->
+              <h3>To Do</h3>
+              <div class="kanban-items"></div>
+            </div>
+            <div class="kanban-column" id="todoInProgress" ondragover="dragOver(event)" ondrop="drop(event)"> <!-- Added drag/drop handlers -->
+              <h3>In Progress</h3>
+              <div class="kanban-items"></div>
+            </div>
+            <div class="kanban-column" id="todoDone" ondragover="dragOver(event)" ondrop="drop(event)"> <!-- Added drag/drop handlers -->
+              <h3>Done</h3>
+              <div class="kanban-items"></div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="widget-page" data-widget="weather">
+        <section id="weather" class="widget" aria-labelledby="weather-title">
+          <div class="widget-header">
+            <h2 id="weather-title">🌤️ Weather</h2>
+            <div class="widget-controls">
+              <button class="widget-control" id="weatherRefresh" title="Refresh Weather" aria-label="Refresh weather data">🔄</button>
+              <button class="widget-control" id="weatherLocation" title="Change Location" aria-label="Change weather location">📍</button>
+            </div>
+          </div>
+          <div class="loading-spinner"></div>
+          <div id="weatherInfo">
+            <p>Loading weather...</p>
+          </div>
+          <!-- Added Hourly Forecast Container -->
+          <div id="weatherHourly" class="hourly-forecast-container">
+            <h3>Hourly</h3>
+            <div id="hourlyForecastList" class="hourly-list"></div>
+          </div>
+          <div id="weatherForecast" class="forecast-container"></div>
+          <div id="airQuality">
+            <h3>Air Quality</h3>
+            <div id="aqiInfo">Loading AQI data...</div>
+          </div>
+        </section>
+      </div>
+
+      <div class="widget-page" data-widget="clock">
+        <section id="clock" class="widget" aria-labelledby="clock-title">
+          <div class="widget-header">
+            <h2 id="clock-title">⏰ Clock</h2>
+            <div class="widget-controls">
+              <button class="widget-control" id="clockSwitch" title="Switch Clock Type" aria-label="Switch between analog and digital">🔄</button>
+              <button class="widget-control" id="timerToggle" title="Timer Mode" aria-label="Toggle timer mode">⏲️</button>
+            </div>
+          </div>
+          <div class="clock-container">
+            <div id="clockDigital" class="clock-display">--:--:--</div>
+            <div id="clockAnalog" class="analog-clock-container">
+              <div class="analog-clock">
+                <div class="hour-hand"></div>
+                <div class="minute-hand"></div>
+                <div class="second-hand"></div>
+                <div class="clock-center"></div>
+                <div class="clock-markings"></div>
+              </div>
+            </div>
+          </div>
+          <div id="timerSection" class="timer-section">
+            <div class="timer-display">
+              <span id="timerMinutes">25</span>:<span id="timerSeconds">00</span>
+            </div>
+            <div class="timer-controls">
+              <button id="startTimer" class="timer-button">Start</button>
+              <button id="resetTimer" class="timer-button">Reset</button>
+            </div>
+            <div class="timer-presets">
+              <button class="preset" data-minutes="25">25m</button>
+              <button class="preset" data-minutes="5">5m</button>
+              <button class="preset" data-minutes="15">15m</button>
+              <button class="preset" data-minutes="50">50m</button>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="widget-page" data-widget="finance">
+        <section id="finance" class="widget" aria-labelledby="finance-title">
+          <div class="widget-header">
+            <h2 id="finance-title">📈 Finance</h2>
+            <div class="widget-controls">
+              <button class="widget-control" id="financeAddSymbol" title="Add Symbol" aria-label="Add new stock/crypto symbol">➕</button> <!-- Updated aria-label -->
+              <button class="widget-control" id="financeToggleType" title="Toggle Crypto/Stocks" aria-label="Toggle between crypto and stocks">💱</button> <!-- Changed ID -->
+            </div>
+          </div>
+          <div class="loading-spinner"></div>
+          <div id="watchlist" class="finance-watchlist"></div>
+        </section>
+      </div>
+
+      <div class="widget-page" data-widget="news">
+        <section id="news" class="widget" aria-labelledby="news-title">
+          <div class="widget-header">
+            <h2 id="news-title">📰 News</h2>
+            <div class="widget-controls">
+              <button class="widget-control" id="newsRefresh" title="Refresh News" aria-label="Refresh news feed">🔄</button>
+              <button class="widget-control" id="newsSettings" title="News Settings" aria-label="News settings">⚙️</button>
+            </div>
+          </div>
+          <div class="loading-spinner"></div>
+          <div class="news-categories">
+            <button class="news-category active" data-category="general">General</button>
+            <button class="news-category" data-category="technology">Tech</button>
+            <button class="news-category" data-category="business">Business</button>
+            <button class="news-category" data-category="health">Health</button>
+            <button class="news-category" data-category="science">Science</button> <!-- Added Category -->
+            <button class="news-category" data-category="sports">Sports</button> <!-- Added Category -->
+            <button class="news-category" data-category="entertainment">Entertainment</button> <!-- Added Category -->
+          </div>
+          <div id="newsContainer" class="news-container">
+            <p>Loading news...</p>
+          </div>
+          <div id="readLaterList" class="read-later-container">
+            <h3>Read Later</h3>
+            <ul id="readLaterItems"></ul>
+          </div>
+        </section>
+      </div>
     </main>
   </div>
+
+  <!-- Navigation Dots -->
+  <div class="navigation-dots"></div>
 
   <!-- Settings Modal -->
   <div id="settingsModal" class="modal" aria-labelledby="settings-title" aria-modal="true">

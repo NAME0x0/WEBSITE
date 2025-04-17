@@ -32,31 +32,481 @@ document.addEventListener('DOMContentLoaded', () => {
   let newsSettings = JSON.parse(localStorage.getItem('newsSettings')) || { source: 'newsapi', rssUrl: '', openInNewTab: true };
   let readLaterNews = JSON.parse(localStorage.getItem('readLaterNews')) || []; // [{ title, url }]
 
-  // Apply Accent Color
+  const bodyElement = document.body;
+  const container = document.querySelector('.container');
+  const widgetPages = document.querySelectorAll('.widget-page');
+  const mainHeader = document.querySelector('.main-header');
+  
+  // Initialize WebGL Background
+  initWebGLBackground();
+  
+  // Initialize Horizontal Scrolling and Navigation
+  setupHorizontalScrolling();
+  setupNavigationDots();
+  setupScrollingEffects();
+
+  // Apply Accent Color with RGB variant for opacity calculations
   function applyAccentColor() {
+    // Convert hex to RGB for CSS variables
+    const hexToRgb = (hex) => {
+      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+      } : null;
+    };
+    
+    const rgb = hexToRgb(settings.accentColor) || {r: 10, g: 189, b: 227}; // Default if conversion fails
     document.documentElement.style.setProperty('--secondary-color', settings.accentColor);
-    // Potentially update other related colors if needed
+    document.documentElement.style.setProperty('--secondary-color-rgb', `${rgb.r}, ${rgb.g}, ${rgb.b}`);
   }
   applyAccentColor();
 
-  // Apply Widget Visibility
+  // WebGL Background Animation using Three.js
+  function initWebGLBackground() {
+    const canvas = document.getElementById('backgroundCanvas');
+    if (!canvas) return;
+    
+    // Initialize Three.js scene
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    
+    // Create dynamic particles
+    const particlesGeometry = new THREE.BufferGeometry();
+    const particlesCount = 2000;
+    const positionArray = new Float32Array(particlesCount * 3);
+    const scalesArray = new Float32Array(particlesCount);
+    
+    // Random positions and scales
+    for (let i = 0; i < particlesCount; i++) {
+      positionArray[i * 3] = (Math.random() - 0.5) * 15;
+      positionArray[i * 3 + 1] = (Math.random() - 0.5) * 15;
+      positionArray[i * 3 + 2] = (Math.random() - 0.5) * 10;
+      scalesArray[i] = Math.random();
+    }
+    
+    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positionArray, 3));
+    particlesGeometry.setAttribute('scale', new THREE.BufferAttribute(scalesArray, 1));
+    
+    // Create shader material for particles
+    const particlesMaterial = new THREE.ShaderMaterial({
+      vertexShader: `
+        attribute float scale;
+        varying vec3 vColor;
+        
+        void main() {
+          vec3 pos = position;
+          
+          // Color based on position
+          vColor = mix(
+            vec3(0.04, 0.74, 0.89), // Light blue
+            vec3(0.98, 0.42, 0.42), // Light red
+            smoothstep(-5.0, 5.0, position.x)
+          );
+          
+          // Vertex position
+          vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
+          gl_Position = projectionMatrix * mvPosition;
+          
+          // Size based on scale and distance
+          gl_PointSize = scale * (300.0 / -mvPosition.z);
+        }
+      `,
+      fragmentShader: `
+        varying vec3 vColor;
+        
+        void main() {
+          // Circular particle with soft edge
+          float distanceToCenter = length(gl_PointCoord - vec2(0.5));
+          float strength = 0.05 / distanceToCenter - 0.1;
+          
+          gl_FragColor = vec4(vColor, strength);
+        }
+      `,
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
+    });
+    
+    const particles = new THREE.Points(particlesGeometry, particlesMaterial);
+    scene.add(particles);
+    
+    // Position camera
+    camera.position.z = 5;
+    
+    // Mouse movement effect
+    const mouse = { x: 0, y: 0 };
+    document.addEventListener('mousemove', (event) => {
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    });
+    
+    // Animation loop
+    const clock = new THREE.Clock();
+    
+    function animate() {
+      const elapsedTime = clock.getElapsedTime();
+      
+      // Rotate particles
+      particles.rotation.y = elapsedTime * 0.05;
+      
+      // Move particles based on mouse position
+      if (mouse.x && mouse.y) {
+        particles.rotation.x += (mouse.y * 0.5 - particles.rotation.x) * 0.01;
+        particles.rotation.y += (mouse.x * 0.5 - particles.rotation.y) * 0.01;
+      }
+      
+      // Wave effect
+      const positions = particlesGeometry.attributes.position.array;
+      for (let i = 0; i < particlesCount; i++) {
+        const i3 = i * 3;
+        positions[i3 + 1] += Math.sin(elapsedTime + positions[i3]) * 0.002;
+      }
+      particlesGeometry.attributes.position.needsUpdate = true;
+      
+      // Render scene
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    }
+    
+    animate();
+    
+    // Handle window resize
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+    
+    // Update background color based on theme
+    function updateBackgroundColor() {
+      const theme = document.body.getAttribute('data-theme');
+      if (theme === 'light') {
+        scene.background = new THREE.Color(0xf0f0f0);
+      } else {
+        scene.background = new THREE.Color(0x1a1a2e);
+      }
+    }
+    
+    // Initial background color
+    updateBackgroundColor();
+    
+    // Listen for theme changes
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'data-theme') {
+          updateBackgroundColor();
+        }
+      });
+    });
+    
+    observer.observe(document.body, { attributes: true });
+  }
+
+  // Setup Horizontal Scrolling with vertical wheel support
+  function setupHorizontalScrolling() {
+    // Override wheel event to scroll horizontally
+    container.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const delta = Math.max(-1, Math.min(1, e.deltaY || -e.detail));
+      container.scrollLeft += delta * 100; // Adjust scroll speed
+      
+      // Check if we're at the end and need to loop
+      if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 50) {
+        // Smooth scroll back to start after a small delay
+        setTimeout(() => {
+          container.scrollTo({
+            left: 0,
+            behavior: 'smooth'
+          });
+        }, 500); // Wait half a second before looping
+      }
+    });
+    
+    // Touch support for mobile devices
+    let touchStart = 0;
+    let touchEnd = 0;
+    
+    container.addEventListener('touchstart', (e) => {
+      touchStart = e.changedTouches[0].screenX;
+    });
+    
+    container.addEventListener('touchend', (e) => {
+      touchEnd = e.changedTouches[0].screenX;
+      handleSwipe();
+    });
+    
+    function handleSwipe() {
+      const distance = touchStart - touchEnd;
+      if (Math.abs(distance) > 50) { // Minimum swipe distance
+        if (distance > 0) {
+          // Swipe left - go to next section
+          navigateToNextSection();
+        } else {
+          // Swipe right - go to previous section
+          navigateToPreviousSection();
+        }
+      }
+    }
+    
+    // Navigate to specific section index
+    window.navigateToSection = function(index) {
+      const visiblePages = getVisiblePages();
+      if (index >= 0 && index < visiblePages.length) {
+        container.scrollTo({
+          left: index === 0 ? 0 : visiblePages[index].offsetLeft,
+          behavior: 'smooth'
+        });
+      }
+    };
+    
+    // Navigate to next section
+    function navigateToNextSection() {
+      const currentIndex = getCurrentSectionIndex();
+      const visiblePages = getVisiblePages();
+      
+      if (currentIndex < visiblePages.length - 1) {
+        navigateToSection(currentIndex + 1);
+      } else {
+        // Loop back to beginning
+        navigateToSection(0);
+      }
+    }
+    
+    // Navigate to previous section
+    function navigateToPreviousSection() {
+      const currentIndex = getCurrentSectionIndex();
+      
+      if (currentIndex > 0) {
+        navigateToSection(currentIndex - 1);
+      } else {
+        // Loop to end
+        const visiblePages = getVisiblePages();
+        navigateToSection(visiblePages.length - 1);
+      }
+    }
+    
+    // Get currently visible section index
+    function getCurrentSectionIndex() {
+      const scrollLeft = container.scrollLeft;
+      const visiblePages = getVisiblePages();
+      
+      // Find which section is most visible
+      for (let i = 0; i < visiblePages.length; i++) {
+        const page = visiblePages[i];
+        const leftEdge = page.offsetLeft;
+        const rightEdge = leftEdge + page.offsetWidth;
+        
+        // If scroll position is within this section
+        if (scrollLeft >= leftEdge - window.innerWidth / 2 && 
+            scrollLeft < rightEdge - window.innerWidth / 2) {
+          return i;
+        }
+      }
+      
+      // Default to first section if none found
+      return 0;
+    }
+    
+    // Get array of visible widget pages (not hidden by settings)
+    function getVisiblePages() {
+      return [mainHeader, ...Array.from(widgetPages)].filter(page => 
+        page && page.style.display !== 'none'
+      );
+    }
+    
+    // Add keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        navigateToNextSection();
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        navigateToPreviousSection();
+      }
+    });
+    
+    // Expose navigation functions globally
+    window.navigateToNextSection = navigateToNextSection;
+    window.navigateToPreviousSection = navigateToPreviousSection;
+  }
+  
+  // Create and setup navigation dots
+  function setupNavigationDots() {
+    const navigationDots = document.querySelector('.navigation-dots');
+    if (!navigationDots) return;
+    
+    // Create dots for main header and each widget page
+    const allPages = [mainHeader, ...Array.from(widgetPages)];
+    
+    allPages.forEach((page, index) => {
+      if (page && page.style.display !== 'none') {
+        const dot = document.createElement('div');
+        dot.className = 'navigation-dot';
+        dot.dataset.index = index;
+        dot.addEventListener('click', () => {
+          window.navigateToSection(index);
+        });
+        navigationDots.appendChild(dot);
+      }
+    });
+    
+    // Update active dot based on scroll position
+    updateActiveDot();
+    
+    container.addEventListener('scroll', updateActiveDot);
+    
+    function updateActiveDot() {
+      const currentIndex = getCurrentSectionIndex();
+      const dots = navigationDots.querySelectorAll('.navigation-dot');
+      
+      dots.forEach((dot, index) => {
+        if (index === currentIndex) {
+          dot.classList.add('active');
+        } else {
+          dot.classList.remove('active');
+        }
+      });
+    }
+    
+    function getCurrentSectionIndex() {
+      const scrollLeft = container.scrollLeft;
+      const visiblePages = getVisiblePages();
+      
+      for (let i = 0; i < visiblePages.length; i++) {
+        const page = visiblePages[i];
+        const leftEdge = page.offsetLeft;
+        const rightEdge = leftEdge + page.offsetWidth;
+        
+        if (scrollLeft >= leftEdge - window.innerWidth / 2 && 
+            scrollLeft < rightEdge - window.innerWidth / 2) {
+          return i;
+        }
+      }
+      
+      return 0;
+    }
+    
+    function getVisiblePages() {
+      return [mainHeader, ...Array.from(widgetPages)].filter(page => 
+        page && page.style.display !== 'none'
+      );
+    }
+  }
+  
+  // Setup scrolling effects and animations
+  function setupScrollingEffects() {
+    // Activate widgets as they come into view
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+        } else {
+          // Optionally remove active class when scrolling away
+          // entry.target.classList.remove('active');
+        }
+      });
+    }, { 
+      root: container,
+      threshold: 0.5,
+      rootMargin: '0px'
+    });
+    
+    // Observe all widget pages
+    widgetPages.forEach(page => {
+      observer.observe(page);
+    });
+    
+    // Make first widget active by default
+    if (widgetPages.length > 0 && !widgetPages[0].classList.contains('active')) {
+      widgetPages[0].classList.add('active');
+    }
+  }
+
+  // Apply Widget Visibility with animation delay
   function applyWidgetVisibility() {
     Object.keys(defaultSettings).forEach(key => {
       if (key.startsWith('widget')) {
         const widgetId = key.substring(6).toLowerCase();
-        const element = document.getElementById(widgetId);
-        if (element) {
-          element.style.display = settings[key] ? 'block' : 'none'; // Assuming 'block', adjust if grid/flex needed
+        const widgetPage = document.querySelector(`.widget-page[data-widget="${widgetId}"]`);
+        
+        if (widgetPage) {
+          widgetPage.style.display = settings[key] ? 'flex' : 'none';
         }
       }
     });
-    // Re-apply grid layout if using CSS Grid for dashboard
-    // const dashboard = document.getElementById('widgetsContainer');
-    // dashboard.style.gridTemplateColumns = 'repeat(auto-fit, minmax(280px, 1fr))'; // Example
+    
+    // Re-setup navigation after visibility changes
+    setupNavigationDots();
   }
   applyWidgetVisibility();
-
-  // Theme Toggle & Auto Scheduling
+  
+  // Loading indicator functions
+  function showLoading(widgetElement) {
+    if (!widgetElement) return;
+    const spinner = widgetElement.querySelector('.loading-spinner');
+    if (spinner) {
+      spinner.style.display = 'block';
+    }
+  }
+  
+  function hideLoading(widgetElement) {
+    if (!widgetElement) return;
+    const spinner = widgetElement.querySelector('.loading-spinner');
+    if (spinner) {
+      spinner.style.display = 'none';
+    }
+  }
+  
+  // Enhance modal handling
+  function openModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (!modal) return;
+    
+    modal.style.display = 'block';
+    setTimeout(() => {
+      modal.classList.add('show');
+    }, 10);
+  }
+  
+  function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (!modal) return;
+    
+    modal.classList.remove('show');
+    setTimeout(() => {
+      modal.style.display = 'none';
+    }, 300);
+  }
+  
+  // Override existing modal open/close functions
+  if (settingsToggle) {
+    settingsToggle.addEventListener('click', () => {
+      // Populate form with current settings (keep existing logic)
+      // ...existing code...
+      
+      openModal('settingsModal');
+    });
+  }
+  
+  if (closeSettings) {
+    closeSettings.addEventListener('click', () => closeModal('settingsModal'));
+  }
+  
+  // Close modals when clicking outside
+  window.addEventListener('click', (e) => {
+    document.querySelectorAll('.modal').forEach(modal => {
+      if (e.target === modal) {
+        const modalId = modal.id;
+        closeModal(modalId);
+      }
+    });
+  });
+  
+  // Theme Toggle & Auto Scheduling with animation
   const themeToggle = document.getElementById('themeToggle');
   function setTheme(theme) {
     document.body.setAttribute('data-theme', theme);
@@ -1068,6 +1518,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const useCurrentLocationBtn = document.getElementById('useCurrentLocation');
 
   function fetchWeather(lat, lon, locationName = "Current Location") {
+    const weatherWidget = document.getElementById('weather');
+    if (weatherWidget) showLoading(weatherWidget);
+    
     // Fetch current, hourly (temp, code), daily (code, temp max/min), and air quality
     const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,wind_speed_10m&hourly=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto`;
     const aqiUrl = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=us_aqi&timezone=auto`;
@@ -1078,7 +1531,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (aqiInfoEl) aqiInfoEl.innerHTML = 'Loading AQI...';
 
     // Fetch main weather data
-    fetch(weatherUrl)
+    const weatherPromise = fetch(weatherUrl)
       .then(response => response.json())
       .then(data => {
         if (data?.current) {
@@ -1141,7 +1594,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
     // Fetch Air Quality Data
-    fetch(aqiUrl)
+    const aqiPromise = fetch(aqiUrl)
       .then(response => response.json())
       .then(data => {
           if (data?.current?.us_aqi && aqiInfoEl) {
@@ -1153,6 +1606,12 @@ document.addEventListener('DOMContentLoaded', () => {
       })
       .catch(() => {
           if (aqiInfoEl) aqiInfoEl.innerHTML = '<p>Error fetching AQI data.</p>';
+      });
+
+    // Add loading indicator hide when weather data is loaded
+    Promise.all([weatherPromise, aqiPromise])
+      .finally(() => {
+        if (weatherWidget) hideLoading(weatherWidget);
       });
   }
 
@@ -1660,6 +2119,9 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentNewsCategory = 'general';
 
   async function fetchNews(category = currentNewsCategory) { // Make async
+      const newsWidget = document.getElementById('news');
+      if (newsWidget) showLoading(newsWidget);
+    
       if (!newsContainer) return;
       newsContainer.innerHTML = `<p>Loading ${category} news...</p>`;
       currentNewsCategory = category;
@@ -1714,6 +2176,9 @@ document.addEventListener('DOMContentLoaded', () => {
           console.error("News fetch error:", error);
           newsContainer.innerHTML = `<p>Error fetching news: ${error.message}. Check API key or RSS URL.</p>`;
       }
+
+      // Add loading indicator hide
+      if (newsWidget) hideLoading(newsWidget);
   }
 
   function renderNews(articles) {
@@ -1851,3 +2316,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- End Placeholder Widgets ---
 
 }); // End DOMContentLoaded
+
+// Initialize the WebGL background if Three.js is available - fallback for older browsers
+window.addEventListener('load', () => {
+  if (typeof THREE === 'undefined') {
+    console.warn('Three.js not loaded. Using CSS fallback for background.');
+    document.body.classList.add('no-webgl');
+  }
+});
