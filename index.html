@@ -3,66 +3,224 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Futuristic Dashboard</title>
+  <title>Glassmorphic Dashboard</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1e1e2f">
+  <!-- Add Marked.js library -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body data-theme="light">
   <div class="container">
     <header>
       <div class="branding">
-        <h1>Futuristic Dashboard</h1>
+        <h1>Glassmorphic Dashboard</h1>
         <p class="tagline">Step into the future of productivity</p>
       </div>
       <div class="header-controls">
-        <button id="themeToggle" title="Toggle Theme">🌗</button>
-        <button id="settingsToggle" title="Settings">⚙️<span class="star">⭐</span></button>
+        <button id="themeToggle" title="Toggle Theme" aria-label="Toggle dark or light theme">🌗</button>
+        <button id="settingsToggle" title="Settings" aria-label="Open dashboard settings">⚙️<span class="star">⭐</span></button>
       </div>
       <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Search the web..." autofocus>
-        <button id="searchBtn" title="Search">🔍</button>
+        <input type="text" id="searchInput" placeholder="Search the web..." autofocus aria-label="Search input">
+        <button id="voiceSearchBtn" title="Voice Search" aria-label="Search with your voice">🎤</button>
+        <button id="searchBtn" title="Search" aria-label="Perform search">🔍</button>
+        <div id="searchSuggestions" class="search-suggestions"></div>
+      </div>
+      <div class="search-history">
+        <button id="lastSearchBtn" title="Repeat Last Search" aria-label="Repeat last search">↩️</button>
+        <button id="favoriteSearchBtn" title="Favorite Searches" aria-label="View favorite searches">⭐</button>
       </div>
     </header>
 
-    <main class="dashboard">
-      <section id="notes" class="widget">
-        <h2>Notes</h2>
-        <textarea id="notesArea" placeholder="Your thoughts..."></textarea>
-      </section>
-
-      <section id="calculator" class="widget">
-        <h2>Calculator</h2>
-        <input type="text" id="calcInput" readonly placeholder="0">
-        <div class="calc-buttons"></div>
-      </section>
-
-      <section id="todo" class="widget">
-        <h2>To‑Do List</h2>
-        <div class="todo-input">
-          <input type="text" id="todoInput" placeholder="New task...">
-          <button id="addTodo" title="Add Task">➕</button>
+    <main class="dashboard" id="widgetsContainer">
+      <section id="notes" class="widget" aria-labelledby="notes-title">
+        <div class="widget-header">
+          <h2 id="notes-title">📝 Notes</h2>
+          <div class="widget-controls">
+            <button class="widget-control" id="notesMarkdownToggle" title="Toggle Markdown Preview" aria-label="Toggle markdown preview">📄</button>
+            <button class="widget-control" id="notesSnapshot" title="Save Snapshot" aria-label="Save note snapshot">📸</button>
+            <button class="widget-control" id="notesHistoryToggle" title="View Snapshots" aria-label="View note snapshots">📜</button> <!-- Added History Toggle -->
+          </div>
         </div>
-        <ul id="todoList"></ul>
+        <div class="tabs">
+          <button class="tab active" data-target="editor">Editor</button>
+          <button class="tab" data-target="preview">Preview</button>
+        </div>
+        <div id="notesEditor" class="tab-content active">
+          <textarea id="notesArea" placeholder="Your thoughts..." aria-label="Notes text area"></textarea>
+          <div class="tags-container">
+            <input type="text" id="tagInput" placeholder="Add tags..." aria-label="Add tags">
+            <div id="tagsDisplay"></div>
+          </div>
+        </div>
+        <div id="notesPreview" class="tab-content markdown-preview"></div>
+        <!-- Added Snapshot History Section -->
+        <div id="notesHistory" class="notes-history" style="display: none;">
+          <h3>Snapshots</h3>
+          <ul id="snapshotList"></ul>
+        </div>
       </section>
 
-      <section id="weather" class="widget">
-        <h2>Weather</h2>
+      <section id="calculator" class="widget" aria-labelledby="calculator-title">
+        <div class="widget-header">
+          <h2 id="calculator-title">🔢 Calculator</h2>
+          <div class="widget-controls">
+            <button class="widget-control" id="calcModeStandard" title="Standard Mode" aria-label="Switch to standard calculator">📊</button>
+            <button class="widget-control" id="calcModeScientific" title="Scientific Mode" aria-label="Switch to scientific calculator">🔬</button>
+            <button class="widget-control" id="calcModeProgramming" title="Programming Mode" aria-label="Switch to programming calculator">💻</button>
+          </div>
+        </div>
+        <input type="text" id="calcInput" readonly placeholder="0" aria-label="Calculator display">
+        <div class="calc-buttons"></div>
+        <div class="calc-history">
+          <h3>History</h3>
+          <ul id="calcHistoryList"></ul>
+        </div>
+      </section>
+
+      <section id="todo" class="widget" aria-labelledby="todo-title">
+        <div class="widget-header">
+          <h2 id="todo-title">✅ To-Do List</h2>
+          <div class="widget-controls">
+            <button class="widget-control" id="todoKanban" title="Kanban View" aria-label="Switch to Kanban view">📋</button>
+            <button class="widget-control" id="todoList" title="List View" aria-label="Switch to list view">📝</button>
+          </div>
+        </div>
+        <div class="todo-input">
+          <input type="text" id="todoInput" placeholder="New task..." aria-label="New task input">
+          <button id="addTodo" title="Add Task" aria-label="Add task">➕</button>
+        </div>
+        <div class="todo-options">
+          <label for="todoDate">Due date: <input type="date" id="todoDate" aria-label="Due date"></label>
+          <label for="todoRecurring">
+            <input type="checkbox" id="todoRecurring" aria-label="Recurring task">
+            Recurring
+          </label>
+        </div>
+        <div id="todoListView">
+          <ul id="todoList"></ul>
+        </div>
+        <div id="todoKanbanView" class="kanban-container">
+          <div class="kanban-column" id="todoToDo" ondragover="dragOver(event)" ondrop="drop(event)"> <!-- Added drag/drop handlers -->
+            <h3>To Do</h3>
+            <div class="kanban-items"></div>
+          </div>
+          <div class="kanban-column" id="todoInProgress" ondragover="dragOver(event)" ondrop="drop(event)"> <!-- Added drag/drop handlers -->
+            <h3>In Progress</h3>
+            <div class="kanban-items"></div>
+          </div>
+          <div class="kanban-column" id="todoDone" ondragover="dragOver(event)" ondrop="drop(event)"> <!-- Added drag/drop handlers -->
+            <h3>Done</h3>
+            <div class="kanban-items"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="weather" class="widget" aria-labelledby="weather-title">
+        <div class="widget-header">
+          <h2 id="weather-title">🌤️ Weather</h2>
+          <div class="widget-controls">
+            <button class="widget-control" id="weatherRefresh" title="Refresh Weather" aria-label="Refresh weather data">🔄</button>
+            <button class="widget-control" id="weatherLocation" title="Change Location" aria-label="Change weather location">📍</button>
+          </div>
+        </div>
         <div id="weatherInfo">
           <p>Loading weather...</p>
         </div>
+        <!-- Added Hourly Forecast Container -->
+        <div id="weatherHourly" class="hourly-forecast-container">
+          <h3>Hourly</h3>
+          <div id="hourlyForecastList" class="hourly-list"></div>
+        </div>
+        <div id="weatherForecast" class="forecast-container"></div>
+        <div id="airQuality">
+          <h3>Air Quality</h3>
+          <div id="aqiInfo">Loading AQI data...</div>
+        </div>
       </section>
 
-      <section id="clock" class="widget">
-        <h2>Clock</h2>
-        <div id="clockDisplay">--:--:--</div>
+      <section id="clock" class="widget" aria-labelledby="clock-title">
+        <div class="widget-header">
+          <h2 id="clock-title">⏰ Clock</h2>
+          <div class="widget-controls">
+            <button class="widget-control" id="clockSwitch" title="Switch Clock Type" aria-label="Switch between analog and digital">🔄</button>
+            <button class="widget-control" id="timerToggle" title="Timer Mode" aria-label="Toggle timer mode">⏲️</button>
+          </div>
+        </div>
+        <div class="clock-container">
+          <div id="clockDigital" class="clock-display">--:--:--</div>
+          <div id="clockAnalog" class="analog-clock-container">
+            <div class="analog-clock">
+              <div class="hour-hand"></div>
+              <div class="minute-hand"></div>
+              <div class="second-hand"></div>
+              <div class="clock-center"></div>
+              <div class="clock-markings"></div>
+            </div>
+          </div>
+        </div>
+        <div id="timerSection" class="timer-section">
+          <div class="timer-display">
+            <span id="timerMinutes">25</span>:<span id="timerSeconds">00</span>
+          </div>
+          <div class="timer-controls">
+            <button id="startTimer" class="timer-button">Start</button>
+            <button id="resetTimer" class="timer-button">Reset</button>
+          </div>
+          <div class="timer-presets">
+            <button class="preset" data-minutes="25">25m</button>
+            <button class="preset" data-minutes="5">5m</button>
+            <button class="preset" data-minutes="15">15m</button>
+            <button class="preset" data-minutes="50">50m</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="finance" class="widget" aria-labelledby="finance-title">
+        <div class="widget-header">
+          <h2 id="finance-title">📈 Finance</h2>
+          <div class="widget-controls">
+            <button class="widget-control" id="financeAddSymbol" title="Add Symbol" aria-label="Add new stock/crypto symbol">➕</button> <!-- Updated aria-label -->
+            <button class="widget-control" id="financeToggleType" title="Toggle Crypto/Stocks" aria-label="Toggle between crypto and stocks">💱</button> <!-- Changed ID -->
+          </div>
+        </div>
+        <div id="watchlist" class="finance-watchlist"></div>
+      </section>
+
+      <section id="news" class="widget" aria-labelledby="news-title">
+        <div class="widget-header">
+          <h2 id="news-title">📰 News</h2>
+          <div class="widget-controls">
+            <button class="widget-control" id="newsRefresh" title="Refresh News" aria-label="Refresh news feed">🔄</button>
+            <button class="widget-control" id="newsSettings" title="News Settings" aria-label="News settings">⚙️</button>
+          </div>
+        </div>
+        <div class="news-categories">
+          <button class="news-category active" data-category="general">General</button>
+          <button class="news-category" data-category="technology">Tech</button>
+          <button class="news-category" data-category="business">Business</button>
+          <button class="news-category" data-category="health">Health</button>
+          <button class="news-category" data-category="science">Science</button> <!-- Added Category -->
+          <button class="news-category" data-category="sports">Sports</button> <!-- Added Category -->
+          <button class="news-category" data-category="entertainment">Entertainment</button> <!-- Added Category -->
+        </div>
+        <div id="newsContainer" class="news-container">
+          <p>Loading news...</p>
+        </div>
+        <div id="readLaterList" class="read-later-container">
+          <h3>Read Later</h3>
+          <ul id="readLaterItems"></ul>
+        </div>
       </section>
     </main>
   </div>
 
   <!-- Settings Modal -->
-  <div id="settingsModal" class="modal">
+  <div id="settingsModal" class="modal" aria-labelledby="settings-title" aria-modal="true">
     <div class="modal-content">
       <span id="closeSettings" class="close" title="Close Settings">&times;</span>
-      <h2>Dashboard Settings</h2>
+      <h2 id="settings-title">Dashboard Settings</h2>
       <form id="settingsForm">
         <fieldset>
           <legend>Default Search Engine</legend>
@@ -70,20 +228,146 @@
           <label><input type="radio" name="defaultEngine" value="duckduckgo"> DuckDuckGo</label>
           <label><input type="radio" name="defaultEngine" value="bing"> Bing</label>
           <label><input type="radio" name="defaultEngine" value="perplexity"> Perplexity.ai</label>
+          <label><input type="radio" name="defaultEngine" value="custom"> Custom</label>
+          <div id="customEngineOptions" class="custom-engine-options">
+            <input type="text" name="customEngineUrl" placeholder="Custom search URL with %s as query placeholder">
+            <input type="text" name="customEngineName" placeholder="Custom search engine name">
+          </div>
         </fieldset>
+        
+        <fieldset>
+          <legend>Appearance</legend>
+          <label><input type="checkbox" name="autoTheme"> Auto-switch theme based on time</label>
+          <div id="themeSchedule" class="theme-schedule">
+            <label>Light theme starts: <input type="time" name="lightStart" value="06:00"></label>
+            <label>Dark theme starts: <input type="time" name="darkStart" value="18:00"></label>
+          </div>
+          <label>Accent Color: <input type="color" name="accentColor" value="#0abde3"></label>
+        </fieldset>
+        
         <fieldset>
           <legend>Widgets</legend>
-          <label><input type="checkbox" name="widgetNotes" checked> Notes</label>
-          <label><input type="checkbox" name="widgetCalculator" checked> Calculator</label>
-          <label><input type="checkbox" name="widgetTodo" checked> To‑Do List</label>
-          <label><input type="checkbox" name="widgetWeather" checked> Weather</label>
-          <label><input type="checkbox" name="widgetClock" checked> Clock</label>
+          <div class="widgets-grid">
+            <label><input type="checkbox" name="widgetNotes" checked> Notes</label>
+            <label><input type="checkbox" name="widgetCalculator" checked> Calculator</label>
+            <label><input type="checkbox" name="widgetTodo" checked> To‑Do List</label>
+            <label><input type="checkbox" name="widgetWeather" checked> Weather</label>
+            <label><input type="checkbox" name="widgetClock" checked> Clock</label>
+            <label><input type="checkbox" name="widgetFinance"> Finance</label>
+            <label><input type="checkbox" name="widgetNews"> News</label>
+            <label><input type="checkbox" name="widgetBookmarks"> Bookmarks</label>
+            <label><input type="checkbox" name="widgetAI"> AI Assistant</label>
+            <label><input type="checkbox" name="widgetTranslator"> Translator</label>
+            <label><input type="checkbox" name="widgetUtilities"> Utilities</label>
+          </div>
         </fieldset>
+
+        <fieldset>
+          <legend>API Keys (Optional & Use Securely)</legend>
+          <p><small>Note: Storing keys in LocalStorage is not secure for production. Consider server-side solutions.</small></p>
+          <label>OpenCage Geocoding API Key: <input type="text" name="opencageApiKey" placeholder="Enter OpenCage API Key"></label>
+          <label>AlphaVantage API Key: <input type="text" name="alphaVantageApiKey" placeholder="Enter AlphaVantage API Key"></label>
+          <label>NewsAPI.org API Key: <input type="text" name="newsApiKey" placeholder="Enter NewsAPI Key"></label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Data Management</legend>
+          <div class="data-management-buttons">
+            <button type="button" id="exportData">Export All Data</button>
+            <button type="button" id="importData">Import Data</button>
+            <button type="button" id="clearData" class="danger-button">Clear All Data</button>
+          </div>
+        </fieldset>
+        
         <button type="submit">Save Settings</button>
       </form>
     </div>
   </div>
 
+  <!-- Location Modal for Weather -->
+  <div id="locationModal" class="modal" aria-labelledby="location-title" aria-modal="true">
+    <div class="modal-content">
+      <span id="closeLocation" class="close" title="Close">&times;</span>
+      <h2 id="location-title">Set Weather Location</h2>
+      <form id="locationForm">
+        <label for="cityInput">City Name:</label>
+        <input type="text" id="cityInput" placeholder="Enter city name">
+        <button type="button" id="useCurrentLocation">Use My Location</button>
+        <button type="submit">Set Location</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Symbol Modal for Finance -->
+  <div id="addSymbolModal" class="modal" aria-labelledby="addsymbol-title" aria-modal="true">
+    <div class="modal-content">
+      <span id="closeAddSymbol" class="close" title="Close">&times;</span>
+      <h2 id="addsymbol-title">Add Financial Symbol</h2>
+      <form id="addSymbolForm">
+        <label for="symbolType">Type:</label>
+        <select id="symbolType">
+          <option value="stock">Stock</option>
+          <option value="crypto">Cryptocurrency</option>
+        </select>
+        <label for="symbolSearch">Search Symbol:</label>
+        <input type="text" id="symbolSearch" placeholder="Enter symbol or name">
+        <div id="symbolSearchResults"></div>
+        <button type="submit">Add to Watchlist</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- News Settings Modal -->
+  <div id="newsSettingsModal" class="modal" aria-labelledby="newssettings-title" aria-modal="true">
+    <div class="modal-content">
+      <span id="closeNewsSettings" class="close" title="Close">&times;</span>
+      <h2 id="newssettings-title">News Settings</h2>
+      <form id="newsSettingsForm">
+        <label>News Source:</label>
+        <select name="newsSource">
+          <option value="newsapi">NewsAPI.org</option>
+          <option value="rss">Custom RSS Feed</option>
+        </select>
+        <div id="rssOptions">
+          <label for="rssUrl">RSS Feed URL:</label>
+          <input type="url" id="rssUrl" placeholder="https://example.com/rss.xml">
+        </div>
+        <label>
+          <input type="checkbox" name="openInNewTab" checked>
+          Open news articles in new tab
+        </label>
+        <button type="submit">Save News Settings</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Favorite Searches Modal -->
+  <div id="favoriteSearchModal" class="modal" aria-labelledby="favsearch-title" aria-modal="true">
+    <div class="modal-content">
+      <span id="closeFavSearch" class="close" title="Close">&times;</span>
+      <h2 id="favsearch-title">Favorite Searches</h2>
+      <div class="add-favorite-search">
+        <input type="text" id="newFavSearchInput" placeholder="Add current or new query...">
+        <button id="addFavSearchBtn">Add Favorite</button>
+      </div>
+      <ul id="favoriteSearchList">
+        <!-- Favorite searches will be listed here -->
+      </ul>
+    </div>
+  </div>
+
+  <!-- Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./service-worker.js')
+        .then(registration => {
+          console.log('Service Worker registered with scope:', registration.scope);
+        })
+        .catch(error => {
+          console.error('Service Worker registration failed:', error);
+        });
+    }
+  </script>
   <script src="script.js"></script>
 </body>
 </html>

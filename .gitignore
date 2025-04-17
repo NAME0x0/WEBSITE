@@ -1,0 +1,13 @@
+# Environment variables
+.env
+
+# Node dependencies (if you ever use npm)
+node_modules/
+
+# Build output (if you use a build tool)
+dist/
+build/
+
+# Other common ignores
+.DS_Store
+*.log
