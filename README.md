@@ -1,27 +1,112 @@
-# WEBSITE
+**Prompt: Design & Implement a Next‑Gen Glassmorphic Personal Search Dashboard**
 
-## Overview
-Experience the future of personal organization and web search with this cutting-edge dashboard. Designed with a sleek glassmorphic aesthetic and advanced UI/UX interactions, this project integrates:
-- **Powerful Search Engine:** Seamlessly query the web using your favorite search engine (Google, DuckDuckGo, Bing, or Perplexity.ai).
-- **Interactive Widgets:** Manage your daily life with built-in tools:
-  - 📝 **Notes:** Capture your ideas with persistent note-taking.
-  - 🔢 **Calculator:** Perform quick arithmetic operations.
-  - ✅ **To‑Do List:** Organize your tasks efficiently.
-  - 🌤 **Weather:** Stay updated with real-time weather information.
-  - ⏰ **Clock:** View the current time with a live, updating clock.
-- **Personalization:** Customize your dashboard settings, widget visibility, and default search engine.
-- **Theme Toggle:** Enjoy smooth transitions between light and dark modes.
-- **Responsive Design:** A seamless experience across all devices.
+**1. Project Goal**  
+Create a single‑page web application (“Dashboard”) that fuses a powerful multi‑engine search bar with an extensible suite of productivity, information and AI‑driven utilities—all wrapped in a sleek glassmorphic UI.
 
-## How to Use
-1. Open `index.html` in your browser.
-2. Use the prominent search bar to query the web.
-3. Interact with the widgets to take notes, calculate, manage tasks, check the weather, and see the current time.
-4. Click the "Settings" button to personalize your experience.
-5. All settings are saved locally for a tailored experience every time you visit.
+---
 
-## Technologies
-- HTML5
-- CSS3 (featuring glassmorphism and advanced animations)
-- Vanilla JavaScript
-- Open‑Meteo API (for weather data)
+**2. Core Features**  
+1. **Universal Search Bar**  
+   - Support Google, DuckDuckGo, Bing, Perplexity.ai, and a “Custom” slot.  
+   - Instant suggestions via API (typeahead).  
+   - Voice‑to‑text / speech recognition toggle.  
+   - Search history, favourites, and one‑click “re‑run last query.”  
+
+2. **Interactive Widgets**  
+   - **📝 Note‑Taker:**  
+     - Markdown support, live preview, tag‑based organization.  
+     - Autosave & manual “snapshot” version history.  
+   - **🔢 Calculator:**  
+     - Standard, scientific, and programming modes (hex, bin).  
+     - History panel with copy‑to‑clipboard.  
+   - **✅ To‑Do & Kanban Board:**  
+     - Drag‑and‑drop cards, subtasks, due dates & reminders.  
+     - Recurring task templates and progress tracker.  
+   - **📅 Calendar & Events:**  
+     - Two‑way sync with Google Calendar / Outlook API.  
+     - Day/week/month views; event creation & RSVP links.  
+   - **🌤 Weather & Air Quality:**  
+     - 7‑day forecast, hourly breakdown, AQI.  
+     - Geolocation + manual city selection; background animation.  
+   - **⏰ Clock & Timers:**  
+     - Analog/digital clocks for multiple time zones.  
+     - Pomodoro & countdown timers with custom intervals.  
+   - **📈 Finance Ticker:**  
+     - Real‑time stock & crypto quotes (AlphaVantage / CoinGecko).  
+     - Mini‑charts on hover; “watchlist” persistence.  
+   - **📰 News & RSS Feed Reader:**  
+     - Connect to NewsAPI, custom RSS URLs.  
+     - Category filtering, “read later” list.  
+   - **✉️ Email Preview Pane:**  
+     - OAuth integration for Gmail/Outlook.  
+     - Unread count badge, one‑click reply templates.  
+   - **🔍 AI Assistant Sidebar:**  
+     - Chat widget powered by OpenAI (or local LLM).  
+     - “Summarize page,” “translate selection,” “write email from template.”  
+   - **🔗 Bookmark & Link Manager:**  
+     - Folders/tags, favicon thumbnails, import/export OPML/JSON.  
+   - **🌐 Translator & Dictionary:**  
+     - Inline translator (Google Translate API) and Merriam‑Webster lookup.  
+   - **⚙️ Utility Toolbox:**  
+     - Unit converter, currency converter, QR code generator, color picker.  
+
+---
+
+**3. Customization & Personalization**  
+- **Settings Modal:**  
+  - Toggle each widget on/off; reorder via drag handles.  
+  - Choose default search engine and language.  
+  - Set theme schedule (auto‑switch light/dark based on time).  
+  - Configure keyboard shortcuts for all actions.  
+- **Profile Sync (Optional):**  
+  - LocalStorage by default; optional Firebase / Supabase sync for cross‑device.  
+
+---
+
+**4. Design & UX Specifications**  
+- **Glassmorphism Aesthetic:**  
+  - Frosted glass panels, soft glows, subtle blur (backdrop‑filter).  
+  - Two theme palettes (light/dark), with accent color picker.  
+- **Animations & Transitions:**  
+  - Hover/focus states with smooth scale/opacity changes.  
+  - Widget expand/collapse via height/opacity CSS transitions.  
+- **Responsive & PWA‑Ready:**  
+  - Mobile‑first layout: collapsible sidebars, bottom “quick‑access” bar.  
+  - Service Worker for offline note‑taking, task‑entry and cached search history.  
+- **Accessibility:**  
+  - Full keyboard navigation (tab order, ARIA roles).  
+  - High‑contrast mode toggle.  
+  - Screen‑reader labels on all interactive elements.  
+
+---
+
+**5. Technical Stack & APIs**  
+- **Frontend:**  
+  - HTML5, CSS3 (+ Tailwind CSS optional), Vanilla JS or React/Vue with ES6 modules.  
+  - Build tools: Vite / Webpack; TypeScript optional.  
+- **APIs & Libraries:**  
+  - Search: engine‑specific REST endpoints or custom redirect.  
+  - Weather: Open‑Meteo.  
+  - Calendar/Email: Google Calendar API, Gmail API / Microsoft Graph.  
+  - Finance: AlphaVantage, CoinGecko.  
+  - News: NewsAPI.org, RSS‑to‑JSON.  
+  - Speech: Web Speech API.  
+  - LLM Chat: OpenAI SDK.  
+- **Data Persistence:**  
+  - LocalStorage & IndexedDB for core data; optional cloud sync.  
+  - Export/Import JSON backup.  
+- **Security & Privacy:**  
+  - OAuth2 flows, secure token storage.  
+  - CORS handling, Content Security Policy header.  
+
+---
+
+**6. Deliverables**  
+1. **Fully functioning `index.html`, `styles.css`, `app.js`** (or React/Vue components).  
+2. **Documentation:** Setup instructions, API key configuration, folder structure.  
+3. **Unit & E2E Tests:** Basic Jest or Cypress tests for core widget functionality.  
+4. **Deployment Guide:** PWA manifest, Netlify/Vercel deployment steps.  
+
+---
+
+*End of Prompt*
