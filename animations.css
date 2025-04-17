@@ -1,0 +1,1304 @@
+/* Additional CSS for animations and enhancements */
+
+/* Sound indicator animation */
+@keyframes soundWave {
+  0% { transform: scale(1); opacity: 0.7; }
+  50% { transform: scale(1.5); opacity: 0; }
+  100% { transform: scale(1); opacity: 0; }
+}
+
+.sound-wave {
+  position: fixed;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(var(--secondary-color-rgb), 0.3);
+  pointer-events: none;
+  z-index: 9999;
+  animation: soundWave 0.5s ease-out forwards;
+}
+
+/* Clock animations */
+.clock-number {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.clock-number:hover {
+  transform: scale(1.2);
+  color: var(--secondary-color);
+}
+
+.clock-colon {
+  display: inline-block;
+  transition: opacity 0.5s ease;
+}
+
+.colon-visible {
+  opacity: 1;
+}
+
+.colon-faded {
+  opacity: 0.5;
+}
+
+.analog-clock {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid var(--border-color);
+  margin: 0 auto;
+  box-shadow: 0 0 20px var(--glow-color), inset 0 0 20px rgba(0, 0, 0, 0.2);
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
+}
+
+.analog-clock:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 30px var(--secondary-color), inset 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.hour-hand, .minute-hand, .second-hand {
+  position: absolute;
+  transform-origin: bottom center;
+  left: 50%;
+  bottom: 50%;
+}
+
+.hour-hand {
+  width: 6px;
+  height: 50px;
+  background: var(--text-color);
+  border-radius: 3px;
+  margin-left: -3px;
+  z-index: 2;
+}
+
+.minute-hand {
+  width: 4px;
+  height: 70px;
+  background: var(--text-color);
+  border-radius: 2px;
+  margin-left: -2px;
+  z-index: 3;
+}
+
+.second-hand {
+  width: 2px;
+  height: 80px;
+  background: var(--secondary-color);
+  border-radius: 1px;
+  margin-left: -1px;
+  z-index: 4;
+}
+
+.clock-center {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: var(--secondary-color);
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+}
+
+.clock-markings {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
+.hour-marking {
+  position: absolute;
+  font-size: 14px;
+  color: var(--text-color);
+  transform-origin: center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.minute-marking {
+  position: absolute;
+  width: 2px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.3);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Timer animations */
+.timer-display {
+  font-size: 3rem;
+  text-align: center;
+  margin: 20px 0;
+  transition: all 0.3s ease;
+}
+
+.timer-ending {
+  animation: timerEnding 0.5s ease infinite alternate;
+}
+
+@keyframes timerEnding {
+  from { color: var(--text-color); }
+  to { color: var(--accent-color); }
+}
+
+.timer-complete {
+  animation: timerComplete 0.5s ease 3;
+}
+
+@keyframes timerComplete {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); color: var(--secondary-color); }
+  100% { transform: scale(1); }
+}
+
+.timer-button {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  padding: 8px 15px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 0 5px;
+}
+
+.timer-button:hover {
+  background: var(--secondary-color);
+  color: var(--primary-color);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.timer-presets {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.preset {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  padding: 5px 10px;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.preset:hover, .preset.active {
+  background: var(--secondary-color);
+  color: var(--primary-color);
+  transform: translateY(-2px);
+}
+
+/* Todo list animations */
+.todo-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  margin-bottom: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.todo-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateX(5px);
+}
+
+.todo-item.completed {
+  background: rgba(var(--secondary-color-rgb), 0.1);
+}
+
+.todo-item.completed .todo-text {
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+.todo-item-enter {
+  animation: todoEnter 0.5s ease forwards;
+}
+
+@keyframes todoEnter {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.todo-item-exit {
+  animation: todoExit 0.3s ease forwards;
+}
+
+@keyframes todoExit {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(-100%); }
+}
+
+.todo-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+.todo-actions {
+  display: flex;
+  gap: 5px;
+}
+
+.todo-edit, .todo-delete {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  opacity: 0.7;
+  transition: all 0.3s ease;
+}
+
+.todo-edit:hover, .todo-delete:hover {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+/* Kanban view */
+.kanban-container {
+  display: flex;
+  gap: 15px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+  margin-top: 20px;
+}
+
+.kanban-column {
+  flex: 1;
+  min-width: 200px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 10px;
+  transition: all 0.3s ease;
+}
+
+.kanban-column h3 {
+  text-align: center;
+  margin-bottom: 10px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.kanban-column.drag-over {
+  background: rgba(var(--secondary-color-rgb), 0.1);
+  transform: scale(1.02);
+}
+
+.kanban-items {
+  min-height: 200px;
+}
+
+.kanban-item {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 8px;
+  cursor: grab;
+  transition: all 0.3s ease;
+}
+
+.kanban-item:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+.kanban-item.dragging {
+  opacity: 0.5;
+  transform: scale(0.95);
+}
+
+.kanban-item-enter {
+  animation: kanbanEnter 0.5s ease forwards;
+}
+
+@keyframes kanbanEnter {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.kanban-item-exit {
+  animation: kanbanExit 0.3s ease forwards;
+}
+
+@keyframes kanbanExit {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(0.8); }
+}
+
+/* Notes animations */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(var(--secondary-color-rgb), 0.2);
+  color: var(--text-color);
+  padding: 3px 8px;
+  border-radius: 15px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  transition: all 0.3s ease;
+}
+
+.tag button {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  margin-left: 5px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.tag button:hover {
+  opacity: 1;
+}
+
+.tag-enter {
+  animation: tagEnter 0.5s ease forwards;
+}
+
+@keyframes tagEnter {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.preview-update {
+  animation: previewUpdate 0.5s ease;
+}
+
+@keyframes previewUpdate {
+  0% { opacity: 0.7; }
+  50% { opacity: 0.9; }
+  100% { opacity: 1; }
+}
+
+.tab-transition {
+  animation: tabTransition 0.3s ease;
+}
+
+@keyframes tabTransition {
+  from { opacity: 0.7; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.saving-indicator {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 8px 15px;
+  border-radius: 20px;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.saving-indicator.saved {
+  background: rgba(var(--secondary-color-rgb), 0.7);
+}
+
+.fade-out {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.snapshot-confirmation {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(var(--secondary-color-rgb), 0.7);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 10px;
+  z-index: 1000;
+  animation: snapshotConfirm 0.5s ease forwards;
+}
+
+@keyframes snapshotConfirm {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.history-enter {
+  animation: historyEnter 0.3s ease forwards;
+}
+
+@keyframes historyEnter {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.history-exit {
+  animation: historyExit 0.3s ease forwards;
+}
+
+@keyframes historyExit {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-10px); }
+}
+
+.snapshot-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.snapshot-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.snapshot-item-enter {
+  animation: snapshotEnter 0.5s ease forwards;
+}
+
+@keyframes snapshotEnter {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.snapshot-item-exit {
+  animation: snapshotExit 0.3s ease forwards;
+}
+
+@keyframes snapshotExit {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(20px); }
+}
+
+/* Calculator animations - FIXED LAYOUT */
+.calc-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-top: 15px;
+}
+
+/* Scientific calculator layout */
+.calc-buttons.scientific {
+  grid-template-columns: repeat(7, 1fr);
+}
+
+/* Programming calculator layout */
+.calc-buttons.programming {
+  grid-template-columns: repeat(6, 1fr);
+}
+
+.calc-button {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  font-size: 1.2rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  height: 50px;
+}
+
+.calc-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.calc-button.equals {
+  background: var(--secondary-color);
+  color: var(--primary-color);
+  grid-column: span 2;
+}
+
+.calc-button.clear {
+  background: var(--accent-color);
+  color: var(--primary-color);
+}
+
+.calc-button.operator {
+  background: rgba(var(--secondary-color-rgb), 0.2);
+  font-weight: bold;
+}
+
+.calc-button.function {
+  background: rgba(255, 255, 255, 0.15);
+  font-size: 1rem;
+}
+
+.calc-button-press {
+  animation: buttonPress 0.15s ease;
+}
+
+@keyframes buttonPress {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+.calc-input {
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 15px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  color: var(--text-color);
+  font-size: 1.5rem;
+  text-align: right;
+  transition: all 0.3s ease;
+}
+
+.calc-input:focus {
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 10px var(--glow-color);
+}
+
+.calc-input-update {
+  animation: calcUpdate 0.3s ease;
+}
+
+@keyframes calcUpdate {
+  0% { background: rgba(var(--secondary-color-rgb), 0.2); }
+  100% { background: rgba(0, 0, 0, 0.2); }
+}
+
+.calc-input-clear {
+  animation: calcClear 0.3s ease;
+}
+
+@keyframes calcClear {
+  0% { background: rgba(var(--accent-color-rgb, 255, 107, 107), 0.2); }
+  100% { background: rgba(0, 0, 0, 0.2); }
+}
+
+.calc-input-success {
+  animation: calcSuccess 0.5s ease;
+}
+
+@keyframes calcSuccess {
+  0% { background: rgba(var(--secondary-color-rgb), 0.3); }
+  50% { background: rgba(var(--secondary-color-rgb), 0.1); }
+  100% { background: rgba(0, 0, 0, 0.2); }
+}
+
+.calc-input-error {
+  animation: calcError 0.5s ease;
+}
+
+@keyframes calcError {
+  0% { background: rgba(255, 0, 0, 0.3); }
+  50% { background: rgba(255, 0, 0, 0.1); }
+  100% { background: rgba(0, 0, 0, 0.2); }
+}
+
+.calc-input-type {
+  animation: calcType 0.1s ease;
+}
+
+@keyframes calcType {
+  0% { background: rgba(255, 255, 255, 0.1); }
+  100% { background: rgba(0, 0, 0, 0.2); }
+}
+
+.calc-history {
+  margin-top: 15px;
+  max-height: 150px;
+  overflow-y: auto;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.calc-history h3 {
+  margin-bottom: 10px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid var(--border-color);
+  text-align: center;
+}
+
+.calc-history li {
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 5px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.calc-history li:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateX(5px);
+}
+
+.history-item-enter {
+  animation: historyItemEnter 0.5s ease forwards;
+  opacity: 0;
+  transform: translateX(-10px);
+}
+
+@keyframes historyItemEnter {
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* Weather animations */
+.weather-current {
+  text-align: center;
+  margin-bottom: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 15px;
+  padding: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.weather-location {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: var(--secondary-color);
+}
+
+.weather-main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 15px;
+}
+
+.weather-icon {
+  font-size: 3.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.weather-temp {
+  font-size: 2.8rem;
+  font-weight: 600;
+}
+
+.weather-desc {
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+  opacity: 0.9;
+}
+
+.weather-wind {
+  font-size: 1rem;
+  opacity: 0.8;
+  background: rgba(255, 255, 255, 0.05);
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 20px;
+}
+
+.weather-item-enter {
+  animation: weatherItemEnter 0.5s ease forwards;
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+@keyframes weatherItemEnter {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hourly-forecast-container {
+  margin: 20px 0;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 15px;
+  padding: 15px;
+}
+
+.hourly-forecast-container h3 {
+  margin-bottom: 15px;
+  text-align: center;
+  color: var(--secondary-color);
+}
+
+.hourly-list {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+  scrollbar-width: thin;
+}
+
+.hourly-list::-webkit-scrollbar {
+  height: 6px;
+}
+
+.hourly-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+.hourly-list::-webkit-scrollbar-thumb {
+  background: rgba(var(--secondary-color-rgb), 0.3);
+  border-radius: 10px;
+}
+
+.hourly-item {
+  flex: 0 0 auto;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 12px;
+  border-radius: 12px;
+  min-width: 80px;
+  animation: hourlyEnter 0.5s ease forwards;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+}
+
+.hourly-item:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes hourlyEnter {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hourly-container-enter {
+  animation: containerEnter 0.5s ease;
+}
+
+@keyframes containerEnter {
+  from { opacity: 0.7; }
+  to { opacity: 1; }
+}
+
+.forecast-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.forecast-day {
+  flex: 1 1 calc(25% - 12px);
+  min-width: 110px;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 15px;
+  border-radius: 12px;
+  text-align: center;
+  animation: forecastEnter 0.5s ease forwards;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+}
+
+.forecast-day:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes forecastEnter {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.forecast-day-enter {
+  animation: forecastDayEnter 0.5s ease forwards;
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+@keyframes forecastDayEnter {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.forecast-date {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--secondary-color);
+}
+
+.forecast-icon {
+  font-size: 2rem;
+  margin: 8px 0;
+}
+
+.forecast-temp {
+  font-size: 1.1rem;
+}
+
+#airQuality {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 15px;
+  padding: 15px;
+  margin-top: 20px;
+}
+
+#airQuality h3 {
+  text-align: center;
+  margin-bottom: 15px;
+  color: var(--secondary-color);
+}
+
+.aqi-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin: 10px 0;
+}
+
+.aqi-value {
+  font-size: 2.5rem;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.1);
+  width: 70px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.aqi-desc {
+  font-size: 1.2rem;
+}
+
+.aqi-enter {
+  animation: aqiEnter 0.5s ease;
+}
+
+@keyframes aqiEnter {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Weather icon animations */
+.weather-icon-sun {
+  display: inline-block;
+  animation: rotateSun 10s linear infinite;
+}
+
+@keyframes rotateSun {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.weather-icon-partly-cloudy {
+  display: inline-block;
+  animation: floatCloud 5s ease-in-out infinite;
+}
+
+@keyframes floatCloud {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.weather-icon-cloudy {
+  display: inline-block;
+  animation: floatCloud 7s ease-in-out infinite;
+}
+
+.weather-icon-fog {
+  display: inline-block;
+  animation: fogFloat 8s ease-in-out infinite;
+}
+
+@keyframes fogFloat {
+  0%, 100% { transform: translateX(0); opacity: 0.8; }
+  50% { transform: translateX(5px); opacity: 1; }
+}
+
+.weather-icon-rain {
+  display: inline-block;
+  animation: rainDrop 1s ease-in-out infinite;
+}
+
+@keyframes rainDrop {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(2px); }
+}
+
+.weather-icon-snow {
+  display: inline-block;
+  animation: snowFall 3s ease-in-out infinite;
+}
+
+@keyframes snowFall {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(3px) rotate(15deg); }
+}
+
+.weather-icon-showers {
+  display: inline-block;
+  animation: showerEffect 2s ease-in-out infinite;
+}
+
+@keyframes showerEffect {
+  0%, 100% { transform: translateY(0); }
+  25% { transform: translateY(2px); }
+  75% { transform: translateY(-2px); }
+}
+
+.weather-icon-thunder {
+  display: inline-block;
+  animation: thunderEffect 3s ease-in-out infinite;
+}
+
+@keyframes thunderEffect {
+  0%, 100% { transform: scale(1); }
+  5%, 15% { transform: scale(1.2); filter: brightness(1.5); }
+  10%, 20% { transform: scale(1); filter: brightness(1); }
+}
+
+/* Transition animations for clock and timer */
+#clockDigital, #clockAnalog, #timerSection {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#clockDigital.active, #clockAnalog.active, #timerSection.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+#clockDigital:not(.active), #clockAnalog:not(.active), #timerSection:not(.active) {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+/* Enhanced widget styling */
+.widget {
+  background: var(--widget-bg);
+  padding: calc(var(--spacing) * 1.5);
+  border-radius: 30px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2),
+              0 0 30px var(--glow-color);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-color);
+  width: 90%;
+  max-width: 800px;
+  max-height: 80vh;
+  overflow-y: auto;
+  transform: scale(0.95);
+  transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+  position: relative;
+}
+
+.widget:hover {
+  transform: scale(1) translateY(-10px);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3),
+              0 0 40px var(--glow-color);
+}
+
+.widget-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.widget h2 {
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  color: var(--secondary-color);
+  font-weight: 500;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.widget-controls {
+  display: flex;
+  gap: 10px;
+}
+
+.widget-control {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: var(--text-color);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.widget-control:hover {
+  background: var(--secondary-color);
+  color: var(--primary-color);
+  transform: scale(1.2) rotate(15deg);
+}
+
+/* Enhanced tabs styling */
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.tab {
+  padding: 8px 15px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tab:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.tab.active {
+  background: var(--secondary-color);
+  color: var(--primary-color);
+}
+
+/* Enhanced form elements */
+input[type="text"], 
+input[type="date"], 
+input[type="time"],
+input[type="url"],
+input[type="color"],
+textarea,
+select {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  padding: 10px 15px;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+input[type="text"]:focus, 
+input[type="date"]:focus, 
+input[type="time"]:focus,
+input[type="url"]:focus,
+input[type="color"]:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 10px var(--glow-color);
+  outline: none;
+}
+
+/* Enhanced modal styling */
+.modal-content {
+  background: var(--widget-bg);
+  margin: 7% auto;
+  padding: 30px;
+  border: 1px solid var(--border-color);
+  border-radius: 30px;
+  width: 85%;
+  max-width: 600px;
+  position: relative;
+  animation: modalAppear 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5),
+              0 0 30px var(--glow-color);
+}
+
+/* Enhanced navigation dots */
+.navigation-dots {
+  position: fixed;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  z-index: 100;
+}
+
+.navigation-dot {
+  width: 12px;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.navigation-dot::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.navigation-dot:hover {
+  background: rgba(255, 255, 255, 0.5);
+  transform: scale(1.2);
+}
+
+.navigation-dot.active {
+  background: var(--secondary-color);
+  transform: scale(1.5);
+}
+
+.navigation-dot.active::before {
+  border-color: var(--secondary-color);
+}
+
+/* Enhanced scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--secondary-color);
+}
+
+/* Enhanced button styling */
+button {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+/* Enhanced form actions */
+.form-actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.form-actions button {
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: 1px solid var(--border-color);
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-color);
+  transition: all 0.3s ease;
+}
+
+.form-actions button[type="submit"] {
+  background: var(--secondary-color);
+  color: var(--primary-color);
+}
+
+.form-actions button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Enhanced fieldset styling */
+fieldset {
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+legend {
+  padding: 0 10px;
+  color: var(--secondary-color);
+}
+
+/* Enhanced checkbox and radio styling */
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: var(--secondary-color);
+}
+
+/* Media queries for responsive design */
+@media (max-width: 768px) {
+  .calc-buttons {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+  
+  .calc-buttons.scientific {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  .calc-buttons.programming {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  .calc-button {
+    font-size: 1rem;
+    padding: 10px;
+    height: 40px;
+  }
+  
+  .forecast-day {
+    flex: 1 1 calc(50% - 12px);
+  }
+}
+
+@media (max-width: 480px) {
+  .calc-buttons {
+    gap: 5px;
+  }
+  
+  .calc-button {
+    font-size: 0.9rem;
+    padding: 8px;
+    height: 35px;
+  }
+  
+  .forecast-day {
+    flex: 1 1 100%;
+  }
+}
