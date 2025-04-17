@@ -1,12 +1,16 @@
-**Prompt: Design & Implement a Next‑Gen Glassmorphic Personal Search Dashboard**
+# Project Proposal: Glassmorphic Dashboard
+
+## Overview
 
 **1. Project Goal**  
 Create a single‑page web application (“Dashboard”) that fuses a powerful multi‑engine search bar with an extensible suite of productivity, information and AI‑driven utilities—all wrapped in a sleek glassmorphic UI.
 
 ---
 
-**2. Core Features**  
-1. **Universal Search Bar**  
+## 2. Core Features
+
+1. **Universal Search Bar**
+
    - Support Google, DuckDuckGo, Bing, Perplexity.ai, and a “Custom” slot.  
    - Instant suggestions via API (typeahead).  
    - Voice‑to‑text / speech recognition toggle.  
@@ -52,7 +56,8 @@ Create a single‑page web application (“Dashboard”) that fuses a powerful m
 
 ---
 
-**3. Customization & Personalization**  
+## 3. Customization & Personalization
+
 - **Settings Modal:**  
   - Toggle each widget on/off; reorder via drag handles.  
   - Choose default search engine and language.  
@@ -63,7 +68,8 @@ Create a single‑page web application (“Dashboard”) that fuses a powerful m
 
 ---
 
-**4. Design & UX Specifications**  
+## 4. Design & UX Specifications
+
 - **Glassmorphism Aesthetic:**  
   - Frosted glass panels, soft glows, subtle blur (backdrop‑filter).  
   - Two theme palettes (light/dark), with accent color picker.  
@@ -80,7 +86,8 @@ Create a single‑page web application (“Dashboard”) that fuses a powerful m
 
 ---
 
-**5. Technical Stack & APIs**  
+## 5. Technical Stack & APIs
+
 - **Frontend:**  
   - HTML5, CSS3 (+ Tailwind CSS optional), Vanilla JS or React/Vue with ES6 modules.  
   - Build tools: Vite / Webpack; TypeScript optional.  
@@ -101,12 +108,11 @@ Create a single‑page web application (“Dashboard”) that fuses a powerful m
 
 ---
 
-**6. Deliverables**  
+## 6. Deliverables
+
 1. **Fully functioning `index.html`, `styles.css`, `app.js`** (or React/Vue components).  
 2. **Documentation:** Setup instructions, API key configuration, folder structure.  
 3. **Unit & E2E Tests:** Basic Jest or Cypress tests for core widget functionality.  
 4. **Deployment Guide:** PWA manifest, Netlify/Vercel deployment steps.  
 
 ---
-
-*End of Prompt*
